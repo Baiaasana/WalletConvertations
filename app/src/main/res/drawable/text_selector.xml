@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" android:enterFadeDuration="1000" android:exitFadeDuration="1000">
+
+    <item android:visibility="visible" android:state_enabled="false" />
+
+    <item android:visibility="invisible" android:state_enabled="true" />
+
+</selector>

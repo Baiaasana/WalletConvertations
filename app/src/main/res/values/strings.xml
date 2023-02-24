@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WalletConvertation</string>
+    <string name="get_course">get Course</string>
 </resources>

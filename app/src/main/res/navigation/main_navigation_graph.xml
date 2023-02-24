@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation_graph"
+    app:startDestination="@id/convertFragment">
+
+    <fragment
+        android:id="@+id/convertFragment"
+        android:name="com.example.walletconvertation.presentation.fragments.convert.ConvertFragment"
+        android:label="fragment_convert"
+        tools:layout="@layout/fragment_convert" >
+        <action
+            android:id="@+id/action_convertFragment_to_walletsFragment"
+            app:destination="@id/walletsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/walletsFragment"
+        android:name="com.example.walletconvertation.presentation.fragments.wallet.WalletsFragment"
+        android:label="fragment_wallets"
+        tools:layout="@layout/fragment_wallets" />
+</navigation>
