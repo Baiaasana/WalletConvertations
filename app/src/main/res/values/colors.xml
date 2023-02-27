@@ -7,4 +7,14 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="blue">#130F26</color>
+    <color name="light_blue">#2496FF</color>
+    <color name="grey">#627384</color>
+    <color name="bold_grey">#4B5B6C</color>
+    <color name="background_grey">#F5F5F5</color>
+    <color name="search_back_grey">#F7F8FA</color>
+    <color name="line_grey">#E5E7EC</color>
+    <color name="editText_background">#E5E7EC</color>
+    <color name="courses_background">#F7F8FA</color>
 </resources>

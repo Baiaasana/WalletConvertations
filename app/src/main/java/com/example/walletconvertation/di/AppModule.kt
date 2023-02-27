@@ -64,21 +64,4 @@ object AppModule {
     fun responseHandler(): ResponseHandler {
         return ResponseHandler()
     }
-
-    @Binds
-    @Singleton
-    fun bindWalletsRepository(
-        walletsRepositoryImpl: WalletsRepositoryImpl
-    ): WalletsRepository {
-        return walletsRepositoryImpl
-    }
-
-    @Binds
-    @Singleton
-    fun bindCourseRepository(
-        courseRepositoryImpl: CourseRepositoryImpl
-    ): CourseRepository {
-        return courseRepositoryImpl
-    }
-
 }

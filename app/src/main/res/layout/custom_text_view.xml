@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/customAmount"
+            android:backgroundTint="@color/search_back_grey"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:fontFamily="@font/fira_go_medium"
+            android:text="00.00"
+            android:textColor="@color/blue" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/customCurrency"
+            android:layout_marginHorizontal="5dp"
+            android:backgroundTint="@color/search_back_grey"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:fontFamily="@font/firago_regular"
+            android:text="$"
+            android:textColor="@color/bold_grey" />
+
+    </LinearLayout>
+
+</merge>

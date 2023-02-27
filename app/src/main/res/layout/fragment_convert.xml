@@ -15,57 +15,277 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:backgroundTint="@color/white"
         tools:context=".presentation.fragments.convert.ConvertFragment">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textView"
+        <com.example.walletconvertation.common.customs.CustomToolbar
+            android:id="@+id/toolbar"
+            app:title="@{`კონვერტაცია`}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:gravity="center"
-            android:text="@{viewModel.rate.toString()}"
-            android:textSize="22sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ProgressBar
-            android:id="@+id/progressBar"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_from"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:visibility="@{viewModel.loading?View.VISIBLE: View.GONE}"
-            app:layout_constraintEnd_toEndOf="@+id/textView"
-            app:layout_constraintStart_toStartOf="@+id/textView"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            android:layout_marginVertical="16dp"
+            android:fontFamily="@font/firago_regular"
+            android:paddingHorizontal="16dp"
+            android:text="ანგარიშიდან"
+            android:textColor="@color/bold_grey"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/toolbar"
+            app:layout_constraintStart_toStartOf="@+id/toolbar"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+        <com.example.walletconvertation.common.customs.CustomWalletView
+            android:id="@+id/wallet_from"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:visibility="@{'2'}"
+            app:layout_constraintEnd_toEndOf="@+id/tv_from"
+            app:layout_constraintStart_toStartOf="@+id/tv_from"
+            app:layout_constraintTop_toBottomOf="@+id/tv_from" />
+
+        <LinearLayout
+            android:id="@+id/view_convert"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@id/wallet_from"
+            app:layout_constraintStart_toStartOf="@id/wallet_from"
+            app:layout_constraintTop_toBottomOf="@id/wallet_from">
+
+            <View
+                android:id="@+id/view3"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_marginVertical="10dp"
+                android:layout_weight="0.4"
+                android:background="@color/line_grey" />
+
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:src="@drawable/ic_convert" />
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_marginVertical="10dp"
+                android:layout_weight="0.1"
+                android:background="@android:color/darker_gray"
+                android:backgroundTint="@color/line_grey" />
+
+        </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/errorText"
+            android:id="@+id/tv_to"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:text="@{viewModel.errorMessage.toString()}"
-            app:layout_constraintEnd_toEndOf="@+id/progressBar"
-            app:layout_constraintStart_toStartOf="@+id/progressBar"
-            app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+            android:layout_marginVertical="16dp"
+            android:fontFamily="@font/firago_regular"
+            android:paddingHorizontal="16dp"
+            android:text="ანგარიშზე"
+            android:textColor="@color/bold_grey"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/view_convert"
+            app:layout_constraintStart_toStartOf="@+id/view_convert"
+            app:layout_constraintTop_toBottomOf="@+id/view_convert" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnGetCourse"
-            android:layout_width="wrap_content"
+        <com.example.walletconvertation.common.customs.CustomWalletView
+            android:id="@+id/wallet_to"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="250dp"
-            android:backgroundTint="@color/teal_700"
-            android:onClick="@{()-> viewModel.getGELUSD()}"
-            android:paddingHorizontal="50dp"
+            app:layout_constraintEnd_toEndOf="@+id/tv_to"
+            app:layout_constraintStart_toStartOf="@+id/tv_to"
+            app:layout_constraintTop_toBottomOf="@+id/tv_to" />
+
+        <LinearLayout
+            android:id="@+id/llTextViews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
             android:paddingVertical="10dp"
-            android:text="@string/get_course"
-            android:textColor="#FFFFFF"
-            app:cornerRadius="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/errorText"
-            app:layout_constraintStart_toStartOf="@+id/errorText" />
+            app:layout_constraintEnd_toEndOf="@id/wallet_to"
+            app:layout_constraintStart_toStartOf="@id/wallet_to"
+            app:layout_constraintTop_toBottomOf="@id/wallet_to">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4.5dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/firago_regular"
+                android:text="ყიდვის თანხა"
+                android:textColor="@color/bold_grey"
+                android:textSize="12sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="9dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/firago_regular"
+                android:text="გაყიდვის თანხა"
+                android:textColor="@color/bold_grey"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llEditTexts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@+id/llTextViews"
+            app:layout_constraintStart_toStartOf="@+id/llTextViews"
+            app:layout_constraintTop_toBottomOf="@+id/llTextViews">
+
+            <com.example.walletconvertation.common.customs.CustomConvertView
+                android:id="@+id/etAmountFrom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="7dp"
+                android:layout_weight="1" />
+
+            <com.example.walletconvertation.common.customs.CustomConvertView
+                android:id="@+id/etAmountTo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llCourses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/custon_courses_backgrond"
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="@+id/llEditTexts"
+            app:layout_constraintStart_toStartOf="@+id/llEditTexts"
+            app:layout_constraintTop_toBottomOf="@+id/llEditTexts">
+
+            <LinearLayout
+                android:id="@+id/ll_normal_course"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:fontFamily="@font/fira_go_book"
+                    android:text="სტანდარტული კურსი:"
+                    android:textColor="@color/bold_grey"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.example.walletconvertation.common.customs.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_equals"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/fira_go_book"
+                        android:gravity="center"
+                        android:paddingHorizontal="5dp"
+                        android:text="="
+                        android:textColor="@color/bold_grey"
+                        android:textSize="12sp"
+                        android:visibility="visible" />
+
+                    <com.example.walletconvertation.common.customs.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llYourCourse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:fontFamily="@font/fira_go_book"
+                    android:text="შენი კურსი:"
+                    android:textColor="@color/bold_grey"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.example.walletconvertation.common.customs.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvEquals"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/fira_go_book"
+                        android:gravity="center"
+                        android:paddingHorizontal="5dp"
+                        android:text="="
+                        android:textColor="@color/bold_grey"
+                        android:textSize="12sp"
+                        android:visibility="visible" />
+
+                    <com.example.walletconvertation.common.customs.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_continue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="16dp"
+            android:background="@drawable/custom_edittext_back"
+            android:backgroundTint="@color/search_back_grey"
+            android:fontFamily="@font/fira_go_medium"
+            android:paddingVertical="17dp"
+            android:text="გაგრძელება"
+            android:textColor="@color/blue"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@id/llCourses"
+            app:layout_constraintStart_toStartOf="@id/llCourses"
+            app:layout_constraintTop_toBottomOf="@id/llCourses" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

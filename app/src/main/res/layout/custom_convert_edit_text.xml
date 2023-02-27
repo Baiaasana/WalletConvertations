@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="9dp"
+        android:background="@drawable/custom_edittext_back"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etAmount_"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:hint="00.00"
+            android:ellipsize="end"
+            android:background="@null"
+            android:paddingStart="16dp"
+            android:paddingVertical="12dp"
+            android:maxLines="1"
+            android:fontFamily="@font/firago_regular"
+            android:backgroundTint="@color/search_back_grey"
+            android:textColorHint="@color/line_grey"
+            android:textColor="@color/black" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvCurrency_"
+            android:backgroundTint="@color/search_back_grey"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:fontFamily="@font/firago_regular"
+            android:text="$"
+            android:textColor="@color/bold_grey"
+            android:paddingHorizontal="16dp" />
+
+    </LinearLayout>
+
+</merge>

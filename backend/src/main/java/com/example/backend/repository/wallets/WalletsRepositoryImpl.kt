@@ -7,7 +7,6 @@ import com.example.backend.common.ResponseHandler
 import com.example.backend.data.model.CourseModel
 import com.example.backend.data.model.WalletModel
 import com.example.backend.data.network.ApiService
-import com.example.backend.repository.course.CourseRepository
 import javax.inject.Inject
 
 class WalletsRepositoryImpl @Inject constructor(
