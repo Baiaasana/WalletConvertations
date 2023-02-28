@@ -1,5 +1,6 @@
 package com.example.walletconvertation.presentation.fragments.convert
 
+import android.text.Editable
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.backend.common.Resource
@@ -43,11 +44,10 @@ class ConvertViewModel @Inject constructor(
         MutableLiveData<WalletModel>(WalletModel(9, "dsds", 34.00F, "RUB", true, 4343L))
     val selectedWalletTo: LiveData<WalletModel> = _selectedWalletTo
 
-    private val _amountFrom = MutableLiveData<Float?>()
-    val amountFrom: LiveData<Float?> = _amountFrom
+    val amountFrom = MutableLiveData<String>(null)
 
-    private val _amountTo = MutableLiveData<Float?>()
-    val amountTo: LiveData<Float?> = _amountTo
+    val amountTo = MutableLiveData<String>(null)
+
 
     init {
         getWallets()
@@ -115,11 +115,12 @@ class ConvertViewModel @Inject constructor(
         return setSymbol(selectedWalletTo.value?.currency.toString())
     }
 
-    fun convertFROMTO() {
-        _amountTo.value = _amountFrom.value?.times(_rate.value!!)
+    fun convertFROMTO(){
+        amountTo.value = amountFrom.value!!.toFloat().times(_rate.value!!.toFloat()).toString()
     }
 
-    fun convertToFROM() {
-        _amountFrom.value = _amountTo.value?.times(_rate.value!!)
+    fun convertTOFROM(){
+        amountFrom.value = amountTo.value!!.toFloat().times(_rate.value!!.toFloat()).toString()
     }
+
 }

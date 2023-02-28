@@ -1,6 +1,8 @@
 package com.example.walletconvertation.presentation.fragments.convert
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,6 +48,23 @@ class ConvertFragment : Fragment() {
         binding.walletTo.setOnClickListener {
             findNavController().navigate(ConvertFragmentDirections.actionConvertFragmentToWalletsFragment("to"))
         }
+        binding.etAmountFrom.getAmount().addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                p0.let {
+                    convertViewModel.convertFROMTO()
+                }
+            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+        })
+
+        binding.etAmountTo.getAmount().addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                convertViewModel.convertTOFROM()
+            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+        })
     }
 
     override fun onDestroyView() {
