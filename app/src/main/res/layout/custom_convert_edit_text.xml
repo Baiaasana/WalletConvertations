@@ -21,6 +21,7 @@
             android:paddingStart="16dp"
             android:paddingVertical="12dp"
             android:maxLines="1"
+            android:inputType="numberDecimal"
             android:fontFamily="@font/firago_regular"
             android:backgroundTint="@color/search_back_grey"
             android:textColorHint="@color/line_grey"
@@ -33,7 +34,6 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:fontFamily="@font/firago_regular"
-            android:text="$"
             android:textColor="@color/bold_grey"
             android:paddingHorizontal="16dp" />
 

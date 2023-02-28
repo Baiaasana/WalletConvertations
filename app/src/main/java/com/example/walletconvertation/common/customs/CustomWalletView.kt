@@ -1,15 +1,12 @@
 package com.example.walletconvertation.common.customs
 
 import android.content.Context
-import android.opengl.Visibility
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
-import androidx.databinding.InverseBindingAdapter
 import com.example.walletconvertation.R
 
 class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
@@ -64,8 +61,12 @@ fun setAmount(wallet: CustomWalletView, amount: String) {
 }
 
 @BindingAdapter("visibility")
-fun visibility(wallet: CustomWalletView, visibility: Int){
-     wallet.getEndIcon().visibility = visibility
+fun visibility(wallet: CustomWalletView, visibility: Boolean){
+    if(visibility){
+        wallet.getEndIcon().visibility = View.VISIBLE
+    }else {
+        wallet.getEndIcon().visibility = View.INVISIBLE
+    }
 }
 
 @BindingAdapter("walletTitle")

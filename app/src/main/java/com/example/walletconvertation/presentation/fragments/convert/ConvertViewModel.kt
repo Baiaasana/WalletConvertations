@@ -6,6 +6,7 @@ import com.example.backend.common.Resource
 import com.example.backend.data.model.WalletModel
 import com.example.backend.repository.course.CourseRepository
 import com.example.backend.repository.wallets.WalletsRepository
+import com.example.walletconvertation.common.Utility
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,7 +15,7 @@ import javax.inject.Inject
 class ConvertViewModel @Inject constructor(
     private val courseRepository: CourseRepository,
     private val walletsRepository: WalletsRepository
-) : ViewModel() {
+) : ViewModel(), Utility {
 
     private val _rate = MutableLiveData<Float?>()
     val rate: LiveData<Float?> = _rate
@@ -22,7 +23,7 @@ class ConvertViewModel @Inject constructor(
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
-    private val _errorMessage = MutableLiveData<String?>()
+    private val _errorMessage = MutableLiveData<String?>("")
     val errorMessage: LiveData<String?> = _errorMessage
 
     private val _wallets = MutableLiveData<List<WalletModel>?>()
@@ -34,30 +35,35 @@ class ConvertViewModel @Inject constructor(
     private val _walletsErrorMessage = MutableLiveData<String?>()
     val walletsErrorMessage: LiveData<String?> = _walletsErrorMessage
 
-//    wallets.value!!.findLast { it.is_default == true }
+    private val _selectedWalletFrom =
+        MutableLiveData<WalletModel>(WalletModel(9, "dsds", 34.00F, "GEL", true, 4343L))
+    val selectedWalletFrom: LiveData<WalletModel> = _selectedWalletFrom
+
+    private val _selectedWalletTo =
+        MutableLiveData<WalletModel>(WalletModel(9, "dsds", 34.00F, "RUB", true, 4343L))
+    val selectedWalletTo: LiveData<WalletModel> = _selectedWalletTo
+
+    private val _amountFrom = MutableLiveData<Float?>()
+    val amountFrom: LiveData<Float?> = _amountFrom
+
+    private val _amountTo = MutableLiveData<Float?>()
+    val amountTo: LiveData<Float?> = _amountTo
 
     init {
         getWallets()
+        getCourse(selectedWalletFrom.value!!.currency.toString(), selectedWalletTo.value!!.currency.toString())
     }
-
-
-    private val _selectedWalletFrom = MutableLiveData<WalletModel>(WalletModel(9, "dsds", 34.00F, "ds", true, 4343L))
-    val selectedWalletFrom: LiveData<WalletModel> = _selectedWalletFrom
-
-    private val _selectedWalletTo = MutableLiveData<WalletModel>(WalletModel(9, "dsds", 34.00F, "ds", true, 4343L))
-    val selectedWalletTo: LiveData<WalletModel> = _selectedWalletTo
-
-    fun selectWalletFrom(walletModel: WalletModel){
-        _selectedWalletFrom.postValue(walletModel)
+    fun selectWalletFrom(walletModel: WalletModel) {
+        _selectedWalletFrom.value = walletModel
         Log.d("select wallet", "from ".plus(selectedWalletFrom.value))
     }
 
-    fun selectWalletTo(walletModel: WalletModel){
-        _selectedWalletTo.postValue(walletModel)
+    fun selectWalletTo(walletModel: WalletModel) {
+        _selectedWalletTo.value = walletModel
         Log.d("select wallet", "to ".plus(selectedWalletTo.value))
     }
 
-    private fun getCourse(from: String, to: String) {
+     fun getCourse(from: String, to: String) {
         _loading.postValue(true)
         viewModelScope.launch {
             val result = courseRepository.getCourse(from, to).value
@@ -98,5 +104,22 @@ class ConvertViewModel @Inject constructor(
             }
             _loading.postValue(false)
         }
+    }
+
+
+    fun setFromSymbol(): String {
+        return setSymbol(selectedWalletFrom.value?.currency.toString())
+    }
+
+    fun setToSymbol(): String {
+        return setSymbol(selectedWalletTo.value?.currency.toString())
+    }
+
+    fun convertFROMTO() {
+        _amountTo.value = _amountFrom.value?.times(_rate.value!!)
+    }
+
+    fun convertToFROM() {
+        _amountFrom.value = _amountTo.value?.times(_rate.value!!)
     }
 }

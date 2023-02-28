@@ -20,32 +20,33 @@ class CustomConvertView(context: Context, attrs: AttributeSet?) : LinearLayout(c
         currency = view.findViewById(R.id.tvCurrency_)
     }
 
-    fun getAmount(): Float {
-        return amount.text.toString().toFloat()
+    fun getAmount(): AppCompatEditText {
+        return amount
     }
 
-    fun getCurrency(): String {
-        return currency.text.toString()
+    fun getCurrency(): AppCompatTextView {
+        return currency
     }
 }
 
 @BindingAdapter("setCurrency")
-fun settCurrency(textView :AppCompatTextView, currency: String) {
-    textView.text = currency
+fun setCurrency(view: CustomConvertView, currency: String) {
+    view.getCurrency().text = currency
 }
 
-@BindingAdapter("setAmount")
-fun settAmount(editText :AppCompatEditText, amount: Float) {
-    editText.setText(amount.toString())
+@InverseBindingAdapter(attribute = "setAmount")
+fun setAmount(view : CustomConvertView, amount: Float) {
+    view.getAmount().setText(amount.toString())
 }
 
-@InverseBindingAdapter(attribute = "currency")
-fun getCurrency(view :CustomConvertView) : String {
-    return view.getCurrency()
-}
 
-@InverseBindingAdapter(attribute = "amount")
-fun getaAmount(view :CustomConvertView) : Float {
-    return view.getAmount()
-}
+//@InverseBindingAdapter(attribute = "currency")
+//fun getCurrency(view :CustomConvertView) : String {
+//    return view.getCurrency()
+//}
+//
+//@InverseBindingAdapter(attribute = "amount")
+//fun getaAmount(view :CustomConvertView) : Float {
+//    return view.getAmount()
+//}
 

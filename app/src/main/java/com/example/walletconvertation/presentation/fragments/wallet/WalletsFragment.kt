@@ -48,10 +48,10 @@ class WalletsFragment : Fragment() {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = walletAdapter
         }
-        val data = convertViewModel.wallets.value
+        var data = convertViewModel.wallets.value
         when (args.walletType) {
-            "from" -> data!!.filterNot { it.id == convertViewModel.selectedWalletTo.value?.id }
-            "to" -> data!!.filterNot { it.id == convertViewModel.selectedWalletFrom.value?.id }
+            "from" -> data = data!!.filterNot { it.id == convertViewModel.selectedWalletTo.value?.id }
+            "to" -> data = data!!.filterNot { it.id == convertViewModel.selectedWalletFrom.value?.id }
         }
         walletAdapter.submitList(data)
     }
@@ -68,11 +68,20 @@ class WalletsFragment : Fragment() {
 
         when (args.walletType) {
             "from" -> walletAdapter.onWalletClickListener = {
-                convertViewModel.selectWalletFrom(it)
+                convertViewModel.apply {
+                    selectWalletFrom(it).also {
+                        getCourse(selectedWalletFrom.value!!.currency.toString(), selectedWalletTo.value!!.currency.toString())
+
+                    }
+                }
                 findNavController().navigateUp()
             }
             "to" -> walletAdapter.onWalletClickListener = {
-                convertViewModel.selectWalletTo(it)
+                convertViewModel.apply {
+                    selectWalletTo(it).also {
+                        getCourse(selectedWalletFrom.value!!.currency.toString(), selectedWalletTo.value!!.currency.toString())
+                    }
+                }
                 findNavController().navigateUp()
             }
         }

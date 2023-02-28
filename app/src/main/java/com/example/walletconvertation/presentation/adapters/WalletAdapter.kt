@@ -1,5 +1,6 @@
 package com.example.walletconvertation.presentation.adapters
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.backend.data.model.WalletModel
+import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
 import com.example.walletconvertation.databinding.CustomWalletViewBinding
 
@@ -25,9 +27,12 @@ class WalletAdapter :
                 tvAccountNumber.text = item.account_number.toString().plus("(${item.currency})")
                 tvAmount.text = item.balance.toString()
                 tvCurrency.text = setSymbol(item.currency.toString())
+                ivEndIcon.setBackgroundResource(R.drawable.ic_check)
+                ivEndIcon.visibility = View.INVISIBLE
 
                 itemView.setOnClickListener {
                     onWalletClickListener?.invoke(item)
+
                 }
             }
         }

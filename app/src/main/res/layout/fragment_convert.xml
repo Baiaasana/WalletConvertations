@@ -49,7 +49,7 @@
             app:walletTitle="@{viewModel.selectedWalletFrom.title.toString()}"
             app:accountNumber="@{viewModel.selectedWalletFrom.account_number.toString()}"
             app:walletAmount="@{viewModel.selectedWalletFrom.balance.toString()}"
-            app:walletCurrency="@{viewModel.selectedWalletFrom.currency.toString()}"
+            app:walletCurrency="@{viewModel.setFromSymbol()}"
             app:layout_constraintEnd_toEndOf="@+id/tv_from"
             app:layout_constraintStart_toStartOf="@+id/tv_from"
             app:layout_constraintTop_toBottomOf="@+id/tv_from" />
@@ -111,7 +111,7 @@
             app:walletTitle="@{viewModel.selectedWalletTo.title.toString()}"
             app:accountNumber="@{viewModel.selectedWalletTo.account_number.toString()}"
             app:walletAmount="@{viewModel.selectedWalletTo.balance.toString()}"
-            app:walletCurrency="@{viewModel.selectedWalletTo.currency.toString()}"
+            app:walletCurrency="@{viewModel.setToSymbol()}"
             app:layout_constraintEnd_toEndOf="@+id/tv_to"
             app:layout_constraintStart_toStartOf="@+id/tv_to"
             app:layout_constraintTop_toBottomOf="@+id/tv_to" />
@@ -161,6 +161,8 @@
             <com.example.walletconvertation.common.customs.CustomConvertView
                 android:id="@+id/etAmountFrom"
                 android:layout_width="match_parent"
+                app:setCurrency="@{viewModel.setFromSymbol()}"
+                android:onClick="@{() -> viewModel.convertFROMTO()}"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="7dp"
                 android:layout_weight="1" />
@@ -168,6 +170,8 @@
             <com.example.walletconvertation.common.customs.CustomConvertView
                 android:id="@+id/etAmountTo"
                 android:layout_width="match_parent"
+                app:setCurrency="@{viewModel.setToSymbol()}"
+                android:onClick="@{() -> viewModel.convertToFROM()}"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="16dp"
                 android:layout_weight="1" />
@@ -208,6 +212,8 @@
 
                     <com.example.walletconvertation.common.customs.CustomTextView
                         android:layout_width="wrap_content"
+                        app:setAmount="@{1.00F}"
+                        app:setCurrency="@{viewModel.setFromSymbol()}"
                         android:layout_height="wrap_content" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -224,6 +230,8 @@
 
                     <com.example.walletconvertation.common.customs.CustomTextView
                         android:layout_width="wrap_content"
+                        app:setAmount="@{viewModel.rate}"
+                        app:setCurrency="@{viewModel.setToSymbol()}"
                         android:layout_height="wrap_content" />
 
 
@@ -254,6 +262,8 @@
 
                     <com.example.walletconvertation.common.customs.CustomTextView
                         android:layout_width="wrap_content"
+                        app:setAmount="@{1.00F}"
+                        app:setCurrency="@{viewModel.setFromSymbol()}"
                         android:layout_height="wrap_content" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -270,6 +280,8 @@
 
                     <com.example.walletconvertation.common.customs.CustomTextView
                         android:layout_width="wrap_content"
+                        app:setAmount="@{viewModel.rate}"
+                        app:setCurrency="@{viewModel.setToSymbol()}"
                         android:layout_height="wrap_content" />
 
                 </LinearLayout>
@@ -277,6 +289,18 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/errorMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.errorMessage.toString()}"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="12sp"
+            android:layout_margin="5dp"
+            app:layout_constraintEnd_toEndOf="@id/llCourses"
+            app:layout_constraintStart_toStartOf="@id/llCourses"
+            app:layout_constraintTop_toBottomOf="@id/llCourses" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_continue"
@@ -288,12 +312,12 @@
             android:backgroundTint="@color/search_back_grey"
             android:fontFamily="@font/fira_go_medium"
             android:paddingVertical="17dp"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@id/errorMessage"
+            app:layout_constraintStart_toStartOf="@id/errorMessage"
             android:text="გაგრძელება"
             android:textColor="@color/blue"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="@id/llCourses"
-            app:layout_constraintStart_toStartOf="@id/llCourses"
-            app:layout_constraintTop_toBottomOf="@id/llCourses" />
+            app:layout_constraintTop_toBottomOf="@id/errorMessage" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
