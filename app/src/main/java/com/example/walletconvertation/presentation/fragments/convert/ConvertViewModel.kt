@@ -1,26 +1,11 @@
 package com.example.walletconvertation.presentation.fragments.convert
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
+import android.util.Log
 import androidx.lifecycle.*
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import androidx.savedstate.SavedStateRegistryOwner
 import com.example.backend.common.Resource
-import com.example.backend.data.model.CourseModel
 import com.example.backend.data.model.WalletModel
 import com.example.backend.repository.course.CourseRepository
-import com.example.backend.repository.course.CourseRepositoryImpl
-import com.example.backend.repository.course.CourseRepositoryImpl_Factory
 import com.example.backend.repository.wallets.WalletsRepository
-import com.example.backend.repository.wallets.WalletsRepositoryImpl
-import com.example.walletconvertation.App
-import com.example.walletconvertation.common.CourseViewState
-import com.example.walletconvertation.common.WalletsViewState
-import com.example.walletconvertation.di.AppModule
-import com.example.walletconvertation.di.RepositoryModule
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -49,17 +34,27 @@ class ConvertViewModel @Inject constructor(
     private val _walletsErrorMessage = MutableLiveData<String?>()
     val walletsErrorMessage: LiveData<String?> = _walletsErrorMessage
 
-    private val _selectedWallet = MutableLiveData<WalletModel>()
-    val selectedWallet: LiveData<WalletModel> = _selectedWallet
-
-    // anu defualtad xom sul iqneba ragac archeuli da meore fragmentze utxari rom is ar gamoitanos da egaa.
+//    wallets.value!!.findLast { it.is_default == true }
 
     init {
         getWallets()
     }
 
-    fun selectWallet(walletModel: WalletModel){
-        _selectedWallet.postValue(walletModel)
+
+    private val _selectedWalletFrom = MutableLiveData<WalletModel>(WalletModel(9, "dsds", 34.00F, "ds", true, 4343L))
+    val selectedWalletFrom: LiveData<WalletModel> = _selectedWalletFrom
+
+    private val _selectedWalletTo = MutableLiveData<WalletModel>(WalletModel(9, "dsds", 34.00F, "ds", true, 4343L))
+    val selectedWalletTo: LiveData<WalletModel> = _selectedWalletTo
+
+    fun selectWalletFrom(walletModel: WalletModel){
+        _selectedWalletFrom.postValue(walletModel)
+        Log.d("select wallet", "from ".plus(selectedWalletFrom.value))
+    }
+
+    fun selectWalletTo(walletModel: WalletModel){
+        _selectedWalletTo.postValue(walletModel)
+        Log.d("select wallet", "to ".plus(selectedWalletTo.value))
     }
 
     private fun getCourse(from: String, to: String) {

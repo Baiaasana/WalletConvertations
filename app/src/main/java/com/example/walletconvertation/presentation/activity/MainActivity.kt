@@ -2,6 +2,7 @@ package com.example.walletconvertation.presentation.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.navigation.fragment.NavHostFragment
 import com.example.walletconvertation.R
 import com.example.walletconvertation.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,5 +16,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+
+        val navController = navHostFragment.navController
+        val navGraph = navController.navInflater.inflate(R.navigation.main_navigation_graph)
+        navGraph.setStartDestination(R.id.convertFragment)
+        navController.graph = navGraph
     }
 }

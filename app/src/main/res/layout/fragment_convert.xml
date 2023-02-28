@@ -46,6 +46,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:visibility="@{'2'}"
+            app:walletTitle="@{viewModel.selectedWalletFrom.title.toString()}"
+            app:accountNumber="@{viewModel.selectedWalletFrom.account_number.toString()}"
+            app:walletAmount="@{viewModel.selectedWalletFrom.balance.toString()}"
+            app:walletCurrency="@{viewModel.selectedWalletFrom.currency.toString()}"
             app:layout_constraintEnd_toEndOf="@+id/tv_from"
             app:layout_constraintStart_toStartOf="@+id/tv_from"
             app:layout_constraintTop_toBottomOf="@+id/tv_from" />
@@ -104,6 +108,10 @@
             android:id="@+id/wallet_to"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:walletTitle="@{viewModel.selectedWalletTo.title.toString()}"
+            app:accountNumber="@{viewModel.selectedWalletTo.account_number.toString()}"
+            app:walletAmount="@{viewModel.selectedWalletTo.balance.toString()}"
+            app:walletCurrency="@{viewModel.selectedWalletTo.currency.toString()}"
             app:layout_constraintEnd_toEndOf="@+id/tv_to"
             app:layout_constraintStart_toStartOf="@+id/tv_to"
             app:layout_constraintTop_toBottomOf="@+id/tv_to" />

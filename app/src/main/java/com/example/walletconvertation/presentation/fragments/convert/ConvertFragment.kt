@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
+import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.navigation.fragment.findNavController
 import com.example.walletconvertation.R
 import com.example.walletconvertation.databinding.FragmentConvertBinding
@@ -18,10 +19,6 @@ class ConvertFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val convertViewModel: ConvertViewModel by hiltNavGraphViewModels(R.id.main_navigation_graph)
-
-//    private val convertViewModel: ConvertViewModel by viewModels(
-//        { findNavController().getBackStackEntry(R.id.main_navigation_graph) }
-//    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,7 +40,11 @@ class ConvertFragment : Fragment() {
 
     private fun listeners() {
         binding.walletFrom.setOnClickListener {
-            findNavController().navigate(ConvertFragmentDirections.actionConvertFragmentToWalletsFragment())
+            findNavController().navigate(ConvertFragmentDirections.actionConvertFragmentToWalletsFragment("from"))
+        }
+
+        binding.walletTo.setOnClickListener {
+            findNavController().navigate(ConvertFragmentDirections.actionConvertFragmentToWalletsFragment("to"))
         }
     }
 

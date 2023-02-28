@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backend.data.model.WalletModel
 import com.example.walletconvertation.R
@@ -22,6 +23,7 @@ class WalletsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val walletAdapter: WalletAdapter = WalletAdapter()
+    private val args : WalletsFragmentArgs by navArgs()
 
     private val convertViewModel: ConvertViewModel by hiltNavGraphViewModels(R.id.main_navigation_graph)
 
@@ -46,8 +48,12 @@ class WalletsFragment : Fragment() {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = walletAdapter
         }
-        // aq und ashemowmo romeli aris selected da is ar gamoachino
-        walletAdapter.submitList(convertViewModel.wallets.value)
+        val data = convertViewModel.wallets.value
+        when (args.walletType) {
+            "from" -> data!!.filterNot { it.id == convertViewModel.selectedWalletTo.value?.id }
+            "to" -> data!!.filterNot { it.id == convertViewModel.selectedWalletFrom.value?.id }
+        }
+        walletAdapter.submitList(data)
     }
 
     override fun onDestroyView() {
@@ -59,8 +65,16 @@ class WalletsFragment : Fragment() {
         binding.toolbar.getBackIcon().setOnClickListener {
             findNavController().navigateUp()
         }
-        walletAdapter.onWalletClickListener = {
-            convertViewModel.selectWallet(it)
+
+        when (args.walletType) {
+            "from" -> walletAdapter.onWalletClickListener = {
+                convertViewModel.selectWalletFrom(it)
+                findNavController().navigateUp()
+            }
+            "to" -> walletAdapter.onWalletClickListener = {
+                convertViewModel.selectWalletTo(it)
+                findNavController().navigateUp()
+            }
         }
     }
 }

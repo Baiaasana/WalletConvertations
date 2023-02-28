@@ -35,6 +35,14 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         return amount
     }
 
+    fun getTitle(): AppCompatTextView{
+        return walletTitle
+    }
+
+    fun getAccount(): AppCompatTextView{
+        return accountNumber
+    }
+
     fun getCurrency(): AppCompatTextView {
         return currency
     }
@@ -45,12 +53,12 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
 
 }
 
-@BindingAdapter("currency")
+@BindingAdapter("walletCurrency")
 fun setCurrency(wallet: CustomWalletView, currency: String) {
     wallet.getCurrency().text = currency
 }
 
-@BindingAdapter("amount")
+@BindingAdapter("walletAmount")
 fun setAmount(wallet: CustomWalletView, amount: String) {
     wallet.getAmount().text = amount
 }
@@ -60,8 +68,15 @@ fun visibility(wallet: CustomWalletView, visibility: Int){
      wallet.getEndIcon().visibility = visibility
 }
 
+@BindingAdapter("walletTitle")
+fun setTitle(view: CustomWalletView, title: String) {
+    view.getTitle().text = title
+}
 
-
+@BindingAdapter("accountNumber")
+fun setAccountNumber(view: CustomWalletView, title: String) {
+    view.getAccount().text = title
+}
 
 //@InverseBindingAdapter(attribute = "currency")
 //fun getCurrency(view :CustomConvertView) : String {

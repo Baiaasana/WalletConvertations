@@ -18,5 +18,9 @@
         android:id="@+id/walletsFragment"
         android:name="com.example.walletconvertation.presentation.fragments.wallet.WalletsFragment"
         android:label="fragment_wallets"
-        tools:layout="@layout/fragment_wallets" />
+        tools:layout="@layout/fragment_wallets" >
+        <argument
+            android:name="wallet_type"
+            app:argType="string" />
+    </fragment>
 </navigation>
