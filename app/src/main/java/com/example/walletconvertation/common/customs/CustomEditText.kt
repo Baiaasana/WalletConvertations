@@ -39,32 +39,6 @@ fun setCurrency(view :CustomEditText, currency: String) {
     view.getCurrency().text = currency
 }
 
-//@BindingAdapter("setAmount")
-//fun setAmount(view :CustomEditText, amount: Float) {
-//    view.getAmount().setText(amount.toString())
-//}
-//
-//@InverseBindingAdapter(attribute = "setAmount")
-//fun getAmount(view :CustomEditText) : Float {
-//    return view.getAmount().text.toString().toFloat()
-//}
-
-
-//@BindingAdapter(value = ["setValue", "custom:AttrChanged"], requireAll = false)
-//fun setValue(view :CustomEditText, text: String?, listener: InverseBindingListener){
-//    if (view.getAmount().text.toString() != text) {
-//        view.getAmount().setText(text)
-//    }
-//    view.getAmount().doOnTextChanged { _: CharSequence?, _: Int?, _: Int?, _: Int? ->
-//        listener.onChange()
-//    }
-//}
-//
-//@InverseBindingAdapter(attribute = "setValue", event = "custom:AttrChanged")
-//fun getValue(view :CustomEditText): String? {
-//    return view.getAmount().text.toString().uppercase()
-//}
-
 @BindingAdapter("editTextValueAttrChanged")
 fun setListener(amountInput: CustomEditText, listener: InverseBindingListener) {
     amountInput.getAmount().addTextChangedListener(object : TextWatcher {
@@ -88,4 +62,5 @@ fun setTextValue(amountInput: CustomEditText, value: String?) {
 fun getTextValue(amountInput: CustomEditText): String {
     return amountInput.getAmount().text.toString()
 }
+
 

@@ -18,7 +18,7 @@ class ConvertViewModel @Inject constructor(
     private val walletsRepository: WalletsRepository
 ) : ViewModel(), Utility {
 
-    private val _rate = MutableLiveData<Float?>()
+    private val _rate = MutableLiveData<Float?>(0F)
     val rate: LiveData<Float?> = _rate
 
     private val _loading = MutableLiveData<Boolean>()
@@ -44,9 +44,9 @@ class ConvertViewModel @Inject constructor(
         MutableLiveData<WalletModel>(WalletModel(9, "dsds", 34.00F, "RUB", true, 4343L))
     val selectedWalletTo: LiveData<WalletModel> = _selectedWalletTo
 
-    val amountFrom = MutableLiveData<String>(null)
+    val amountFrom = MutableLiveData<String>("0")
 
-    val amountTo = MutableLiveData<String>(null)
+    val amountTo = MutableLiveData<String>("0")
 
 
     init {
@@ -115,12 +115,20 @@ class ConvertViewModel @Inject constructor(
         return setSymbol(selectedWalletTo.value?.currency.toString())
     }
 
-    fun convertFROMTO(){
-        amountTo.value = amountFrom.value!!.toFloat().times(_rate.value!!.toFloat()).toString()
+    fun convertFROMTO(): String {
+        amountTo.value = rate.value?.toFloat()
+            ?.let {
+                if(amountFrom.value!!.isNotEmpty()){
+                    amountFrom.value!!.toFloat().times(it).toString() }else{ ""}
+            }.toString()
+        return amountTo.value.toString()
     }
-
-    fun convertTOFROM(){
-        amountFrom.value = amountTo.value!!.toFloat().times(_rate.value!!.toFloat()).toString()
+    fun convertTOFROM() {
+        amountFrom.value = rate.value?.toFloat()
+            ?.let {
+                if(amountTo.value!!.isNotEmpty()){
+                    amountTo.value!!.toFloat().times(it).toString() }else{ ""}
+            }.toString()
     }
 
 }

@@ -33,8 +33,8 @@ class ConvertFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.viewModel = convertViewModel
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = convertViewModel
 
         listeners()
 
@@ -48,23 +48,35 @@ class ConvertFragment : Fragment() {
         binding.walletTo.setOnClickListener {
             findNavController().navigate(ConvertFragmentDirections.actionConvertFragmentToWalletsFragment("to"))
         }
-        binding.etAmountFrom.getAmount().addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-                p0.let {
-                    convertViewModel.convertFROMTO()
-                }
-            }
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-        })
 
-        binding.etAmountTo.getAmount().addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-                convertViewModel.convertTOFROM()
-            }
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-        })
+
+//        binding.etAmountFrom.getAmount().addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+//
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//                s.let {
+//                    if(s!!.isNotEmpty()){
+//                        convertViewModel.convertFROMTO()
+//                    }
+//                }
+//            }
+//
+//            override fun afterTextChanged(s: Editable?) {}
+//        })
+//
+//        binding.etAmountTo.getAmount().addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+//
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//                s.let {
+//                    if(s!!.isNotEmpty()){
+//                        convertViewModel.convertTOFROM()
+//                    }
+//                }
+//            }
+//
+//            override fun afterTextChanged(s: Editable?) {}
+//        })
     }
 
     override fun onDestroyView() {
