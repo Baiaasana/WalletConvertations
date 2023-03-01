@@ -1,5 +1,9 @@
 package com.example.walletconvertation.common
 
+import android.app.Activity
+import android.content.Context
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -15,17 +19,9 @@ interface Utility {
         }
     }
 
-    fun coursesAreEquals(fromCourse: String, toCourse: String) = fromCourse == toCourse
-
-    fun checkFloat(str: String) = str[str.length - 3] == '.'
-
-    fun checkText(text: String) = (text.isNotEmpty() && text.toFloat() > 0)
-
-    fun getData(milliSeconds: Long, dateFormat: String?): String? {
-        val formatter = SimpleDateFormat(dateFormat)
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = milliSeconds
-        return formatter.format(calendar.time)
+    fun Context.hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 }

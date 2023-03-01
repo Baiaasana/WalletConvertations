@@ -78,6 +78,10 @@ dependencies {
     implementation "com.squareup.moshi:moshi:1.12.0"
     implementation "com.squareup.moshi:moshi-kotlin:1.12.0"
 
+    // keyboard dependency
+    implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:3.0.0-RC2'
+
+
 }
 kapt {
     correctErrorTypes true
