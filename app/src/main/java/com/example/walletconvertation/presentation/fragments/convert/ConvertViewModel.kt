@@ -1,8 +1,10 @@
 package com.example.walletconvertation.presentation.fragments.convert
 
-import android.text.Editable
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.backend.common.Resource
 import com.example.backend.data.model.WalletModel
 import com.example.backend.repository.course.CourseRepository
@@ -44,9 +46,9 @@ class ConvertViewModel @Inject constructor(
         MutableLiveData<WalletModel>(WalletModel(9, "dsds", 34.00F, "RUB", true, 4343L))
     val selectedWalletTo: LiveData<WalletModel> = _selectedWalletTo
 
-    val amountFrom = MutableLiveData<String>("0")
+    val amountFrom = MutableLiveData<String>("")
 
-    val amountTo = MutableLiveData<String>("0")
+    val amountTo = MutableLiveData<String>("")
 
 
     init {
@@ -115,19 +117,25 @@ class ConvertViewModel @Inject constructor(
         return setSymbol(selectedWalletTo.value?.currency.toString())
     }
 
-    fun convertFROMTO(): String {
-        amountTo.value = rate.value?.toFloat()
-            ?.let {
-                if(amountFrom.value!!.isNotEmpty()){
-                    amountFrom.value!!.toFloat().times(it).toString() }else{ ""}
-            }.toString()
-        return amountTo.value.toString()
+    fun convertFROMTO() {
+        amountTo.value = rate.value?.toFloat()?.let {
+            if (amountFrom.value!!.isNotEmpty()) {
+                amountFrom.value!!.toFloat().times(it).toString()
+            } else {
+                "5"
+            }
+        }.toString()
+
     }
+
     fun convertTOFROM() {
         amountFrom.value = rate.value?.toFloat()
             ?.let {
-                if(amountTo.value!!.isNotEmpty()){
-                    amountTo.value!!.toFloat().times(it).toString() }else{ ""}
+                if (amountTo.value!!.isNotEmpty()) {
+                    amountTo.value!!.toFloat().times(it).toString()
+                } else {
+                    ""
+                }
             }.toString()
     }
 
