@@ -28,7 +28,7 @@ class WalletAdapter :
                 tvAmount.text = item.balance.toString()
                 tvCurrency.text = setSymbol(item.currency.toString())
                 ivEndIcon.setBackgroundResource(R.drawable.ic_check)
-                ivEndIcon.visibility = View.INVISIBLE
+                ivEndIcon.visibility = View.GONE
 
                 itemView.setOnClickListener {
                     onWalletClickListener?.invoke(item)

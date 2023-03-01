@@ -43,6 +43,8 @@ class ConvertFragment : Fragment(), Utility {
 
         handleKeyboardEvent()
 
+        // keyboard event with high
+
 //        binding.root.viewTreeObserver.addOnGlobalLayoutListener(OnGlobalLayoutListener {
 //            val r = Rect()
 //            view.getWindowVisibleDisplayFrame(r)
@@ -56,15 +58,6 @@ class ConvertFragment : Fragment(), Utility {
 
     }
 
-    private fun dsd() {
-        setEventListener(requireActivity(), object : KeyboardVisibilityEventListener {
-            override fun onVisibilityChanged(isOpen: Boolean) {
-                if (isOpen) Toast.makeText(context, "keyboard opened", Toast.LENGTH_SHORT).show()
-                else Toast.makeText(context, "keyboard hidden", Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     private fun listeners() {
         binding.walletFrom.setOnClickListener {
@@ -73,6 +66,7 @@ class ConvertFragment : Fragment(), Utility {
                     "from"
                 )
             )
+            convertViewModel.clearFields()
         }
 
         binding.walletTo.setOnClickListener {
@@ -81,6 +75,7 @@ class ConvertFragment : Fragment(), Utility {
                     "to"
                 )
             )
+            convertViewModel.clearFields()
         }
 
         val amountFromWatcher = object : TextWatcher {
@@ -125,6 +120,8 @@ class ConvertFragment : Fragment(), Utility {
         binding.root.setOnClickListener {
             it?.let { activity?.hideKeyboard(it) }
 
+            // hide manually
+
 //            val view = requireActivity().currentFocus
 //            if (view != null) {
 //                val inputMethodManager =
@@ -146,12 +143,11 @@ class ConvertFragment : Fragment(), Utility {
     private fun handleKeyboardEvent(){
         setEventListener(requireActivity(), object : KeyboardVisibilityEventListener {
             override fun onVisibilityChanged(isOpen: Boolean) {
-                if (isOpen) Toast.makeText(context, "keyboard opened", Toast.LENGTH_SHORT).show()
+                if (isOpen) {}
                 else {
                     val amount = convertViewModel.amountFrom.value.toString().toDouble()
                     val formattedAmount = kotlinStringFormat(amount, 2)
                     convertViewModel.amountFrom.value = formattedAmount
-                    Toast.makeText(context, "keyboard hidden", Toast.LENGTH_SHORT).show()
                 }
             }
         })

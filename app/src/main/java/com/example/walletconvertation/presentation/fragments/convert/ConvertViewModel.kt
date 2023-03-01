@@ -44,11 +44,11 @@ class ConvertViewModel @Inject constructor(
     private val _defaultWallet = MutableLiveData<WalletModel>()
 
     private val _selectedWalletFrom =
-        MutableLiveData<WalletModel>(WalletModel(9, "dsds", 34.00F, "GEL", true, 4343L))
+        MutableLiveData<WalletModel>(WalletModel(1, "dsds", 34.00F, "GEL", true, 4343L))
     val selectedWalletFrom: LiveData<WalletModel> = _selectedWalletFrom
 
     private val _selectedWalletTo =
-        MutableLiveData<WalletModel>(WalletModel(9, "dsds", 34.00F, "RUB", true, 4343L))
+        MutableLiveData<WalletModel>(WalletModel(4, "dsds", 34.00F, "RUB", true, 4343L))
     val selectedWalletTo: LiveData<WalletModel> = _selectedWalletTo
 
     init {
@@ -156,5 +156,10 @@ class ConvertViewModel @Inject constructor(
             }
         }
         return false
+    }
+
+    fun clearFields(){
+        amountFrom.value = ""
+        amountTo.value = ""
     }
 }
