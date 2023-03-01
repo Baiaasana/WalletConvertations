@@ -9,6 +9,8 @@ import com.example.backend.common.Resource
 import com.example.backend.data.model.WalletModel
 import com.example.backend.repository.course.CourseRepository
 import com.example.backend.repository.wallets.WalletsRepository
+import com.example.walletconvertation.common.CourseSymbols
+import com.example.walletconvertation.common.ErrorEnum
 import com.example.walletconvertation.common.Utility
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -20,13 +22,13 @@ class ConvertViewModel @Inject constructor(
     private val walletsRepository: WalletsRepository
 ) : ViewModel(), Utility {
 
-    private val _rate = MutableLiveData<Float?>(0F)
+    private val _rate = MutableLiveData<Float?>(1F)
     val rate: LiveData<Float?> = _rate
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
-    private val _errorMessage = MutableLiveData<String?>("")
+    private val _errorMessage = MutableLiveData<String?>(null)
     val errorMessage: LiveData<String?> = _errorMessage
 
     private val _wallets = MutableLiveData<List<WalletModel>?>()
@@ -41,18 +43,20 @@ class ConvertViewModel @Inject constructor(
     val amountFrom = MutableLiveData<String>("")
     val amountTo = MutableLiveData<String>("")
 
-    private val _defaultWallet = MutableLiveData<WalletModel>()
-
-    private val _selectedWalletFrom =
-        MutableLiveData<WalletModel>(WalletModel(1, "dsds", 34.00F, "GEL", true, 4343L))
-    val selectedWalletFrom: LiveData<WalletModel> = _selectedWalletFrom
-
-    private val _selectedWalletTo =
-        MutableLiveData<WalletModel>(WalletModel(4, "dsds", 34.00F, "RUB", true, 4343L))
-    val selectedWalletTo: LiveData<WalletModel> = _selectedWalletTo
-
     init {
         getWallets()
+    }
+
+    private val _selectedWalletFrom =
+        MutableLiveData<WalletModel?>(WalletModel())
+    val selectedWalletFrom: LiveData<WalletModel?> = _selectedWalletFrom
+
+    private val _selectedWalletTo =
+        MutableLiveData<WalletModel?>(WalletModel())
+    val selectedWalletTo: LiveData<WalletModel?> = _selectedWalletTo
+
+    init {
+//        getWallets()
         getCourse(
             selectedWalletFrom.value!!.currency.toString(),
             selectedWalletTo.value!!.currency.toString()
@@ -101,8 +105,16 @@ class ConvertViewModel @Inject constructor(
                     result.data?.let {
                         val data = it
                         _wallets.value = data
-                        _defaultWallet.value = data.findLast { element -> element.is_default == true }
-                        Log.d("default wallet", "value ".plus(_defaultWallet.value))
+                        _selectedWalletFrom.value =
+                            data.findLast { element -> element.is_default == true }
+                        _selectedWalletTo.value =
+                            data.findLast { element -> element.is_default == true }
+
+                        Log.d(
+                            "wallet",
+                            "data's wallet ".plus(data.findLast { element -> element.is_default == true })
+                        )
+
                         Log.d(" wallets", "value ".plus(_wallets.value))
 
                     }
@@ -120,11 +132,21 @@ class ConvertViewModel @Inject constructor(
 
 
     fun setFromSymbol(): String {
-        return setSymbol(selectedWalletFrom.value?.currency.toString())
+        return setSymbol(_selectedWalletFrom.value!!.currency.toString())
     }
 
     fun setToSymbol(): String {
-        return setSymbol(selectedWalletTo.value?.currency.toString())
+        return setSymbol(_selectedWalletTo.value!!.currency.toString())
+    }
+
+    fun setdSymbol(course: String): String {
+
+        return when (course) {
+            CourseSymbols.RUB.name -> CourseSymbols.RUB.symbol
+            CourseSymbols.USD.name -> CourseSymbols.USD.symbol
+            CourseSymbols.EUR.name -> CourseSymbols.EUR.symbol
+            else -> CourseSymbols.GEL.symbol
+        }
     }
 
     fun convertFROMTO() {
@@ -158,8 +180,33 @@ class ConvertViewModel @Inject constructor(
         return false
     }
 
-    fun clearFields(){
+    fun clearFields() {
         amountFrom.value = ""
         amountTo.value = ""
+    }
+
+    fun reverseWallets() {
+        val from = _selectedWalletFrom.value
+        val to = _selectedWalletTo.value
+        _selectedWalletFrom.value = to
+        _selectedWalletTo.value = from
+        getCourse(
+            selectedWalletFrom.value!!.currency.toString(),
+            selectedWalletTo.value!!.currency.toString()
+        )
+    }
+
+    // tu servisi ar aris edittextebi disable
+    // keyboard null hide ?
+
+    fun disable(): Boolean {
+        return when (_errorMessage.value.toString()) {
+            ErrorEnum.ERROR.error.toString() -> ErrorEnum.ERROR.boolean
+            ErrorEnum.NO_ERROR.error.toString() -> ErrorEnum.NO_ERROR.boolean
+
+            else -> {
+                ErrorEnum.NO_ERROR.boolean
+            }
+        }
     }
 }

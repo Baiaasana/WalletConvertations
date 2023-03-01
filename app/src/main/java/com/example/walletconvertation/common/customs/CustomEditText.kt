@@ -32,6 +32,11 @@ class CustomEditText(context: Context, attrs: AttributeSet?) : LinearLayout(cont
     }
 }
 
+@BindingAdapter("disabled")
+fun setDisable(amountInput: CustomEditText, boolean: Boolean) {
+    amountInput.getAmount().isEnabled  = boolean
+}
+
 @BindingAdapter("setCurrency")
 fun setCurrency(view :CustomEditText, currency: String) {
     view.getCurrency().text = currency
@@ -60,5 +65,7 @@ fun setTextValue(amountInput: CustomEditText, value: String?) {
 fun getTextValue(amountInput: CustomEditText): String {
     return amountInput.getAmount().text.toString()
 }
+
+
 
 

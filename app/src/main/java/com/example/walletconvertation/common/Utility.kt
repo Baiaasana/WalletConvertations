@@ -12,10 +12,10 @@ interface Utility {
     fun setSymbol(course: String): String {
 
         return when (course) {
-            CourseSymbols.GEL.name -> CourseSymbols.GEL.symbol
+            CourseSymbols.RUB.name -> CourseSymbols.RUB.symbol
             CourseSymbols.USD.name -> CourseSymbols.USD.symbol
             CourseSymbols.EUR.name -> CourseSymbols.EUR.symbol
-            else -> CourseSymbols.RUB.symbol
+            else -> CourseSymbols.GEL.symbol
         }
     }
 

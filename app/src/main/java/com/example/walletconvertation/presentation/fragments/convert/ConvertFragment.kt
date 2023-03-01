@@ -7,7 +7,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
@@ -61,21 +60,21 @@ class ConvertFragment : Fragment(), Utility {
     @SuppressLint("ClickableViewAccessibility")
     private fun listeners() {
         binding.walletFrom.setOnClickListener {
+            convertViewModel.clearFields()
             findNavController().navigate(
                 ConvertFragmentDirections.actionConvertFragmentToWalletsFragment(
                     "from"
                 )
             )
-            convertViewModel.clearFields()
         }
 
         binding.walletTo.setOnClickListener {
+            convertViewModel.clearFields()
             findNavController().navigate(
                 ConvertFragmentDirections.actionConvertFragmentToWalletsFragment(
                     "to"
                 )
             )
-            convertViewModel.clearFields()
         }
 
         val amountFromWatcher = object : TextWatcher {
@@ -145,9 +144,13 @@ class ConvertFragment : Fragment(), Utility {
             override fun onVisibilityChanged(isOpen: Boolean) {
                 if (isOpen) {}
                 else {
-                    val amount = convertViewModel.amountFrom.value.toString().toDouble()
-                    val formattedAmount = kotlinStringFormat(amount, 2)
-                    convertViewModel.amountFrom.value = formattedAmount
+                    convertViewModel.amountFrom.value.let {
+                        if (it!!.isNotEmpty()) {
+                            val amount = convertViewModel.amountFrom.value.toString().toDouble()
+                            val formattedAmount = kotlinStringFormat(amount, 2)
+                            convertViewModel.amountFrom.value = formattedAmount
+                        }
+                    }
                 }
             }
         })
