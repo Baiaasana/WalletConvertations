@@ -71,7 +71,6 @@ class WalletsFragment : Fragment() {
                 convertViewModel.apply {
                     selectWalletFrom(it).also {
                         getCourse(selectedWalletFrom.value!!.currency.toString(), selectedWalletTo.value!!.currency.toString())
-
                     }
                 }
                 findNavController().navigateUp()

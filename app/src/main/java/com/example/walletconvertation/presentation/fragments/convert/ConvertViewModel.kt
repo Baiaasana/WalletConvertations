@@ -43,9 +43,8 @@ class ConvertViewModel @Inject constructor(
     val amountFrom = MutableLiveData<String>("")
     val amountTo = MutableLiveData<String>("")
 
-    init {
-        getWallets()
-    }
+    private val _etEnable = MutableLiveData<Boolean>(true)
+    val etEnable: LiveData<Boolean> = _etEnable
 
     private val _selectedWalletFrom =
         MutableLiveData<WalletModel?>(WalletModel())
@@ -56,21 +55,19 @@ class ConvertViewModel @Inject constructor(
     val selectedWalletTo: LiveData<WalletModel?> = _selectedWalletTo
 
     init {
-//        getWallets()
-        getCourse(
-            selectedWalletFrom.value!!.currency.toString(),
-            selectedWalletTo.value!!.currency.toString()
-        )
+        getWallets()
+//        getCourse(
+//            selectedWalletFrom.value!!.currency.toString(),
+//            selectedWalletTo.value!!.currency.toString()
+//        )
     }
 
     fun selectWalletFrom(walletModel: WalletModel) {
         _selectedWalletFrom.value = walletModel
-        Log.d("select wallet", "from ".plus(selectedWalletFrom.value))
     }
 
     fun selectWalletTo(walletModel: WalletModel) {
         _selectedWalletTo.value = walletModel
-        Log.d("select wallet", "to ".plus(selectedWalletTo.value))
     }
 
      fun getCourse(from: String, to: String) {
@@ -81,16 +78,17 @@ class ConvertViewModel @Inject constructor(
                 Resource.Status.SUCCESS -> {
                     result.data?.rate.let {
                         _rate.postValue(it)
-                        _errorMessage.postValue("")
+                        _errorMessage.value = null
                     }
                     result.data?.rate ?: kotlin.run {
-                        _errorMessage.postValue("სერვისი არ არის ხელმისაწვდომი")
+                        _errorMessage.value = "სერვისი არ არის ხელმისაწვდომი"
                     }
                 }
                 Resource.Status.ERROR -> {
                     _errorMessage.postValue(result.message.toString())
                 }
             }
+            disable()
             _loading.postValue(false)
         }
     }
@@ -108,22 +106,18 @@ class ConvertViewModel @Inject constructor(
                         _selectedWalletFrom.value =
                             data.findLast { element -> element.is_default == true }
                         _selectedWalletTo.value =
-                            data.findLast { element -> element.is_default == true }
-
-                        Log.d(
-                            "wallet",
-                            "data's wallet ".plus(data.findLast { element -> element.is_default == true })
+                            data.findLast { element -> element.id == (_selectedWalletFrom.value!!.id!!.plus(1)) }
+                        getCourse(
+                            _selectedWalletFrom.value!!.currency.toString(),
+                            _selectedWalletTo.value!!.currency.toString()
                         )
-
-                        Log.d(" wallets", "value ".plus(_wallets.value))
-
                     }
                     result.data ?: kotlin.run {
-                        _errorMessage.postValue("სერვისი არ არის ხელმისაწვდომი")
+                        _walletsErrorMessage.postValue("სერვისი არ არის ხელმისაწვდომი")
                     }
                 }
                 Resource.Status.ERROR -> {
-                    _errorMessage.postValue(result.message.toString())
+                    _walletsErrorMessage.postValue(result.message.toString())
                 }
             }
             _loading.postValue(false)
@@ -131,15 +125,15 @@ class ConvertViewModel @Inject constructor(
     }
 
 
-    fun setFromSymbol(): String {
-        return setSymbol(_selectedWalletFrom.value!!.currency.toString())
-    }
+//    fun setFromSymbol(): String {
+//        return setSymbol(_selectedWalletFrom.value!!.currency.toString())
+//    }
+//
+//    fun setToSymbol(): String {
+//        return setSymbol(_selectedWalletTo.value!!.currency.toString())
+//    }
 
-    fun setToSymbol(): String {
-        return setSymbol(_selectedWalletTo.value!!.currency.toString())
-    }
-
-    fun setdSymbol(course: String): String {
+    fun setCourseSymbol(course: String): String {
 
         return when (course) {
             CourseSymbols.RUB.name -> CourseSymbols.RUB.symbol
@@ -190,22 +184,16 @@ class ConvertViewModel @Inject constructor(
         val to = _selectedWalletTo.value
         _selectedWalletFrom.value = to
         _selectedWalletTo.value = from
-        getCourse(
-            selectedWalletFrom.value!!.currency.toString(),
-            selectedWalletTo.value!!.currency.toString()
-        )
+        clearFields()
+        getCourse(selectedWalletFrom.value!!.currency.toString(), selectedWalletTo.value!!.currency.toString())
     }
 
-    // tu servisi ar aris edittextebi disable
-    // keyboard null hide ?
-
-    fun disable(): Boolean {
-        return when (_errorMessage.value.toString()) {
-            ErrorEnum.ERROR.error.toString() -> ErrorEnum.ERROR.boolean
-            ErrorEnum.NO_ERROR.error.toString() -> ErrorEnum.NO_ERROR.boolean
-
+     fun disable() {
+         when (_errorMessage.value.toString()) {
+            ErrorEnum.ERROR.error.toString() -> _etEnable.value = ErrorEnum.ERROR.boolean
+            ErrorEnum.NO_ERROR.error.toString() -> _etEnable.value = ErrorEnum.NO_ERROR.boolean
             else -> {
-                ErrorEnum.NO_ERROR.boolean
+                _etEnable.value = ErrorEnum.NO_ERROR.boolean
             }
         }
     }

@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
@@ -116,6 +118,13 @@ class ConvertFragment : Fragment(), Utility {
             }
         }
 
+        binding.btnReverse.setOnClickListener {
+            convertViewModel.reverseWallets()
+            binding.etAmountTo.getAmount().isClickable = false
+            binding.etAmountFrom.getAmount().isClickable = false
+        }
+
+
         binding.root.setOnClickListener {
             it?.let { activity?.hideKeyboard(it) }
 
@@ -155,4 +164,11 @@ class ConvertFragment : Fragment(), Utility {
             }
         })
     }
+
+
+//    fun reverseClicks(view: View){
+//        convertViewModel.reverseWallets()
+//        binding.etAmountTo.getAmount().isFocusable = false
+//        binding.etAmountFrom.getAmount().isFocusable = false
+//    }
 }

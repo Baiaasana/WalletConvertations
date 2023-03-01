@@ -49,7 +49,7 @@
             app:walletTitle="@{viewModel.selectedWalletFrom.title.toString()}"
             app:accountNumber="@{viewModel.selectedWalletFrom.account_number.toString()}"
             app:walletAmount="@{viewModel.selectedWalletFrom.balance.toString()}"
-            app:walletCurrency="@{viewModel.setdSymbol(viewModel.selectedWalletFrom.currency.toString())}"
+            app:walletCurrency="@{viewModel.setCourseSymbol(viewModel.selectedWalletFrom.currency.toString())}"
             app:layout_constraintEnd_toEndOf="@+id/tv_from"
             app:layout_constraintStart_toStartOf="@+id/tv_from"
             app:layout_constraintTop_toBottomOf="@+id/tv_from" />
@@ -78,7 +78,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.4"
-                android:onClick="@{()-> viewModel.reverseWallets()}"
                 android:src="@drawable/ic_convert" />
 
             <View
@@ -113,7 +112,7 @@
             app:walletTitle="@{viewModel.selectedWalletTo.title.toString()}"
             app:accountNumber="@{viewModel.selectedWalletTo.account_number.toString()}"
             app:walletAmount="@{viewModel.selectedWalletTo.balance.toString()}"
-            app:walletCurrency="@{viewModel.setdSymbol(viewModel.selectedWalletTo.currency.toString())}"
+            app:walletCurrency="@{viewModel.setCourseSymbol(viewModel.selectedWalletTo.currency.toString())}"
             app:layout_constraintEnd_toEndOf="@+id/tv_to"
             app:layout_constraintStart_toStartOf="@+id/tv_to"
             app:layout_constraintTop_toBottomOf="@+id/tv_to" />
@@ -163,8 +162,8 @@
             <com.example.walletconvertation.common.customs.CustomEditText
                 android:id="@+id/etAmountFrom"
                 android:layout_width="match_parent"
-                app:disabled="@{viewModel.disable()}"
-                app:setCurrency="@{viewModel.setdSymbol(viewModel.selectedWalletFrom.currency.toString())}"
+                app:disabled="@{viewModel.etEnable}"
+                app:setCurrency="@{viewModel.setCourseSymbol(viewModel.selectedWalletFrom.currency.toString())}"
                 app:editTextValue="@={viewModel.amountFrom}"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="7dp"
@@ -173,8 +172,8 @@
             <com.example.walletconvertation.common.customs.CustomEditText
                 android:id="@+id/etAmountTo"
                 android:layout_width="match_parent"
-                app:disabled="@{viewModel.disable()}"
-                app:setCurrency="@{viewModel.setdSymbol(viewModel.selectedWalletTo.currency.toString())}"
+                app:disabled="@{viewModel.etEnable}"
+                app:setCurrency="@{viewModel.setCourseSymbol(viewModel.selectedWalletTo.currency.toString())}"
                 app:editTextValue="@={viewModel.amountTo}"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="16dp"
@@ -217,7 +216,7 @@
                     <com.example.walletconvertation.common.customs.CustomTextView
                         android:layout_width="wrap_content"
                         app:setAmount="@{1.00F}"
-                        app:setCurrency="@{viewModel.setdSymbol(viewModel.selectedWalletFrom.currency.toString())}"
+                        app:setCurrency="@{viewModel.setCourseSymbol(viewModel.selectedWalletFrom.currency.toString())}"
                         android:layout_height="wrap_content" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -235,7 +234,7 @@
                     <com.example.walletconvertation.common.customs.CustomTextView
                         android:layout_width="wrap_content"
                         app:setAmount="@{viewModel.rate}"
-                        app:setCurrency="@{viewModel.setdSymbol(viewModel.selectedWalletTo.currency.toString())}"
+                        app:setCurrency="@{viewModel.setCourseSymbol(viewModel.selectedWalletTo.currency.toString())}"
                         android:layout_height="wrap_content" />
 
 
@@ -267,7 +266,7 @@
                     <com.example.walletconvertation.common.customs.CustomTextView
                         android:layout_width="wrap_content"
                         app:setAmount="@{1.00F}"
-                        app:setCurrency="@{viewModel.setdSymbol(viewModel.selectedWalletFrom.currency.toString())}}"
+                        app:setCurrency="@{viewModel.setCourseSymbol(viewModel.selectedWalletFrom.currency.toString())}"
                         android:layout_height="wrap_content" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -285,7 +284,7 @@
                     <com.example.walletconvertation.common.customs.CustomTextView
                         android:layout_width="wrap_content"
                         app:setAmount="@{viewModel.rate}"
-                        app:setCurrency="@{viewModel.setdSymbol(viewModel.selectedWalletTo.currency.toString())}}"
+                        app:setCurrency="@{viewModel.setCourseSymbol(viewModel.selectedWalletTo.currency.toString())}"
                         android:layout_height="wrap_content" />
 
                 </LinearLayout>
@@ -323,7 +322,8 @@
             app:layout_constraintStart_toStartOf="@id/errorMessage"
             android:text="გაგრძელება"
             android:textColor="@color/blue"
-            app:layout_constraintTop_toBottomOf="@id/errorMessage" />
+            app:layout_constraintTop_toBottomOf="@id/errorMessage"
+            tools:ignore="VisualLintButtonSize" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -2,6 +2,8 @@ package com.example.walletconvertation.presentation.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.navigation.fragment.NavHostFragment
 import com.example.walletconvertation.R
 import com.example.walletconvertation.databinding.ActivityMainBinding
@@ -23,5 +25,9 @@ class MainActivity : AppCompatActivity() {
         val navGraph = navController.navInflater.inflate(R.navigation.main_navigation_graph)
         navGraph.setStartDestination(R.id.convertFragment)
         navController.graph = navGraph
+    }
+
+    fun reverseClicks(view: View){
+        Toast.makeText(this, "click", Toast.LENGTH_SHORT).show()
     }
 }
