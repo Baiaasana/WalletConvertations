@@ -62,9 +62,8 @@ class ConvertFragment : Fragment() {
         val amountFromWatcher = object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 p0?.let {
-
                     convertViewModel.convertFROMTO()
-
+                    binding.btnContinue.isEnabled = convertViewModel.checkAmount()
                 }
             }
 
@@ -75,9 +74,8 @@ class ConvertFragment : Fragment() {
         val amountToWatcher = object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 p0?.let {
-
                     convertViewModel.convertTOFROM()
-
+                    binding.btnContinue.isEnabled = convertViewModel.checkAmount()
                 }
             }
 

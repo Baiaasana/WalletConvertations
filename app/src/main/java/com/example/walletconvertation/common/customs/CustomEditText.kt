@@ -7,11 +7,9 @@ import android.util.AttributeSet
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.widget.doOnTextChanged
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
-import androidx.databinding.InverseMethod
 import com.example.walletconvertation.R
 
 class CustomEditText(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
@@ -20,7 +18,7 @@ class CustomEditText(context: Context, attrs: AttributeSet?) : LinearLayout(cont
     private val currency: AppCompatTextView
 
     init {
-        val view = inflate(context, R.layout.custom_convert_edit_text, this)
+        val view = inflate(context, R.layout.custom_edit_text, this)
         amount = view.findViewById(R.id.etAmount_)
         currency = view.findViewById(R.id.tvCurrency_)
     }

@@ -46,9 +46,5 @@
             tools:itemCount="4"
             tools:listitem="@layout/custom_wallet_view" />
 
-
-
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -38,6 +38,11 @@ class ConvertViewModel @Inject constructor(
     private val _walletsErrorMessage = MutableLiveData<String?>()
     val walletsErrorMessage: LiveData<String?> = _walletsErrorMessage
 
+    val amountFrom = MutableLiveData<String>("")
+    val amountTo = MutableLiveData<String>("")
+
+    private val _defaultWallet = MutableLiveData<WalletModel>()
+
     private val _selectedWalletFrom =
         MutableLiveData<WalletModel>(WalletModel(9, "dsds", 34.00F, "GEL", true, 4343L))
     val selectedWalletFrom: LiveData<WalletModel> = _selectedWalletFrom
@@ -46,15 +51,14 @@ class ConvertViewModel @Inject constructor(
         MutableLiveData<WalletModel>(WalletModel(9, "dsds", 34.00F, "RUB", true, 4343L))
     val selectedWalletTo: LiveData<WalletModel> = _selectedWalletTo
 
-    val amountFrom = MutableLiveData<String>("")
-
-    val amountTo = MutableLiveData<String>("")
-
-
     init {
         getWallets()
-        getCourse(selectedWalletFrom.value!!.currency.toString(), selectedWalletTo.value!!.currency.toString())
+        getCourse(
+            selectedWalletFrom.value!!.currency.toString(),
+            selectedWalletTo.value!!.currency.toString()
+        )
     }
+
     fun selectWalletFrom(walletModel: WalletModel) {
         _selectedWalletFrom.value = walletModel
         Log.d("select wallet", "from ".plus(selectedWalletFrom.value))
@@ -93,8 +97,14 @@ class ConvertViewModel @Inject constructor(
             val result = walletsRepository.getWallets().value
             when (result!!.status) {
                 Resource.Status.SUCCESS -> {
+
                     result.data?.let {
-                        _wallets.postValue(it)
+                        val data = it
+                        _wallets.value = data
+                        _defaultWallet.value = data.findLast { element -> element.is_default == true }
+                        Log.d("default wallet", "value ".plus(_defaultWallet.value))
+                        Log.d(" wallets", "value ".plus(_wallets.value))
+
                     }
                     result.data ?: kotlin.run {
                         _errorMessage.postValue("სერვისი არ არის ხელმისაწვდომი")
@@ -122,7 +132,7 @@ class ConvertViewModel @Inject constructor(
             if (amountFrom.value!!.isNotEmpty()) {
                 amountFrom.value!!.toFloat().times(it).toString()
             } else {
-                "5"
+                ""
             }
         }.toString()
 
@@ -132,11 +142,19 @@ class ConvertViewModel @Inject constructor(
         amountFrom.value = rate.value?.toFloat()
             ?.let {
                 if (amountTo.value!!.isNotEmpty()) {
-                    amountTo.value!!.toFloat().times(it).toString()
+                    amountTo.value!!.toFloat().div(it).toString()
                 } else {
                     ""
                 }
             }.toString()
     }
 
+    fun checkAmount(): Boolean{
+        if (amountFrom.value!!.isNotEmpty()){
+            if(selectedWalletFrom.value!!.balance!!.toFloat().minus(amountFrom.value!!.toFloat())  >= 0){
+                return true
+            }
+        }
+        return false
+    }
 }
