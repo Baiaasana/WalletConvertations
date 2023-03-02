@@ -100,17 +100,10 @@ class ConvertViewModel @Inject constructor(
                         _selectedWalletTo.value =
                             data.findLast { element ->
                                 element.id == (_selectedWalletFrom.value!!.id!!.plus(
-                                    1
-                                ))
+                                    1))
                             }
-                        getCourse(
-                            _selectedWalletFrom.value!!.currency.toString(),
-                            _selectedWalletTo.value!!.currency.toString()
-                        )
-                    }
-                    result.data ?: kotlin.run {
-                        _errorMessage.postValue("სერვისი არ არის ხელმისაწვდომი")
-                    }
+                        getCourse(_selectedWalletFrom.value!!.currency.toString(), _selectedWalletTo.value!!.currency.toString()) }
+                    result.data ?: kotlin.run { _errorMessage.postValue("სერვისი არ არის ხელმისაწვდომი") }
                 }
                 Resource.Status.ERROR -> {
                     _errorMessage.value = result.message.toString()

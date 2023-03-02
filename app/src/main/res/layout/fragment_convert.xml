@@ -45,7 +45,6 @@
             android:id="@+id/wallet_from"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:visibility="@{'2'}"
             app:wallet_enabled="@{viewModel.walletEnable}"
             app:walletTitle="@{viewModel.selectedWalletFrom.title.toString()}"
             app:accountNumber="@{viewModel.selectedWalletFrom.account_number.toString()}"
