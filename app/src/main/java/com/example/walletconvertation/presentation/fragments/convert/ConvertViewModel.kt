@@ -5,12 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.backend.common.Resource
+import com.example.backend.data.model.ListOfWallets
 import com.example.backend.data.model.WalletModel
 import com.example.backend.repository.course.CourseRepository
 import com.example.backend.repository.wallets.WalletsRepository
 import com.example.walletconvertation.common.CourseSymbols
 import com.example.walletconvertation.common.ErrorEnum
 import com.example.walletconvertation.common.Utility
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,8 +32,11 @@ class ConvertViewModel @Inject constructor(
     private val _errorMessage = MutableLiveData("")
     val errorMessage: LiveData<String?> = _errorMessage
 
-    private val _wallets = MutableLiveData<List<WalletModel>?>()
-    val wallets: LiveData<List<WalletModel>?> = _wallets
+    private val _wallets_from = MutableLiveData<List<WalletModel>?>()
+    val wallets_from: LiveData<List<WalletModel>?> = _wallets_from
+
+    private val _wallets_to = MutableLiveData<List<WalletModel>?>()
+    val wallets_to: LiveData<List<WalletModel>?> = _wallets_to
 
     private val _walletLoading = MutableLiveData<Boolean>()
 
@@ -93,16 +98,29 @@ class ConvertViewModel @Inject constructor(
             when (result!!.status) {
                 Resource.Status.SUCCESS -> {
                     result.data?.let {
-                        val data = it
-                        val firstWallet = data.findLast { element -> element.is_default == true }
-                        val secondWallet = data.findLast { element -> element.id == (firstWallet!!.id!!.plus(1)) }
+
+                        val dataFrom = ArrayList(it.map { it.copy() })
+                        val dataTo = ArrayList(it.map { it.copy() })
+
+                        val firstWallet = dataFrom.findLast { it.is_default == true }
+                        val secondWallet = dataTo.findLast { it.id == (firstWallet!!.id!!.plus(1)) }
                         _selectedWalletFrom.value = firstWallet
                         _selectedWalletTo.value = secondWallet
-                        data.find { item -> item.id == firstWallet!!.id }!!.is_selected_from = true
-                        data.find { item -> item.id == secondWallet!!.id }!!.is_selected_from = true
-                        _wallets.value = data
-                        getCourse(_selectedWalletFrom.value!!.currency.toString(), _selectedWalletTo.value!!.currency.toString()) }
-                    result.data ?: kotlin.run { _errorMessage.postValue("სერვისი არ არის ხელმისაწვდომი") }
+
+                        dataFrom.find { it.id == firstWallet!!.id }!!.is_selected_from = true
+                        dataTo.find { it.id == secondWallet!!.id }!!.is_selected_to = true
+
+
+                        _wallets_from.value = dataFrom
+                        _wallets_to.value = dataTo
+
+                        getCourse(
+                            _selectedWalletFrom.value!!.currency.toString(),
+                            _selectedWalletTo.value!!.currency.toString()
+                        )
+                    } ?: kotlin.run {
+                        _errorMessage.postValue("სერვისი არ არის ხელმისაწვდომი")
+                    }
                 }
                 Resource.Status.ERROR -> {
                     _errorMessage.value = result.message.toString()
@@ -123,8 +141,12 @@ class ConvertViewModel @Inject constructor(
         }
     }
 
-    fun updateData(updatedData: List<WalletModel>){
-        _wallets.value = updatedData
+    fun updateFromData(updatedData: List<WalletModel>) {
+        _wallets_from.value = updatedData
+    }
+
+    fun updateToData(updatedData: List<WalletModel>) {
+        _wallets_to.value = updatedData
     }
 
     fun convertFROMTO() {

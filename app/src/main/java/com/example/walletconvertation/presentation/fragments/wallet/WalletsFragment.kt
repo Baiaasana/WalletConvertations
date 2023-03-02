@@ -9,6 +9,7 @@ import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.backend.data.model.WalletModel
 import com.example.walletconvertation.R
 import com.example.walletconvertation.databinding.FragmentWalletsBinding
 import com.example.walletconvertation.presentation.adapters.WalletAdapter
@@ -43,10 +44,17 @@ class WalletsFragment : Fragment() {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = walletAdapter
         }
-        var data = convertViewModel.wallets.value
+
+        var data : List<WalletModel> = emptyList()
         when (args.walletType) {
-            "from" -> data = data!!.filterNot { it.id == convertViewModel.selectedWalletTo.value?.id }
-            "to" -> data = data!!.filterNot { it.id == convertViewModel.selectedWalletFrom.value?.id }
+            "from" -> {
+                data = convertViewModel.wallets_from.value!!
+//                data = data.filterNot { it.id == convertViewModel.selectedWalletTo.value?.id }
+            }
+            "to" -> {
+                data = convertViewModel.wallets_to.value!!
+                data = data.filterNot { it.id == convertViewModel.selectedWalletFrom.value?.id }
+            }
         }
         walletAdapter.submitList(data)
     }
@@ -64,9 +72,9 @@ class WalletsFragment : Fragment() {
         when (args.walletType) {
             "from" -> walletAdapter.onWalletClickListener = {
                 it.is_selected_from = true
-                val data = convertViewModel.wallets.value!!
+                val data = convertViewModel.wallets_from.value!!
                 data.filterNot { item -> item.id == it.id }.forEach { el -> el.is_selected_from = false }
-                convertViewModel.updateData(data)
+                convertViewModel.updateFromData(data)
                 convertViewModel.apply {
                     selectWalletFrom(it).also {
                         getCourse(selectedWalletFrom.value!!.currency.toString(), selectedWalletTo.value!!.currency.toString())
@@ -76,9 +84,9 @@ class WalletsFragment : Fragment() {
             }
             "to" -> walletAdapter.onWalletClickListener = {
                 it.is_selected_to = true
-                val data = convertViewModel.wallets.value!!
+                val data = convertViewModel.wallets_to.value!!
                 data.filterNot { item -> item.id == it.id }.forEach { el -> el.is_selected_to = false }
-                convertViewModel.updateData(data)
+                convertViewModel.updateToData(data)
                 convertViewModel.apply {
                     selectWalletTo(it).also {
                         getCourse(selectedWalletFrom.value!!.currency.toString(), selectedWalletTo.value!!.currency.toString())
