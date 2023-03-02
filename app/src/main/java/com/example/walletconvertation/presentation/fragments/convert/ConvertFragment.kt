@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.method.DigitsKeyListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,28 +77,42 @@ class ConvertFragment : Fragment(), Utility {
         }
 
         val amountFromWatcher = object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 p0?.let {
+                    convertViewModel.amountFrom.value = p0.toString().replace(",", ".")
+
+                    if (convertViewModel.amountFrom.value!!.contains(".")) {
+                        binding.etAmountFrom.getAmount().keyListener =
+                            DigitsKeyListener.getInstance("0123456789")
+                    } else {
+                        binding.etAmountFrom.getAmount().keyListener =
+                            DigitsKeyListener.getInstance("0123456789.,")
+                    }
                     convertViewModel.convertFROMTO()
                     binding.btnContinue.isEnabled = convertViewModel.checkAmount()
                 }
             }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
         }
 
         val amountToWatcher = object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 p0?.let {
+                    convertViewModel.amountTo.value = p0.toString().replace(",", ".")
+                    if (convertViewModel.amountTo.value!!.contains(".")) {
+                        binding.etAmountTo.getAmount().keyListener =
+                            DigitsKeyListener.getInstance("0123456789")
+                    } else {
+                        binding.etAmountTo.getAmount().keyListener =
+                            DigitsKeyListener.getInstance("0123456789.,")
+                    }
                     convertViewModel.convertTOFROM()
                     binding.btnContinue.isEnabled = convertViewModel.checkAmount()
                 }
             }
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         }
 
         binding.etAmountFrom.getAmount().setOnFocusChangeListener { view, hasFocused ->
@@ -150,9 +165,20 @@ class ConvertFragment : Fragment(), Utility {
                 else {
                     convertViewModel.amountFrom.value.let {
                         if (it!!.isNotEmpty()) {
-                            val amount = convertViewModel.amountFrom.value.toString().toDouble()
+                            val amount =
+                                convertViewModel.amountFrom.value.toString().replace(",", ".")
+                                    .toDouble()
                             val formattedAmount = kotlinStringFormat(amount, 2)
                             convertViewModel.amountFrom.value = formattedAmount
+                        }
+                    }
+                    convertViewModel.amountTo.value.let {
+                        if (it!!.isNotEmpty()) {
+                            val amount =
+                                convertViewModel.amountTo.value.toString().replace(",", ".")
+                                    .toDouble()
+                            val formattedAmount = kotlinStringFormat(amount, 2)
+                            convertViewModel.amountTo.value = formattedAmount
                         }
                     }
                 }
