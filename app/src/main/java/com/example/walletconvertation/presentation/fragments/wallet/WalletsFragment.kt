@@ -63,6 +63,10 @@ class WalletsFragment : Fragment() {
 
         when (args.walletType) {
             "from" -> walletAdapter.onWalletClickListener = {
+                it.is_selected_from = true
+                val data = convertViewModel.wallets.value!!
+                data.filterNot { item -> item.id == it.id }.forEach { el -> el.is_selected_from = false }
+                convertViewModel.updateData(data)
                 convertViewModel.apply {
                     selectWalletFrom(it).also {
                         getCourse(selectedWalletFrom.value!!.currency.toString(), selectedWalletTo.value!!.currency.toString())
@@ -71,6 +75,10 @@ class WalletsFragment : Fragment() {
                 findNavController().navigateUp()
             }
             "to" -> walletAdapter.onWalletClickListener = {
+                it.is_selected_to = true
+                val data = convertViewModel.wallets.value!!
+                data.filterNot { item -> item.id == it.id }.forEach { el -> el.is_selected_to = false }
+                convertViewModel.updateData(data)
                 convertViewModel.apply {
                     selectWalletTo(it).also {
                         getCourse(selectedWalletFrom.value!!.currency.toString(), selectedWalletTo.value!!.currency.toString())

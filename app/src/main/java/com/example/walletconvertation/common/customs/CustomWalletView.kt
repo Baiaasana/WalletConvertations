@@ -2,7 +2,6 @@ package com.example.walletconvertation.common.customs
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
@@ -57,14 +56,6 @@ fun setAmount(wallet: CustomWalletView, amount: String) {
     wallet.getAmount().text = amount
 }
 
-@BindingAdapter("visibility")
-fun visibility(wallet: CustomWalletView, visibility: Boolean){
-    if(visibility){
-        wallet.getEndIcon().visibility = View.VISIBLE
-    }else {
-        wallet.getEndIcon().visibility = View.INVISIBLE
-    }
-}
 @BindingAdapter("walletTitle")
 fun setTitle(view: CustomWalletView, title: String) {
     view.getTitle().text = title
@@ -77,6 +68,12 @@ fun setAccountNumber(view: CustomWalletView, title: String) {
 
 @BindingAdapter("wallet_enabled")
 fun setDisable(view: CustomWalletView, boolean: Boolean) {
-    view.isEnabled  = boolean
+    view.isEnabled = boolean
 }
+
+@BindingAdapter("setIcon")
+fun visibility(wallet: CustomWalletView, drawable: Int) {
+    wallet.getEndIcon().setImageResource(drawable)
+}
+
 

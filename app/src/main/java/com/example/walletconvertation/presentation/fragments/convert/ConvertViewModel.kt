@@ -94,14 +94,13 @@ class ConvertViewModel @Inject constructor(
                 Resource.Status.SUCCESS -> {
                     result.data?.let {
                         val data = it
+                        val firstWallet = data.findLast { element -> element.is_default == true }
+                        val secondWallet = data.findLast { element -> element.id == (firstWallet!!.id!!.plus(1)) }
+                        _selectedWalletFrom.value = firstWallet
+                        _selectedWalletTo.value = secondWallet
+                        data.find { item -> item.id == firstWallet!!.id }!!.is_selected_from = true
+                        data.find { item -> item.id == secondWallet!!.id }!!.is_selected_from = true
                         _wallets.value = data
-                        _selectedWalletFrom.value =
-                            data.findLast { element -> element.is_default == true }
-                        _selectedWalletTo.value =
-                            data.findLast { element ->
-                                element.id == (_selectedWalletFrom.value!!.id!!.plus(
-                                    1))
-                            }
                         getCourse(_selectedWalletFrom.value!!.currency.toString(), _selectedWalletTo.value!!.currency.toString()) }
                     result.data ?: kotlin.run { _errorMessage.postValue("სერვისი არ არის ხელმისაწვდომი") }
                 }
@@ -122,6 +121,10 @@ class ConvertViewModel @Inject constructor(
             CourseSymbols.EUR.name -> CourseSymbols.EUR.symbol
             else -> CourseSymbols.GEL.symbol
         }
+    }
+
+    fun updateData(updatedData: List<WalletModel>){
+        _wallets.value = updatedData
     }
 
     fun convertFROMTO() {
