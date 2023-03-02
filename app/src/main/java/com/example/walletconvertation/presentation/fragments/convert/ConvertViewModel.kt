@@ -21,47 +21,38 @@ class ConvertViewModel @Inject constructor(
     private val walletsRepository: WalletsRepository
 ) : ViewModel(), Utility {
 
-    private val _rate = MutableLiveData<Float?>(1F)
+    private val _rate = MutableLiveData(1F)
     val rate: LiveData<Float?> = _rate
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
-    private val _errorMessage = MutableLiveData<String?>("")
+    private val _errorMessage = MutableLiveData("")
     val errorMessage: LiveData<String?> = _errorMessage
 
     private val _wallets = MutableLiveData<List<WalletModel>?>()
     val wallets: LiveData<List<WalletModel>?> = _wallets
 
     private val _walletLoading = MutableLiveData<Boolean>()
-    val walletLoading: LiveData<Boolean> = _walletLoading
 
-//    private val _walletsErrorMessage = MutableLiveData<String?>()
-//    val walletsErrorMessage: LiveData<String?> = _walletsErrorMessage
+    val amountFrom = MutableLiveData("")
+    val amountTo = MutableLiveData("")
 
-    val amountFrom = MutableLiveData<String>("")
-    val amountTo = MutableLiveData<String>("")
-
-    private val _etEnable = MutableLiveData<Boolean>(true)
+    private val _etEnable = MutableLiveData(true)
     val etEnable: LiveData<Boolean> = _etEnable
 
-    private val _walletEnable = MutableLiveData<Boolean>(false)
+    private val _walletEnable = MutableLiveData(false)
     val walletEnable: LiveData<Boolean> = _walletEnable
 
-    private val _selectedWalletFrom =
-        MutableLiveData<WalletModel?>(WalletModel())
+    private val _selectedWalletFrom = MutableLiveData(WalletModel())
     val selectedWalletFrom: LiveData<WalletModel?> = _selectedWalletFrom
 
     private val _selectedWalletTo =
-        MutableLiveData<WalletModel?>(WalletModel())
+        MutableLiveData(WalletModel())
     val selectedWalletTo: LiveData<WalletModel?> = _selectedWalletTo
 
     init {
         getWallets()
-//        getCourse(
-//            selectedWalletFrom.value!!.currency.toString(),
-//            selectedWalletTo.value!!.currency.toString()
-//        )
     }
 
     fun selectWalletFrom(walletModel: WalletModel) {
@@ -97,7 +88,7 @@ class ConvertViewModel @Inject constructor(
 
     private fun getWallets() {
         _walletLoading.postValue(true)
-        viewModelScope.launch() {
+        viewModelScope.launch {
             val result = walletsRepository.getWallets().value
             when (result!!.status) {
                 Resource.Status.SUCCESS -> {
@@ -148,7 +139,6 @@ class ConvertViewModel @Inject constructor(
                 ""
             }
         }.toString()
-
     }
 
     fun convertTOFROM() {
@@ -185,28 +175,31 @@ class ConvertViewModel @Inject constructor(
         _selectedWalletFrom.value = to
         _selectedWalletTo.value = from
         clearFields()
-        getCourse(selectedWalletFrom.value!!.currency.toString(), selectedWalletTo.value!!.currency.toString())
+        getCourse(
+            selectedWalletFrom.value!!.currency.toString(),
+            selectedWalletTo.value!!.currency.toString()
+        )
     }
 
-     fun disable() {
-         when (_errorMessage.value.toString()) {
-             ErrorEnum.ERROR.error.toString() -> _etEnable.value = ErrorEnum.ERROR.boolean
-             ErrorEnum.ERROR_NULL.error.toString() -> {
-                 _etEnable.value = ErrorEnum.ERROR_NULL.boolean
-                 _walletEnable.value = ErrorEnum.ERROR_NULL.boolean
-             }
-             ErrorEnum.SERVER_ERROR.error.toString() -> {
-                 _etEnable.value = ErrorEnum.SERVER_ERROR.boolean
-                 _walletEnable.value = ErrorEnum.SERVER_ERROR.boolean
-             }
-             ErrorEnum.NO_ERROR.error.toString() -> {
-                 _etEnable.value = ErrorEnum.NO_ERROR.boolean
-                 _walletEnable.value = ErrorEnum.NO_ERROR.boolean
-             }
-             else -> {
-                 _etEnable.value = ErrorEnum.NO_ERROR.boolean
-                 _walletEnable.value = ErrorEnum.NO_ERROR.boolean
-             }
-         }
+    private fun disable() {
+        when (_errorMessage.value.toString()) {
+            ErrorEnum.ERROR.error.toString() -> _etEnable.value = ErrorEnum.ERROR.boolean
+            ErrorEnum.ERROR_NULL.error.toString() -> {
+                _etEnable.value = ErrorEnum.ERROR_NULL.boolean
+                _walletEnable.value = ErrorEnum.ERROR_NULL.boolean
+            }
+            ErrorEnum.SERVER_ERROR.error.toString() -> {
+                _etEnable.value = ErrorEnum.SERVER_ERROR.boolean
+                _walletEnable.value = ErrorEnum.SERVER_ERROR.boolean
+            }
+            ErrorEnum.NO_ERROR.error.toString() -> {
+                _etEnable.value = ErrorEnum.NO_ERROR.boolean
+                _walletEnable.value = ErrorEnum.NO_ERROR.boolean
+            }
+            else -> {
+                _etEnable.value = ErrorEnum.NO_ERROR.boolean
+                _walletEnable.value = ErrorEnum.NO_ERROR.boolean
+            }
+        }
     }
 }

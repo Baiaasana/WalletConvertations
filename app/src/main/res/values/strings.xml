@@ -3,4 +3,17 @@
     <string name="get_course">get Course</string>
     <string name="wallet">Wallet</string>
     <string name="account_number">Account Number</string>
+    <string name="_00_00">00.00</string>
+    <string name="_0_00">0.00</string>
+    <string name="USD">$</string>
+    <string name="title">Title</string>
+    <string name="from_account">ანგარიშიდან</string>
+    <string name="to_account">ანგარიშზე</string>
+    <string name="buy_amount">ყიდვის თანხა</string>
+    <string name="sell_amount">გაყიდვის თანხა</string>
+    <string name="standart_course">სტანდარტული კურსი:</string>
+    <string name="equals">=</string>
+    <string name="your_course">შენი კურსი:</string>
+    <string name="continue_eng">გაგრძელება</string>
+    <string name="wallets_accounts">საფულეების ანგარიში</string>
 </resources>

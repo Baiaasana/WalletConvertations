@@ -1,6 +1,5 @@
 package com.example.walletconvertation.presentation.adapters
 
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,6 @@ class WalletAdapter :
     ListAdapter<WalletModel, WalletAdapter.WalletViewHolder>(ItemCallback), Utility {
 
     var onWalletClickListener: ((WalletModel) -> Unit)? = null
-
     inner class WalletViewHolder(private val binding: CustomWalletViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
 

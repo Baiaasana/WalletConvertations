@@ -3,7 +3,6 @@ package com.example.walletconvertation.common.customs
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
-import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
@@ -27,7 +26,6 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) : LinearLayout(conte
     fun getBackIcon(): AppCompatImageView {
         return back
     }
-
 }
 
 @BindingAdapter("title")

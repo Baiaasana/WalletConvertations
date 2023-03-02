@@ -8,10 +8,8 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ApiService {
-
     @GET(Constants.WALLETS_END_POINT)
     suspend fun getWallets() : Response<List<WalletModel>>
-
     @GET(Constants.COURSES_END_POINT)
     suspend fun getCourse(@Query("from") from: String, @Query("to") to: String) : Response<CourseModel>
 

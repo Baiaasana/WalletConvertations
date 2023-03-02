@@ -4,13 +4,11 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
@@ -32,7 +30,7 @@ class ConvertFragment : Fragment(), Utility {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentConvertBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -45,7 +43,6 @@ class ConvertFragment : Fragment(), Utility {
         handleKeyboardEvent()
 
         // keyboard event with high
-
 //        binding.root.viewTreeObserver.addOnGlobalLayoutListener(OnGlobalLayoutListener {
 //            val r = Rect()
 //            view.getWindowVisibleDisplayFrame(r)
@@ -56,7 +53,6 @@ class ConvertFragment : Fragment(), Utility {
 //        })
 
         listeners()
-
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -139,7 +135,6 @@ class ConvertFragment : Fragment(), Utility {
 //            }
         }
     }
-
 
     fun kotlinStringFormat(input: Double, scale: Int) = "%.${scale}f".format(input)
 

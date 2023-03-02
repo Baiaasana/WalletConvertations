@@ -1,10 +1,8 @@
 package com.example.backend.common
 
-import android.util.Log
 import retrofit2.Response
 
 class ResponseHandler {
-
     suspend fun <T> safeApiCall(request: suspend () -> Response<T>): Resource<T> =
 
         try {

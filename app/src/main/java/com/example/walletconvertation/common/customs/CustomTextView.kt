@@ -4,11 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
-import androidx.databinding.InverseBindingAdapter
 import com.example.walletconvertation.R
 
 class CustomTextView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
@@ -30,7 +27,6 @@ class CustomTextView(context: Context, attrs: AttributeSet?) : LinearLayout(cont
         return currency
     }
 }
-
 @BindingAdapter("setCurrency")
 fun setCurrency(view: CustomTextView, currency: String) {
     view.getCurrency().text = currency

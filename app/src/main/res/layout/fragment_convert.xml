@@ -34,7 +34,7 @@
             android:layout_marginVertical="16dp"
             android:fontFamily="@font/firago_regular"
             android:paddingHorizontal="16dp"
-            android:text="ანგარიშიდან"
+            android:text="@string/from_account"
             android:textColor="@color/bold_grey"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="@+id/toolbar"
@@ -100,7 +100,7 @@
             android:layout_marginVertical="16dp"
             android:fontFamily="@font/firago_regular"
             android:paddingHorizontal="16dp"
-            android:text="ანგარიშზე"
+            android:text="@string/to_account"
             android:textColor="@color/bold_grey"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="@+id/view_convert"
@@ -137,7 +137,7 @@
                 android:layout_marginEnd="4.5dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/firago_regular"
-                android:text="ყიდვის თანხა"
+                android:text="@string/buy_amount"
                 android:textColor="@color/bold_grey"
                 android:textSize="12sp" />
 
@@ -147,7 +147,7 @@
                 android:layout_marginStart="9dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/firago_regular"
-                android:text="გაყიდვის თანხა"
+                android:text="@string/sell_amount"
                 android:textColor="@color/bold_grey"
                 android:textSize="12sp" />
 
@@ -207,7 +207,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:fontFamily="@font/fira_go_book"
-                    android:text="სტანდარტული კურსი:"
+                    android:text="@string/standart_course"
                     android:textColor="@color/bold_grey"
                     android:textSize="12sp" />
 
@@ -230,7 +230,7 @@
                         android:fontFamily="@font/fira_go_book"
                         android:gravity="center"
                         android:paddingHorizontal="5dp"
-                        android:text="="
+                        android:text="@string/equals"
                         android:textColor="@color/bold_grey"
                         android:textSize="12sp"
                         android:visibility="@{viewModel.walletEnable?View.VISIBLE: View.GONE}" />
@@ -259,7 +259,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:fontFamily="@font/fira_go_book"
-                    android:text="შენი კურსი:"
+                    android:text="@string/your_course"
                     android:textColor="@color/bold_grey"
                     android:textSize="12sp" />
 
@@ -282,7 +282,7 @@
                         android:fontFamily="@font/fira_go_book"
                         android:gravity="center"
                         android:paddingHorizontal="5dp"
-                        android:text="="
+                        android:text="@string/equals"
                         android:textColor="@color/bold_grey"
                         android:textSize="12sp"
                         android:visibility="@{viewModel.walletEnable?View.VISIBLE: View.GONE}" />
@@ -312,7 +312,8 @@
             android:layout_margin="5dp"
             app:layout_constraintEnd_toEndOf="@id/llCourses"
             app:layout_constraintStart_toStartOf="@id/llCourses"
-            app:layout_constraintTop_toBottomOf="@id/llCourses" />
+            app:layout_constraintTop_toBottomOf="@id/llCourses"
+            tools:ignore="RtlSymmetry,VisualLintOverlap" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_continue"
@@ -327,7 +328,7 @@
             android:enabled="false"
             app:layout_constraintEnd_toEndOf="@id/errorMessage"
             app:layout_constraintStart_toStartOf="@id/errorMessage"
-            android:text="გაგრძელება"
+            android:text="@string/continue_eng"
             android:textColor="@drawable/button_text_color_selector"
             app:layout_constraintTop_toBottomOf="@id/errorMessage"
             tools:ignore="VisualLintButtonSize" />

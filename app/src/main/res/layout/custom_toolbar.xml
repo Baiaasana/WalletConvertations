@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="Title"
+                android:text="@string/title"
                 android:fontFamily="@font/fira_go_book"
                 android:textColor="@color/blue"
                 android:textSize="16sp" />

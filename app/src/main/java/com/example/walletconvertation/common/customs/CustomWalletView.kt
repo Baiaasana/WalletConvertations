@@ -47,14 +47,11 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
     fun getEndIcon() : AppCompatImageView{
         return endIcon
     }
-
 }
-
 @BindingAdapter("walletCurrency")
 fun setCurrency(wallet: CustomWalletView, currency: String) {
     wallet.getCurrency().text = currency
 }
-
 @BindingAdapter("walletAmount")
 fun setAmount(wallet: CustomWalletView, amount: String) {
     wallet.getAmount().text = amount
@@ -68,7 +65,6 @@ fun visibility(wallet: CustomWalletView, visibility: Boolean){
         wallet.getEndIcon().visibility = View.INVISIBLE
     }
 }
-
 @BindingAdapter("walletTitle")
 fun setTitle(view: CustomWalletView, title: String) {
     view.getTitle().text = title

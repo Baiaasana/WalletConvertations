@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -15,7 +14,7 @@
             android:gravity="center"
             android:textSize="12sp"
             android:fontFamily="@font/fira_go_medium"
-            android:text="0.00"
+            android:text="@string/_0_00"
             android:textColor="@color/blue" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -27,7 +26,7 @@
             android:gravity="center"
             android:textSize="12sp"
             android:fontFamily="@font/firago_regular"
-            android:text="$"
+            android:text="@string/USD"
             android:textColor="@color/bold_grey" />
 
     </LinearLayout>

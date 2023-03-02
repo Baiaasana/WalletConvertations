@@ -9,7 +9,6 @@ import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.backend.data.model.WalletModel
 import com.example.walletconvertation.R
 import com.example.walletconvertation.databinding.FragmentWalletsBinding
 import com.example.walletconvertation.presentation.adapters.WalletAdapter
@@ -21,20 +20,16 @@ class WalletsFragment : Fragment() {
 
     private var _binding: FragmentWalletsBinding? = null
     private val binding get() = _binding!!
-
     private val walletAdapter: WalletAdapter = WalletAdapter()
     private val args : WalletsFragmentArgs by navArgs()
-
     private val convertViewModel: ConvertViewModel by hiltNavGraphViewModels(R.id.main_navigation_graph)
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentWalletsBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

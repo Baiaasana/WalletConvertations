@@ -7,7 +7,6 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.databinding.BindingAdapter
 import com.example.walletconvertation.R
-
 class CustomProgressBar(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
 
     private val progressBar: ProgressBar
