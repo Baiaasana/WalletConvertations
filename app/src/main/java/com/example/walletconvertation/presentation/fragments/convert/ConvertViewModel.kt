@@ -1,6 +1,5 @@
 package com.example.walletconvertation.presentation.fragments.convert
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,7 +27,7 @@ class ConvertViewModel @Inject constructor(
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
-    private val _errorMessage = MutableLiveData<String?>(null)
+    private val _errorMessage = MutableLiveData<String?>("")
     val errorMessage: LiveData<String?> = _errorMessage
 
     private val _wallets = MutableLiveData<List<WalletModel>?>()
@@ -37,14 +36,17 @@ class ConvertViewModel @Inject constructor(
     private val _walletLoading = MutableLiveData<Boolean>()
     val walletLoading: LiveData<Boolean> = _walletLoading
 
-    private val _walletsErrorMessage = MutableLiveData<String?>()
-    val walletsErrorMessage: LiveData<String?> = _walletsErrorMessage
+//    private val _walletsErrorMessage = MutableLiveData<String?>()
+//    val walletsErrorMessage: LiveData<String?> = _walletsErrorMessage
 
     val amountFrom = MutableLiveData<String>("")
     val amountTo = MutableLiveData<String>("")
 
     private val _etEnable = MutableLiveData<Boolean>(true)
     val etEnable: LiveData<Boolean> = _etEnable
+
+    private val _walletEnable = MutableLiveData<Boolean>(false)
+    val walletEnable: LiveData<Boolean> = _walletEnable
 
     private val _selectedWalletFrom =
         MutableLiveData<WalletModel?>(WalletModel())
@@ -78,14 +80,14 @@ class ConvertViewModel @Inject constructor(
                 Resource.Status.SUCCESS -> {
                     result.data?.rate.let {
                         _rate.postValue(it)
-                        _errorMessage.value = null
+                        _errorMessage.value = ""
                     }
                     result.data?.rate ?: kotlin.run {
                         _errorMessage.value = "სერვისი არ არის ხელმისაწვდომი"
                     }
                 }
                 Resource.Status.ERROR -> {
-                    _errorMessage.postValue(result.message.toString())
+                    _errorMessage.value = result.message.toString()
                 }
             }
             disable()
@@ -95,43 +97,38 @@ class ConvertViewModel @Inject constructor(
 
     private fun getWallets() {
         _walletLoading.postValue(true)
-        viewModelScope.launch {
+        viewModelScope.launch() {
             val result = walletsRepository.getWallets().value
             when (result!!.status) {
                 Resource.Status.SUCCESS -> {
-
                     result.data?.let {
                         val data = it
                         _wallets.value = data
                         _selectedWalletFrom.value =
                             data.findLast { element -> element.is_default == true }
                         _selectedWalletTo.value =
-                            data.findLast { element -> element.id == (_selectedWalletFrom.value!!.id!!.plus(1)) }
+                            data.findLast { element ->
+                                element.id == (_selectedWalletFrom.value!!.id!!.plus(
+                                    1
+                                ))
+                            }
                         getCourse(
                             _selectedWalletFrom.value!!.currency.toString(),
                             _selectedWalletTo.value!!.currency.toString()
                         )
                     }
                     result.data ?: kotlin.run {
-                        _walletsErrorMessage.postValue("სერვისი არ არის ხელმისაწვდომი")
+                        _errorMessage.postValue("სერვისი არ არის ხელმისაწვდომი")
                     }
                 }
                 Resource.Status.ERROR -> {
-                    _walletsErrorMessage.postValue(result.message.toString())
+                    _errorMessage.value = result.message.toString()
                 }
             }
+            disable()
             _loading.postValue(false)
         }
     }
-
-
-//    fun setFromSymbol(): String {
-//        return setSymbol(_selectedWalletFrom.value!!.currency.toString())
-//    }
-//
-//    fun setToSymbol(): String {
-//        return setSymbol(_selectedWalletTo.value!!.currency.toString())
-//    }
 
     fun setCourseSymbol(course: String): String {
 
@@ -168,7 +165,10 @@ class ConvertViewModel @Inject constructor(
     fun checkAmount(): Boolean{
         if (amountFrom.value!!.isNotEmpty()){
             if(selectedWalletFrom.value!!.balance!!.toFloat().minus(amountFrom.value!!.toFloat())  >= 0){
+                _errorMessage.value = ""
                 return true
+            }else{
+                _errorMessage.value = "შეიყვანეთ ვალიდური თანხა"
             }
         }
         return false
@@ -190,11 +190,23 @@ class ConvertViewModel @Inject constructor(
 
      fun disable() {
          when (_errorMessage.value.toString()) {
-            ErrorEnum.ERROR.error.toString() -> _etEnable.value = ErrorEnum.ERROR.boolean
-            ErrorEnum.NO_ERROR.error.toString() -> _etEnable.value = ErrorEnum.NO_ERROR.boolean
-            else -> {
-                _etEnable.value = ErrorEnum.NO_ERROR.boolean
-            }
-        }
+             ErrorEnum.ERROR.error.toString() -> _etEnable.value = ErrorEnum.ERROR.boolean
+             ErrorEnum.ERROR_NULL.error.toString() -> {
+                 _etEnable.value = ErrorEnum.ERROR_NULL.boolean
+                 _walletEnable.value = ErrorEnum.ERROR_NULL.boolean
+             }
+             ErrorEnum.SERVER_ERROR.error.toString() -> {
+                 _etEnable.value = ErrorEnum.SERVER_ERROR.boolean
+                 _walletEnable.value = ErrorEnum.SERVER_ERROR.boolean
+             }
+             ErrorEnum.NO_ERROR.error.toString() -> {
+                 _etEnable.value = ErrorEnum.NO_ERROR.boolean
+                 _walletEnable.value = ErrorEnum.NO_ERROR.boolean
+             }
+             else -> {
+                 _etEnable.value = ErrorEnum.NO_ERROR.boolean
+                 _walletEnable.value = ErrorEnum.NO_ERROR.boolean
+             }
+         }
     }
 }

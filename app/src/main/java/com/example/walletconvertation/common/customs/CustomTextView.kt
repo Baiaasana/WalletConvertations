@@ -2,6 +2,7 @@ package com.example.walletconvertation.common.customs
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatEditText
@@ -38,6 +39,15 @@ fun setCurrency(view: CustomTextView, currency: String) {
 @BindingAdapter("setAmount")
 fun setAmount(view : CustomTextView, amount: Float) {
     view.getAmount().text = amount.toString()
+}
+
+@BindingAdapter("visible")
+fun setVisible(view: CustomTextView, bool: Boolean){
+    if(bool) {
+        view.visibility = View.VISIBLE
+    } else {
+        view.visibility = View.INVISIBLE
+    }
 }
 
 

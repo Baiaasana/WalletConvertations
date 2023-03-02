@@ -46,6 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:visibility="@{'2'}"
+            app:wallet_enabled="@{viewModel.walletEnable}"
             app:walletTitle="@{viewModel.selectedWalletFrom.title.toString()}"
             app:accountNumber="@{viewModel.selectedWalletFrom.account_number.toString()}"
             app:walletAmount="@{viewModel.selectedWalletFrom.balance.toString()}"
@@ -75,6 +76,7 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/btn_reverse"
+                android:clickable="@{viewModel.walletEnable}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.4"
@@ -109,6 +111,7 @@
             android:id="@+id/wallet_to"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:wallet_enabled="@{viewModel.walletEnable}"
             app:walletTitle="@{viewModel.selectedWalletTo.title.toString()}"
             app:accountNumber="@{viewModel.selectedWalletTo.account_number.toString()}"
             app:walletAmount="@{viewModel.selectedWalletTo.balance.toString()}"
@@ -216,6 +219,7 @@
                     <com.example.walletconvertation.common.customs.CustomTextView
                         android:layout_width="wrap_content"
                         app:setAmount="@{1.00F}"
+                        app:visible="@{viewModel.walletEnable}"
                         app:setCurrency="@{viewModel.setCourseSymbol(viewModel.selectedWalletFrom.currency.toString())}"
                         android:layout_height="wrap_content" />
 
@@ -229,11 +233,12 @@
                         android:text="="
                         android:textColor="@color/bold_grey"
                         android:textSize="12sp"
-                        android:visibility="visible" />
+                        android:visibility="@{viewModel.walletEnable?View.VISIBLE: View.GONE}" />
 
                     <com.example.walletconvertation.common.customs.CustomTextView
                         android:layout_width="wrap_content"
                         app:setAmount="@{viewModel.rate}"
+                        app:visible="@{viewModel.walletEnable}"
                         app:setCurrency="@{viewModel.setCourseSymbol(viewModel.selectedWalletTo.currency.toString())}"
                         android:layout_height="wrap_content" />
 
@@ -266,6 +271,7 @@
                     <com.example.walletconvertation.common.customs.CustomTextView
                         android:layout_width="wrap_content"
                         app:setAmount="@{1.00F}"
+                        app:visible="@{viewModel.walletEnable}"
                         app:setCurrency="@{viewModel.setCourseSymbol(viewModel.selectedWalletFrom.currency.toString())}"
                         android:layout_height="wrap_content" />
 
@@ -279,11 +285,12 @@
                         android:text="="
                         android:textColor="@color/bold_grey"
                         android:textSize="12sp"
-                        android:visibility="visible" />
+                        android:visibility="@{viewModel.walletEnable?View.VISIBLE: View.GONE}" />
 
                     <com.example.walletconvertation.common.customs.CustomTextView
                         android:layout_width="wrap_content"
                         app:setAmount="@{viewModel.rate}"
+                        app:visible="@{viewModel.walletEnable}"
                         app:setCurrency="@{viewModel.setCourseSymbol(viewModel.selectedWalletTo.currency.toString())}"
                         android:layout_height="wrap_content" />
 
@@ -324,6 +331,16 @@
             android:textColor="@color/blue"
             app:layout_constraintTop_toBottomOf="@id/errorMessage"
             tools:ignore="VisualLintButtonSize" />
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.loading?View.VISIBLE: View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

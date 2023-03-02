@@ -79,14 +79,8 @@ fun setAccountNumber(view: CustomWalletView, title: String) {
     view.getAccount().text = title
 }
 
-//@InverseBindingAdapter(attribute = "currency")
-//fun getCurrency(view :CustomConvertView) : String {
-//    return view.getCurrency()
-//}
-//
-//@InverseBindingAdapter(attribute = "amount")
-//fun getaAmount(view :CustomConvertView) : Float {
-//    return view.getAmount()
-//}
-
+@BindingAdapter("wallet_enabled")
+fun setDisable(view: CustomWalletView, boolean: Boolean) {
+    view.isEnabled  = boolean
+}
 

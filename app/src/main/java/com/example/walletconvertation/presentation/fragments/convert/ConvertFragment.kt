@@ -164,11 +164,4 @@ class ConvertFragment : Fragment(), Utility {
             }
         })
     }
-
-
-//    fun reverseClicks(view: View){
-//        convertViewModel.reverseWallets()
-//        binding.etAmountTo.getAmount().isFocusable = false
-//        binding.etAmountFrom.getAmount().isFocusable = false
-//    }
 }

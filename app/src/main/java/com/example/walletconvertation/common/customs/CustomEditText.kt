@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
+import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
@@ -65,6 +66,8 @@ fun setTextValue(amountInput: CustomEditText, value: String?) {
 fun getTextValue(amountInput: CustomEditText): String {
     return amountInput.getAmount().text.toString()
 }
+
+
 
 
 
