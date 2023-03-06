@@ -1,24 +1,28 @@
 package com.example.walletconvertation.common.customs.walletView
 
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.*
 import com.example.backend.common.Resource
 import com.example.backend.data.model.WalletModel
+import com.example.backend.repository.course.CourseRepository
 import com.example.backend.repository.wallets.WalletsRepository
+import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
+import com.example.walletconvertation.presentation.fragments.convert.ConvertViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class WalletViewModel @Inject constructor(
-    private val walletsRepository: WalletsRepository
-) : ViewModel(), Utility {
+    private val walletsRepository: WalletsRepository, courseRepository: CourseRepository,
+) : Utility, ConvertViewModel(courseRepository) {
 
     private val _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean> = _loading
+    val loading1: LiveData<Boolean> = _loading
 
     private val _errorMessage = MutableLiveData("")
-    val errorMessage: LiveData<String?> = _errorMessage
+    val errorMessage1: LiveData<String?> = _errorMessage
 
     private val _walletsFrom = MutableLiveData<List<WalletModel>?>()
     val walletFrom: LiveData<List<WalletModel>?> = _walletsFrom
@@ -66,6 +70,11 @@ class WalletViewModel @Inject constructor(
 
                         _walletsFrom.value = dataFrom
                         _walletsTo.value = dataTo
+
+                        getCourse(
+                            selectedWalletFrom.value!!.currency.toString(),
+                            selectedWalletTo.value!!.currency.toString()
+                        )
 
                     } ?: kotlin.run {
                         _errorMessage.postValue("სერვისი არ არის ხელმისაწვდომი")

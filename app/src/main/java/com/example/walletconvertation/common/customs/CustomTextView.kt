@@ -28,13 +28,17 @@ class CustomTextView(context: Context, attrs: AttributeSet?) : LinearLayout(cont
     }
 }
 @BindingAdapter("setCurrency")
-fun setCurrency(view: CustomTextView, currency: String) {
-    view.getCurrency().text = currency
+fun setCurrency(view: CustomTextView, currency: String?) {
+    currency.let {
+        view.getCurrency().text = currency
+    }
 }
 
 @BindingAdapter("setAmount")
-fun setAmount(view : CustomTextView, amount: Float) {
-    view.getAmount().text = amount.toString()
+fun setAmount(view : CustomTextView, amount: Float?) {
+    amount.let {
+        view.getAmount().text = amount.toString()
+    }
 }
 
 @BindingAdapter("visible")

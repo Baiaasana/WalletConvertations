@@ -8,13 +8,10 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.doOnAttach
 import androidx.databinding.BindingAdapter
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.*
-import com.example.backend.data.model.WalletModel
 import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
 import com.example.walletconvertation.databinding.CustomWalletViewBinding
-import com.example.walletconvertation.presentation.fragments.convert.ConvertViewModel
 
 class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs),
     Utility {
@@ -76,22 +73,31 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
     }
 }
 @BindingAdapter("walletCurrency")
-fun setCurrency(wallet: CustomWalletView, currency: String) {
-    wallet.getCurrency().text = currency
+fun setCurrency(wallet: CustomWalletView, currency: String?) {
+    currency.let {
+        wallet.getCurrency().text = currency
+    }
 }
+
 @BindingAdapter("walletAmount")
-fun setAmount(wallet: CustomWalletView, amount: String) {
-    wallet.getAmount().text = amount
+fun setAmount(wallet: CustomWalletView, amount: String?) {
+    amount.let {
+        wallet.getAmount().text = amount
+    }
 }
 
 @BindingAdapter("walletTitle")
-fun setTitle(view: CustomWalletView, title: String) {
-    view.getTitle().text = title
+fun setTitle(view: CustomWalletView, title: String?) {
+    title.let {
+        view.getTitle().text = title
+    }
 }
 
 @BindingAdapter("accountNumber")
-fun setAccountNumber(view: CustomWalletView, title: String) {
-    view.getAccount().text = title
+fun setAccountNumber(view: CustomWalletView, accountNumber: String?) {
+    accountNumber.let {
+        view.getAccount().text = accountNumber
+    }
 }
 
 @BindingAdapter("wallet_enabled")

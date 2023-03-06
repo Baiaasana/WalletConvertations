@@ -5,22 +5,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.backend.common.Resource
-import com.example.backend.data.model.ListOfWallets
-import com.example.backend.data.model.WalletModel
 import com.example.backend.repository.course.CourseRepository
 import com.example.backend.repository.wallets.WalletsRepository
 import com.example.walletconvertation.common.CourseSymbols
 import com.example.walletconvertation.common.ErrorEnum
 import com.example.walletconvertation.common.Utility
-import com.google.gson.Gson
+import com.example.walletconvertation.common.customs.walletView.WalletViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ConvertViewModel @Inject constructor(
+open class ConvertViewModel @Inject constructor(
     private val courseRepository: CourseRepository,
-) : ViewModel(), Utility {
+    ) : ViewModel(), Utility {
 
     private val _rate = MutableLiveData(1F)
     val rate: LiveData<Float?> = _rate

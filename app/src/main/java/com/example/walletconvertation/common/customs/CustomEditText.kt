@@ -34,8 +34,10 @@ fun setDisable(amountInput: CustomEditText, boolean: Boolean) {
     amountInput.getAmount().isEnabled  = boolean
 }
 @BindingAdapter("setCurrency")
-fun setCurrency(view :CustomEditText, currency: String) {
-    view.getCurrency().text = currency
+fun setCurrency(view :CustomEditText, currency: String?) {
+    currency.let {
+        view.getCurrency().text = currency
+    }
 }
 @BindingAdapter("editTextValueAttrChanged")
 fun setListener(amountInput: CustomEditText, listener: InverseBindingListener) {
