@@ -1,14 +1,23 @@
-package com.example.walletconvertation.common.customs
+package com.example.walletconvertation.common.customs.walletView
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.doOnAttach
 import androidx.databinding.BindingAdapter
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.*
+import com.example.backend.data.model.WalletModel
 import com.example.walletconvertation.R
+import com.example.walletconvertation.common.Utility
+import com.example.walletconvertation.databinding.CustomWalletViewBinding
+import com.example.walletconvertation.presentation.fragments.convert.ConvertViewModel
 
-class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
+class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs),
+    Utility {
 
     private val walletImage: AppCompatImageView
     private val walletTitle: AppCompatTextView
@@ -16,6 +25,13 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
     private val amount: AppCompatTextView
     private val currency: AppCompatTextView
     private val endIcon: AppCompatImageView
+
+    private val binding: CustomWalletViewBinding =
+        CustomWalletViewBinding.inflate(LayoutInflater.from(context), this, true)
+
+    private val viewModel by lazy {
+        ViewModelProvider(findViewTreeViewModelStoreOwner()!!).get<WalletViewModel>()
+    }
 
     init {
         val view = inflate(context, R.layout.custom_wallet_view, this)
@@ -25,17 +41,29 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         amount = view.findViewById(R.id.tvAmount)
         currency = view.findViewById(R.id.tvCurrency)
         endIcon = view.findViewById(R.id.ivEndIcon)
+
+        getLifeCycleOwner(this)?.let {
+            binding.lifecycleOwner = it
+        }
+
+       doOnAttach {
+           setViewModel(viewModel)
+       }
+    }
+
+    private fun setViewModel(convertViewModel: WalletViewModel) {
+        binding.viewModel = convertViewModel
     }
 
     fun getAmount(): AppCompatTextView {
         return amount
     }
 
-    fun getTitle(): AppCompatTextView{
+    fun getTitle(): AppCompatTextView {
         return walletTitle
     }
 
-    fun getAccount(): AppCompatTextView{
+    fun getAccount(): AppCompatTextView {
         return accountNumber
     }
 

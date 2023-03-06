@@ -20,7 +20,6 @@ import javax.inject.Inject
 @HiltViewModel
 class ConvertViewModel @Inject constructor(
     private val courseRepository: CourseRepository,
-    private val walletsRepository: WalletsRepository
 ) : ViewModel(), Utility {
 
     private val _rate = MutableLiveData(1F)
@@ -32,14 +31,6 @@ class ConvertViewModel @Inject constructor(
     private val _errorMessage = MutableLiveData("")
     val errorMessage: LiveData<String?> = _errorMessage
 
-    private val _wallets_from = MutableLiveData<List<WalletModel>?>()
-    val wallets_from: LiveData<List<WalletModel>?> = _wallets_from
-
-    private val _wallets_to = MutableLiveData<List<WalletModel>?>()
-    val wallets_to: LiveData<List<WalletModel>?> = _wallets_to
-
-    private val _walletLoading = MutableLiveData<Boolean>()
-
     val amountFrom = MutableLiveData("")
     val amountTo = MutableLiveData("")
 
@@ -48,25 +39,6 @@ class ConvertViewModel @Inject constructor(
 
     private val _walletEnable = MutableLiveData(false)
     val walletEnable: LiveData<Boolean> = _walletEnable
-
-    private val _selectedWalletFrom = MutableLiveData(WalletModel())
-    val selectedWalletFrom: LiveData<WalletModel?> = _selectedWalletFrom
-
-    private val _selectedWalletTo =
-        MutableLiveData(WalletModel())
-    val selectedWalletTo: LiveData<WalletModel?> = _selectedWalletTo
-
-    init {
-        getWallets()
-    }
-
-    fun selectWalletFrom(walletModel: WalletModel) {
-        _selectedWalletFrom.value = walletModel
-    }
-
-    fun selectWalletTo(walletModel: WalletModel) {
-        _selectedWalletTo.value = walletModel
-    }
 
      fun getCourse(from: String, to: String) {
         _loading.postValue(true)
@@ -91,46 +63,6 @@ class ConvertViewModel @Inject constructor(
         }
     }
 
-    private fun getWallets() {
-        _walletLoading.postValue(true)
-        viewModelScope.launch {
-            val result = walletsRepository.getWallets().value
-            when (result!!.status) {
-                Resource.Status.SUCCESS -> {
-                    result.data?.let {
-
-                        val dataFrom = ArrayList(it.map { it.copy() })
-                        val dataTo = ArrayList(it.map { it.copy() })
-
-                        val firstWallet = dataFrom.findLast { it.is_default == true }
-                        val secondWallet = dataTo.findLast { it.id == (firstWallet!!.id!!.plus(1)) }
-                        _selectedWalletFrom.value = firstWallet
-                        _selectedWalletTo.value = secondWallet
-
-                        dataFrom.find { it.id == firstWallet!!.id }!!.is_selected_from = true
-                        dataTo.find { it.id == secondWallet!!.id }!!.is_selected_to = true
-
-
-                        _wallets_from.value = dataFrom
-                        _wallets_to.value = dataTo
-
-                        getCourse(
-                            _selectedWalletFrom.value!!.currency.toString(),
-                            _selectedWalletTo.value!!.currency.toString()
-                        )
-                    } ?: kotlin.run {
-                        _errorMessage.postValue("სერვისი არ არის ხელმისაწვდომი")
-                    }
-                }
-                Resource.Status.ERROR -> {
-                    _errorMessage.value = result.message.toString()
-                }
-            }
-            disable()
-            _loading.postValue(false)
-        }
-    }
-
     fun setCourseSymbol(course: String): String {
 
         return when (course) {
@@ -139,14 +71,6 @@ class ConvertViewModel @Inject constructor(
             CourseSymbols.EUR.name -> CourseSymbols.EUR.symbol
             else -> CourseSymbols.GEL.symbol
         }
-    }
-
-    fun updateFromData(updatedData: List<WalletModel>) {
-        _wallets_from.value = updatedData
-    }
-
-    fun updateToData(updatedData: List<WalletModel>) {
-        _wallets_to.value = updatedData
     }
 
     fun convertFROMTO() {
@@ -170,9 +94,9 @@ class ConvertViewModel @Inject constructor(
             }.toString()
     }
 
-    fun checkAmount(): Boolean{
-        if (amountFrom.value!!.isNotEmpty()){
-            if(selectedWalletFrom.value!!.balance!!.toFloat().minus(amountFrom.value!!.toFloat())  >= 0){
+    fun checkAmount(amount: String, selectedAmount: String): Boolean{
+        if (amount.isNotEmpty()){
+            if(selectedAmount.toFloat().minus(amount.toFloat())  >= 0){
                 _errorMessage.value = ""
                 return true
             }else{
@@ -185,18 +109,6 @@ class ConvertViewModel @Inject constructor(
     fun clearFields() {
         amountFrom.value = ""
         amountTo.value = ""
-    }
-
-    fun reverseWallets() {
-        val from = _selectedWalletFrom.value
-        val to = _selectedWalletTo.value
-        _selectedWalletFrom.value = to
-        _selectedWalletTo.value = from
-        clearFields()
-        getCourse(
-            selectedWalletFrom.value!!.currency.toString(),
-            selectedWalletTo.value!!.currency.toString()
-        )
     }
 
     private fun disable() {

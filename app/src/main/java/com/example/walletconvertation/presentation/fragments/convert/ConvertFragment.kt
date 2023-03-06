@@ -9,10 +9,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
+import com.example.walletconvertation.common.customs.walletView.WalletViewModel
 import com.example.walletconvertation.databinding.FragmentConvertBinding
 import dagger.hilt.android.AndroidEntryPoint
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent.setEventListener
@@ -26,6 +29,9 @@ class ConvertFragment : Fragment(), Utility {
     private val binding get() = _binding!!
 
     private val convertViewModel: ConvertViewModel by hiltNavGraphViewModels(R.id.main_navigation_graph)
+//    private val walletViewModel = ViewModelProvider(requireActivity())[WalletViewModel::class.java]
+
+    private val walletViewModel : WalletViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,21 +44,13 @@ class ConvertFragment : Fragment(), Utility {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel = convertViewModel
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            convertViewModel = convertViewModel
+            walletViewModel = walletViewModel
+        }
 
         handleKeyboardEvent()
-
-        // keyboard event with high
-//        binding.root.viewTreeObserver.addOnGlobalLayoutListener(OnGlobalLayoutListener {
-//            val r = Rect()
-//            view.getWindowVisibleDisplayFrame(r)
-//            val heightDiff: Int = view.rootView.height - (r.bottom - r.top)
-//            if (heightDiff < 0) { // if more than 100 pixels, its probably a keyboard...
-//                Toast.makeText(context, "hide", Toast.LENGTH_SHORT).show()
-//            }
-//        })
-
         listeners()
     }
 
@@ -91,7 +89,7 @@ class ConvertFragment : Fragment(), Utility {
                             DigitsKeyListener.getInstance("0123456789.,")
                     }
                     convertViewModel.convertFROMTO()
-                    binding.btnContinue.isEnabled = convertViewModel.checkAmount()
+                    binding.btnContinue.isEnabled = convertViewModel.checkAmount(convertViewModel.amountFrom.value.toString(),walletViewModel.selectedWalletFrom.value.toString())
                 }
             }
         }
@@ -110,7 +108,7 @@ class ConvertFragment : Fragment(), Utility {
                             DigitsKeyListener.getInstance("0123456789.,")
                     }
                     convertViewModel.convertTOFROM()
-                    binding.btnContinue.isEnabled = convertViewModel.checkAmount()
+                    binding.btnContinue.isEnabled = convertViewModel.checkAmount(convertViewModel.amountTo.value.toString(),walletViewModel.selectedWalletTo.value.toString())
                 }
             }
         }
@@ -130,9 +128,14 @@ class ConvertFragment : Fragment(), Utility {
         }
 
         binding.btnReverse.setOnClickListener {
-            convertViewModel.reverseWallets()
+            walletViewModel.reverseWallets()
+            convertViewModel.clearFields()
             binding.etAmountTo.getAmount().isClickable = false
             binding.etAmountFrom.getAmount().isClickable = false
+            convertViewModel.getCourse(
+                walletViewModel.selectedWalletFrom.value!!.currency.toString(),
+                walletViewModel.selectedWalletTo.value!!.currency.toString()
+            )
         }
 
 
