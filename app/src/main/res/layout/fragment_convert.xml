@@ -222,7 +222,7 @@
                     <com.example.walletconvertation.common.customs.CustomTextView
                         android:layout_width="wrap_content"
                         app:setAmount="@{1.00F}"
-                        app:visible="@{convertViewModel.walletEnable}"
+                        app:visible="@{convertViewModel.courseVisibility}"
                         app:setCurrency="@{convertViewModel.setCourseSymbol(walletViewModel.selectedWalletFrom.currency.toString())}"
                         android:layout_height="wrap_content" />
 
@@ -236,12 +236,12 @@
                         android:text="@string/equals"
                         android:textColor="@color/bold_grey"
                         android:textSize="12sp"
-                        android:visibility="@{convertViewModel.walletEnable?View.VISIBLE: View.GONE}" />
+                        android:visibility="@{convertViewModel.courseVisibility?View.VISIBLE: View.GONE}" />
 
                     <com.example.walletconvertation.common.customs.CustomTextView
                         android:layout_width="wrap_content"
                         app:setAmount="@{convertViewModel.rate}"
-                        app:visible="@{convertViewModel.walletEnable}"
+                        app:visible="@{convertViewModel.courseVisibility}"
                         app:setCurrency="@{convertViewModel.setCourseSymbol(walletViewModel.selectedWalletTo.currency.toString())}"
                         android:layout_height="wrap_content" />
 
@@ -273,7 +273,7 @@
                     <com.example.walletconvertation.common.customs.CustomTextView
                         android:layout_width="wrap_content"
                         app:setAmount="@{1.00F}"
-                        app:visible="@{convertViewModel.walletEnable}"
+                        app:visible="@{convertViewModel.courseVisibility}"
                         app:setCurrency="@{convertViewModel.setCourseSymbol(walletViewModel.selectedWalletFrom.currency.toString())}"
                         android:layout_height="wrap_content" />
 
@@ -287,12 +287,12 @@
                         android:text="@string/equals"
                         android:textColor="@color/bold_grey"
                         android:textSize="12sp"
-                        android:visibility="@{convertViewModel.walletEnable?View.VISIBLE: View.GONE}" />
+                        android:visibility="@{convertViewModel.courseVisibility?View.VISIBLE: View.GONE}" />
 
                     <com.example.walletconvertation.common.customs.CustomTextView
                         android:layout_width="wrap_content"
                         app:setAmount="@{convertViewModel.rate}"
-                        app:visible="@{convertViewModel.walletEnable}"
+                        app:visible="@{convertViewModel.courseVisibility}"
                         app:setCurrency="@{convertViewModel.setCourseSymbol(walletViewModel.selectedWalletTo.currency.toString())}"
                         android:layout_height="wrap_content" />
 

@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -57,6 +56,7 @@ class WalletsFragment : Fragment() {
         when (args.walletType) {
             "from" -> {
                 data = walletViewModel.walletFrom.value!!
+                data.find { it.id == walletViewModel.walletsTo.value?.find { !it.enable }?.id.toString().toInt()}?.enable = false
             }
             "to" -> {
                 data = walletViewModel.walletsTo.value!!
@@ -95,9 +95,14 @@ class WalletsFragment : Fragment() {
             }
             "to" -> walletAdapter.onWalletClickListener = {
                 it.is_selected_to = true
+                it.enable = false
                 val data = walletViewModel.walletsTo.value!!
                 data.filterNot { item -> item.id == it.id }
-                    .forEach { el -> el.is_selected_to = false }
+                    .forEach { item ->
+                        item.is_selected_to = false
+                        item.enable = true
+                    }
+                walletViewModel.walletFrom.value!!.forEach { item -> item.enable = true }
                 walletViewModel.updateToData(data)
                 walletViewModel.selectWalletTo(it).also {
                     convertViewModel.getCourse(

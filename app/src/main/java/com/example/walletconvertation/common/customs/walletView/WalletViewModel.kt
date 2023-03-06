@@ -1,5 +1,6 @@
 package com.example.walletconvertation.common.customs.walletView
 
+import android.database.CursorWindowAllocationException
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.*
 import com.example.backend.common.Resource
@@ -10,7 +11,9 @@ import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
 import com.example.walletconvertation.presentation.fragments.convert.ConvertViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.launch
+import java.util.Currency
 import javax.inject.Inject
 
 @HiltViewModel
@@ -61,7 +64,7 @@ class WalletViewModel @Inject constructor(
 
                         val firstWallet = dataFrom.findLast { it.is_default == true }
                         val secondWallet = dataTo.findLast { it.id == (firstWallet!!.id!!.plus(1)) }
-
+                        secondWallet?.let { it.enable = false }
                         _selectedWalletFrom.value = firstWallet
                         _selectedWalletTo.value = secondWallet
 
@@ -84,6 +87,7 @@ class WalletViewModel @Inject constructor(
                     _errorMessage.value = result.message.toString()
                 }
             }
+            disable(errorMessage.value)
             _loading.postValue(false)
         }
     }

@@ -9,8 +9,5 @@ data class WalletModel(
     val account_number: Long? = 0L,
     var is_selected_from: Boolean = false,
     var is_selected_to: Boolean = false,
+    var enable: Boolean = true
 )
-
-data class ListOfWallets(
-    val list : MutableList<WalletModel>
-){}

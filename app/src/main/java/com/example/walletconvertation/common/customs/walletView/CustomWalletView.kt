@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.doOnAttach
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.*
+import com.example.backend.data.model.WalletModel
 import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
 import com.example.walletconvertation.databinding.CustomWalletViewBinding
@@ -29,7 +30,6 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
     private val viewModel by lazy {
         ViewModelProvider(findViewTreeViewModelStoreOwner()!!).get<WalletViewModel>()
     }
-
     init {
         val view = inflate(context, R.layout.custom_wallet_view, this)
         walletImage = view.findViewById(R.id.ivWallet)
@@ -43,9 +43,17 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
             binding.lifecycleOwner = it
         }
 
-       doOnAttach {
-           setViewModel(viewModel)
-       }
+        doOnAttach {
+            setViewModel(viewModel)
+        }
+    }
+
+    private fun onFromWalletClick(walletFrom: WalletModel) {
+        viewModel.selectWalletFrom(walletFrom)
+    }
+
+    private fun onToWalletClick(walletTo: WalletModel) {
+        viewModel.selectWalletTo(walletTo)
     }
 
     private fun setViewModel(convertViewModel: WalletViewModel) {

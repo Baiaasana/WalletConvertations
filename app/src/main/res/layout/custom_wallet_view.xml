@@ -3,9 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
-            type="com.example.walletconvertation.common.customs.walletView.WalletViewModel"/>
+            type="com.example.walletconvertation.common.customs.walletView.WalletViewModel" />
+
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat

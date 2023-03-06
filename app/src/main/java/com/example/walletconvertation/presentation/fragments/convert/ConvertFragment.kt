@@ -9,9 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
@@ -28,10 +30,8 @@ class ConvertFragment : Fragment(), Utility {
     private var _binding: FragmentConvertBinding? = null
     private val binding get() = _binding!!
 
-    private val convertViewModel: ConvertViewModel by hiltNavGraphViewModels(R.id.main_navigation_graph)
-//    private val walletViewModel = ViewModelProvider(requireActivity())[WalletViewModel::class.java]
-
-    private val walletViewModel : WalletViewModel by activityViewModels()
+    private val walletsViewModel : WalletViewModel by activityViewModels()
+    private val convertsViewModel: ConvertViewModel by hiltNavGraphViewModels(R.id.main_navigation_graph)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,24 +40,25 @@ class ConvertFragment : Fragment(), Utility {
     ): View {
         _binding = FragmentConvertBinding.inflate(inflater, container, false)
         return binding.root
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
-            convertViewModel = convertViewModel
-            walletViewModel = walletViewModel
+            convertViewModel = convertsViewModel
+            walletViewModel = walletsViewModel
         }
-
         handleKeyboardEvent()
         listeners()
+
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun listeners() {
         binding.walletFrom.setOnClickListener {
-            convertViewModel.clearFields()
+            convertsViewModel.clearFields()
             findNavController().navigate(
                 ConvertFragmentDirections.actionConvertFragmentToWalletsFragment(
                     "from"
@@ -66,7 +67,7 @@ class ConvertFragment : Fragment(), Utility {
         }
 
         binding.walletTo.setOnClickListener {
-            convertViewModel.clearFields()
+            convertsViewModel.clearFields()
             findNavController().navigate(
                 ConvertFragmentDirections.actionConvertFragmentToWalletsFragment(
                     "to"
@@ -79,17 +80,17 @@ class ConvertFragment : Fragment(), Utility {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 p0?.let {
-                    convertViewModel.amountFrom.value = p0.toString().replace(",", ".")
+                    convertsViewModel.amountFrom.value = p0.toString().replace(",", ".")
 
-                    if (convertViewModel.amountFrom.value!!.contains(".")) {
+                    if (convertsViewModel.amountFrom.value!!.contains(".")) {
                         binding.etAmountFrom.getAmount().keyListener =
                             DigitsKeyListener.getInstance("0123456789")
                     } else {
                         binding.etAmountFrom.getAmount().keyListener =
                             DigitsKeyListener.getInstance("0123456789.,")
                     }
-                    convertViewModel.convertFROMTO()
-                    binding.btnContinue.isEnabled = convertViewModel.checkAmount(convertViewModel.amountFrom.value.toString(),walletViewModel.selectedWalletFrom.value.toString())
+                    convertsViewModel.convertFROMTO()
+                    binding.btnContinue.isEnabled = convertsViewModel.checkAmount(convertsViewModel.amountFrom.value.toString(),walletsViewModel.selectedWalletFrom.value?.balance.toString())
                 }
             }
         }
@@ -99,16 +100,16 @@ class ConvertFragment : Fragment(), Utility {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 p0?.let {
-                    convertViewModel.amountTo.value = p0.toString().replace(",", ".")
-                    if (convertViewModel.amountTo.value!!.contains(".")) {
+                    convertsViewModel.amountTo.value = p0.toString().replace(",", ".")
+                    if (convertsViewModel.amountTo.value!!.contains(".")) {
                         binding.etAmountTo.getAmount().keyListener =
                             DigitsKeyListener.getInstance("0123456789")
                     } else {
                         binding.etAmountTo.getAmount().keyListener =
                             DigitsKeyListener.getInstance("0123456789.,")
                     }
-                    convertViewModel.convertTOFROM()
-                    binding.btnContinue.isEnabled = convertViewModel.checkAmount(convertViewModel.amountTo.value.toString(),walletViewModel.selectedWalletTo.value.toString())
+                    convertsViewModel.convertTOFROM()
+                    binding.btnContinue.isEnabled = convertsViewModel.checkAmount(convertsViewModel.amountTo.value.toString(),walletsViewModel.selectedWalletTo.value?.balance.toString())
                 }
             }
         }
@@ -128,13 +129,13 @@ class ConvertFragment : Fragment(), Utility {
         }
 
         binding.btnReverse.setOnClickListener {
-            walletViewModel.reverseWallets()
-            convertViewModel.clearFields()
+            walletsViewModel.reverseWallets()
+            convertsViewModel.clearFields()
             binding.etAmountTo.getAmount().isClickable = false
             binding.etAmountFrom.getAmount().isClickable = false
-            convertViewModel.getCourse(
-                walletViewModel.selectedWalletFrom.value!!.currency.toString(),
-                walletViewModel.selectedWalletTo.value!!.currency.toString()
+            convertsViewModel.getCourse(
+                walletsViewModel.selectedWalletFrom.value!!.currency.toString(),
+                walletsViewModel.selectedWalletTo.value!!.currency.toString()
             )
         }
 
@@ -166,22 +167,22 @@ class ConvertFragment : Fragment(), Utility {
             override fun onVisibilityChanged(isOpen: Boolean) {
                 if (isOpen) {}
                 else {
-                    convertViewModel.amountFrom.value.let {
+                    convertsViewModel.amountFrom.value.let {
                         if (it!!.isNotEmpty()) {
                             val amount =
-                                convertViewModel.amountFrom.value.toString().replace(",", ".")
+                                convertsViewModel.amountFrom.value.toString().replace(",", ".")
                                     .toDouble()
                             val formattedAmount = kotlinStringFormat(amount, 2)
-                            convertViewModel.amountFrom.value = formattedAmount
+                            convertsViewModel.amountFrom.value = formattedAmount
                         }
                     }
-                    convertViewModel.amountTo.value.let {
+                    convertsViewModel.amountTo.value.let {
                         if (it!!.isNotEmpty()) {
                             val amount =
-                                convertViewModel.amountTo.value.toString().replace(",", ".")
+                                convertsViewModel.amountTo.value.toString().replace(",", ".")
                                     .toDouble()
                             val formattedAmount = kotlinStringFormat(amount, 2)
-                            convertViewModel.amountTo.value = formattedAmount
+                            convertsViewModel.amountTo.value = formattedAmount
                         }
                     }
                 }

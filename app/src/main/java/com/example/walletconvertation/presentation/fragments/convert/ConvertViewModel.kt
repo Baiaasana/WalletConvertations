@@ -20,7 +20,7 @@ open class ConvertViewModel @Inject constructor(
     private val courseRepository: CourseRepository,
     ) : ViewModel(), Utility {
 
-    private val _rate = MutableLiveData(1F)
+    private val _rate = MutableLiveData<Float>(1F)
     val rate: LiveData<Float?> = _rate
 
     private val _loading = MutableLiveData<Boolean>()
@@ -35,8 +35,11 @@ open class ConvertViewModel @Inject constructor(
     private val _etEnable = MutableLiveData(true)
     val etEnable: LiveData<Boolean> = _etEnable
 
-    private val _walletEnable = MutableLiveData(false)
+    private val _walletEnable = MutableLiveData(true)
     val walletEnable: LiveData<Boolean> = _walletEnable
+
+    private val _courseVisibility = MutableLiveData(true)
+    val courseVisibility = _courseVisibility
 
      fun getCourse(from: String, to: String) {
         _loading.postValue(true)
@@ -44,8 +47,8 @@ open class ConvertViewModel @Inject constructor(
             val result = courseRepository.getCourse(from, to).value
             when (result!!.status) {
                 Resource.Status.SUCCESS -> {
-                    result.data?.rate.let {
-                        _rate.postValue(it)
+                    result.data?.rate?.let {
+                        _rate.value = it
                         _errorMessage.value = ""
                     }
                     result.data?.rate ?: kotlin.run {
@@ -56,7 +59,7 @@ open class ConvertViewModel @Inject constructor(
                     _errorMessage.value = result.message.toString()
                 }
             }
-            disable()
+            disable(errorMessage.value)
             _loading.postValue(false)
         }
     }
@@ -109,24 +112,31 @@ open class ConvertViewModel @Inject constructor(
         amountTo.value = ""
     }
 
-    private fun disable() {
-        when (_errorMessage.value.toString()) {
-            ErrorEnum.ERROR.error.toString() -> _etEnable.value = ErrorEnum.ERROR.boolean
+     fun disable(error: String?) {
+        when (error.toString()) {
+            ErrorEnum.ERROR.error.toString() -> {
+                _etEnable.value = ErrorEnum.ERROR.boolean
+                _courseVisibility.value = ErrorEnum.ERROR.boolean
+            }
             ErrorEnum.ERROR_NULL.error.toString() -> {
                 _etEnable.value = ErrorEnum.ERROR_NULL.boolean
                 _walletEnable.value = ErrorEnum.ERROR_NULL.boolean
+                _courseVisibility.value = ErrorEnum.ERROR_NULL.boolean
             }
             ErrorEnum.SERVER_ERROR.error.toString() -> {
                 _etEnable.value = ErrorEnum.SERVER_ERROR.boolean
                 _walletEnable.value = ErrorEnum.SERVER_ERROR.boolean
+                _courseVisibility.value = ErrorEnum.SERVER_ERROR.boolean
             }
             ErrorEnum.NO_ERROR.error.toString() -> {
                 _etEnable.value = ErrorEnum.NO_ERROR.boolean
                 _walletEnable.value = ErrorEnum.NO_ERROR.boolean
+                _courseVisibility.value = ErrorEnum.NO_ERROR.boolean
             }
             else -> {
                 _etEnable.value = ErrorEnum.NO_ERROR.boolean
                 _walletEnable.value = ErrorEnum.NO_ERROR.boolean
+                _courseVisibility.value = ErrorEnum.NO_ERROR.boolean
             }
         }
     }
