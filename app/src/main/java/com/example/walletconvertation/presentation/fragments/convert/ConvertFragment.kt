@@ -9,14 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.backend.data.model.WalletModel
 import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
 import com.example.walletconvertation.common.customs.walletView.WalletCallback
-import com.example.walletconvertation.common.customs.walletView.WalletViewModel
 import com.example.walletconvertation.databinding.FragmentConvertBinding
 import dagger.hilt.android.AndroidEntryPoint
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent.setEventListener
@@ -24,7 +22,7 @@ import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventList
 
 
 @AndroidEntryPoint
-class ConvertFragment : Fragment(), Utility {
+class ConvertFragment : Fragment(), Utility, WalletCallback {
 
     private var _binding: FragmentConvertBinding? = null
     val binding get() = _binding!!
@@ -48,24 +46,28 @@ class ConvertFragment : Fragment(), Utility {
             lifecycleOwner = viewLifecycleOwner
             convertViewModel = viewModel
         }
+        binding.walletFrom.setCallBack(this)
+        binding.walletTo.setCallBack(this)
         handleKeyboardEvent()
         listeners()
-
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun listeners() {
+
+        //listeners dawere tvitom customshi
         binding.walletFrom.setOnClickListener {
-            binding.walletFrom.setEventListener(object : WalletCallback {
-                override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel?) {
-                    super.onSelectedWalletFromChanged(selectedWalletFrom)
-                    viewModel.selectFromWallet(selectedWalletFrom!!)
-                }
-            })
+
+//            binding.walletFrom.setEventListener(object : WalletCallback {
+//                override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel?) {
+//                    super.onSelectedWalletFromChanged(selectedWalletFrom)
+//                    viewModel.selectFromWallet(selectedWalletFrom!!)
+//                }
+//            })
             viewModel.clearFields()
             findNavController().navigate(
                 ConvertFragmentDirections.actionConvertFragmentToWalletsFragment(
-                    "from"
+                    "from", binding.walletFrom.getWalletVIewModel().walletsFrom.value!!.toTypedArray()
                 )
             )
         }
@@ -80,7 +82,7 @@ class ConvertFragment : Fragment(), Utility {
             viewModel.clearFields()
             findNavController().navigate(
                 ConvertFragmentDirections.actionConvertFragmentToWalletsFragment(
-                    "to"
+                    "to", binding.walletFrom.getWalletVIewModel().walletsTo.value!!.toTypedArray()
                 )
             )
         }

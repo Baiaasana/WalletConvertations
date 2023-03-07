@@ -59,11 +59,11 @@ class WalletsFragment : Fragment(), WalletCallback {
         var data : List<WalletModel> = emptyList()
         when (args.walletType) {
             "from" -> {
-                data = listFrom
-                data.find { it.id == listTo.find { !it.enable }?.id.toString().toInt()}?.enable = false
+                data = args.list.toList()
+                data.find { it.id == args.list.toList().find { !it.enable }?.id.toString().toInt()}?.enable = false
             }
             "to" -> {
-                data = listTo
+                data = args.list.toList()
                 data = data.filterNot { it.id == selectedFrom.id }
             }
         }
@@ -84,7 +84,7 @@ class WalletsFragment : Fragment(), WalletCallback {
             "from" -> walletAdapter.onWalletClickListener = {
 
                 it.is_selected_from = true
-                val data = listFrom
+                val data = args.list.toList()
                 data.filterNot { item -> item.id == it.id }
                     .forEach { el -> el.is_selected_from = false }
                 onWalletsFromChanged(data)
@@ -100,13 +100,13 @@ class WalletsFragment : Fragment(), WalletCallback {
             "to" -> walletAdapter.onWalletClickListener = {
                 it.is_selected_to = true
                 it.enable = false
-                val data = listTo
+                val data = args.list.toList()
                 data.filterNot { item -> item.id == it.id }
                     .forEach { item ->
                         item.is_selected_to = false
                         item.enable = true
                     }
-                listFrom.forEach { item -> item.enable = true }
+                args.list.toList().forEach { item -> item.enable = true }
                 onWalletsToChanged(data)
                 onSelectedWalletToChanged(it).also {
                     convertViewModel.getCourse(

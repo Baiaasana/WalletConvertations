@@ -13,6 +13,7 @@ import com.example.backend.data.model.WalletModel
 import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
 import com.example.walletconvertation.databinding.CustomWalletViewBinding
+import com.example.walletconvertation.presentation.fragments.convert.ConvertFragment
 
 class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs),
     Utility {
@@ -48,9 +49,13 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
             setViewModel(viewModel)
             binding.viewModel = viewModel
         }
+
     }
 
     private var callback: WalletCallback? = null
+    fun setCallBack(callback: WalletCallback){
+        this.callback = callback
+    }
 
     fun setEventListener(callback: WalletCallback?) {
         this.callback = callback
@@ -61,25 +66,24 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         viewModel.selectedWalletFrom.observe(findViewTreeLifecycleOwner()!!) { wallet ->
             binding.wallet = wallet
         }
+
+    }
+
+    fun getWalletVIewModel(): WalletViewModel{
+
+        this.viewModel.let { return viewModel }
     }
 
     fun selectFromWallet(selectedWalletFrom: WalletModel) {
-
         if (callback != null) {
             viewModel.selectedWalletFrom.observe(findViewTreeLifecycleOwner()!!) { wallet ->
                 binding.wallet = wallet
             }
             callback!!.onSelectedWalletFromChanged(selectedWalletFrom)
             viewModel.selectWalletFrom(selectedWalletFrom)
-
         }
     }
 
-    fun returnWalletsFrom(){
-        viewModel.walletsFrom.observe(findViewTreeLifecycleOwner()!!) { wallets ->
-            wallets?.let { callback!!.returnListFrom(it) }
-        }
-    }
     fun selectToWallet(selectedWalletTo: WalletModel) {
 
         if (callback != null) {

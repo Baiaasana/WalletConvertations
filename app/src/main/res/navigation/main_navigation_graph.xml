@@ -22,5 +22,8 @@
         <argument
             android:name="wallet_type"
             app:argType="string" />
+        <argument
+            android:name="list"
+            app:argType="com.example.backend.data.model.WalletModel[]" />
     </fragment>
 </navigation>
