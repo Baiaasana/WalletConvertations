@@ -24,8 +24,8 @@ class WalletAdapter :
             binding.apply {
                 tvTitle.text = item.title.toString()
                 tvAccountNumber.text = item.account_number.toString().plus("(${item.currency})")
-                tvAmount.text = item.balance.toString()
-                tvCurrency.text = setSymbol(item.currency.toString())
+                tvAmountWallet.text = item.balance.toString()
+                tvCurrencyWallet.text = setSymbol(item.currency.toString())
                 ivEndIcon.setImageResource(R.drawable.ic_check)
                 if (item.is_selected_from || item.is_selected_to) {
                     ivEndIcon.visibility = View.VISIBLE

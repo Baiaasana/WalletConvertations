@@ -3,13 +3,10 @@ package com.example.walletconvertation.di
 import com.example.backend.data.network.ApiService
 import com.example.backend.common.Constants
 import com.example.backend.common.ResponseHandler
-import com.example.backend.repository.course.CourseRepository
-import com.example.backend.repository.course.CourseRepositoryImpl
-import com.example.backend.repository.wallets.WalletsRepository
-import com.example.backend.repository.wallets.WalletsRepositoryImpl
+import com.example.backend.data.model.WalletModel
+import com.example.walletconvertation.common.customs.walletView.WalletCallback
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -63,5 +60,18 @@ object AppModule {
     @Singleton
     fun responseHandler(): ResponseHandler {
         return ResponseHandler()
+    }
+
+    @Provides
+    @Singleton
+    fun provideWalletCallback(): WalletCallback{
+        return object : WalletCallback {
+            override fun onWalletsFromChanged(walletsFromList: List<WalletModel>?) {}
+            override fun onWalletsToChanged(walletsToList: List<WalletModel>?) {}
+            override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel?) {}
+            override fun onSelectedWalletToChanged(selectedWalletTo: WalletModel?) {}
+            override fun onLoadingStateChanged(loading: Boolean) {}
+            override fun onError(errorMessage: String?) {}
+        }
     }
 }

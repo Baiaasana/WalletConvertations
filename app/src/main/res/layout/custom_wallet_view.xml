@@ -8,14 +8,19 @@
             name="viewModel"
             type="com.example.walletconvertation.common.customs.walletView.WalletViewModel" />
 
+        <variable
+            name="wallet"
+            type="com.example.backend.data.model.WalletModel" />
+
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/wallet"
+        android:id="@+id/walletLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginHorizontal="6dp"
+        tools:context="com.example.walletconvertation.common.customs.walletView"
         android:padding="10dp"
         android:weightSum="1">
 
@@ -40,7 +45,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/fira_go_book"
                 android:gravity="center_vertical"
-                android:text="@string/wallet"
+                android:text="@{wallet.title.toString()}"
                 android:textColor="@color/blue"
                 android:textSize="14sp" />
 
@@ -51,34 +56,34 @@
                 android:layout_marginHorizontal="16dp"
                 android:alpha="0.5"
                 android:ellipsize="end"
+                android:text="@{wallet.account_number.toString()}"
                 android:fontFamily="@font/fira_go_book"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:text="@string/account_number"
                 android:textColor="@color/bold_grey"
                 android:textSize="14sp" />
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvAmount"
+            android:id="@+id/tvAmountWallet"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.7"
+            android:text="xxxx"
             android:fontFamily="@font/fira_go_medium"
             android:gravity="end|center_vertical"
-            android:text="00.00"
             android:textColor="@color/blue"
             android:textSize="14sp" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvCurrency"
+            android:id="@+id/tvCurrencyWallet"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.1"
+            android:text="#"
             android:fontFamily="@font/fira_go_book"
             android:gravity="start|center_vertical"
             android:paddingStart="5dp"
-            android:text="$"
             android:textColor="@color/grey"
             android:textSize="14sp"
             tools:ignore="RtlSymmetry" />
@@ -92,4 +97,5 @@
             android:src="@drawable/ic_arrow_right" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
+
 </layout>

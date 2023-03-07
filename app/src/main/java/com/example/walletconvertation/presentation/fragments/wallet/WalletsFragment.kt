@@ -12,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backend.data.model.WalletModel
 import com.example.walletconvertation.R
+import com.example.walletconvertation.common.customs.walletView.WalletCallback
 import com.example.walletconvertation.common.customs.walletView.WalletViewModel
 import com.example.walletconvertation.databinding.FragmentWalletsBinding
 import com.example.walletconvertation.presentation.adapters.WalletAdapter
@@ -19,7 +20,7 @@ import com.example.walletconvertation.presentation.fragments.convert.ConvertView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class WalletsFragment : Fragment() {
+class WalletsFragment : Fragment(), WalletCallback {
 
     private var _binding: FragmentWalletsBinding? = null
     private val binding get() = _binding!!
@@ -27,9 +28,12 @@ class WalletsFragment : Fragment() {
     private val args: WalletsFragmentArgs by navArgs()
     private val convertViewModel: ConvertViewModel by hiltNavGraphViewModels(R.id.main_navigation_graph)
 
-//    private val walletViewModel = ViewModelProvider(requireActivity())[WalletViewModel::class.java]
+//    private val walletViewModel : WalletViewModel by activityViewModels()
 
-    private val walletViewModel : WalletViewModel by activityViewModels()
+    var listFrom: List<WalletModel> = emptyList()
+    var listTo: List<WalletModel> = emptyList()
+    var selectedFrom: WalletModel = WalletModel()
+    var selectedTo: WalletModel = WalletModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,12 +59,12 @@ class WalletsFragment : Fragment() {
         var data : List<WalletModel> = emptyList()
         when (args.walletType) {
             "from" -> {
-                data = walletViewModel.walletFrom.value!!
-                data.find { it.id == walletViewModel.walletsTo.value?.find { !it.enable }?.id.toString().toInt()}?.enable = false
+                data = listFrom
+                data.find { it.id == listTo.find { !it.enable }?.id.toString().toInt()}?.enable = false
             }
             "to" -> {
-                data = walletViewModel.walletsTo.value!!
-                data = data.filterNot { it.id == walletViewModel.selectedWalletFrom.value?.id }
+                data = listTo
+                data = data.filterNot { it.id == selectedFrom.id }
             }
         }
         walletAdapter.submitList(data)
@@ -78,16 +82,16 @@ class WalletsFragment : Fragment() {
 
         when (args.walletType) {
             "from" -> walletAdapter.onWalletClickListener = {
+
                 it.is_selected_from = true
-                val data = walletViewModel.walletFrom.value!!
+                val data = listFrom
                 data.filterNot { item -> item.id == it.id }
                     .forEach { el -> el.is_selected_from = false }
-                walletViewModel.updateFromData(data)
-
-                walletViewModel.selectWalletFrom(it).also {
+                onWalletsFromChanged(data)
+                onSelectedWalletFromChanged(it).also {
                     convertViewModel.getCourse(
-                        walletViewModel.selectedWalletFrom.value!!.currency.toString(),
-                        walletViewModel.selectedWalletTo.value!!.currency.toString()
+                        convertViewModel.selectedWalletFrom.value!!.currency.toString(),
+                        convertViewModel.selectedWalletTo.value!!.currency.toString()
                     )
                 }
 
@@ -96,18 +100,18 @@ class WalletsFragment : Fragment() {
             "to" -> walletAdapter.onWalletClickListener = {
                 it.is_selected_to = true
                 it.enable = false
-                val data = walletViewModel.walletsTo.value!!
+                val data = listTo
                 data.filterNot { item -> item.id == it.id }
                     .forEach { item ->
                         item.is_selected_to = false
                         item.enable = true
                     }
-                walletViewModel.walletFrom.value!!.forEach { item -> item.enable = true }
-                walletViewModel.updateToData(data)
-                walletViewModel.selectWalletTo(it).also {
+                listFrom.forEach { item -> item.enable = true }
+                onWalletsToChanged(data)
+                onSelectedWalletToChanged(it).also {
                     convertViewModel.getCourse(
-                        walletViewModel.selectedWalletFrom.value!!.currency.toString(),
-                        walletViewModel.selectedWalletTo.value!!.currency.toString()
+                        convertViewModel.selectedWalletFrom.value!!.currency.toString(),
+                        convertViewModel.selectedWalletTo.value!!.currency.toString()
                     )
                 }
                 findNavController().navigateUp()

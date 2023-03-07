@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.backend.common.Resource
+import com.example.backend.data.model.WalletModel
 import com.example.backend.repository.course.CourseRepository
 import com.example.backend.repository.wallets.WalletsRepository
 import com.example.walletconvertation.common.CourseSymbols
@@ -41,7 +42,17 @@ open class ConvertViewModel @Inject constructor(
     private val _courseVisibility = MutableLiveData(true)
     val courseVisibility = _courseVisibility
 
-     fun getCourse(from: String, to: String) {
+    private val _selectedWalletFrom = MutableLiveData(WalletModel())
+    val selectedWalletFrom: LiveData<WalletModel?> = _selectedWalletFrom
+
+    private val _selectedWalletTo = MutableLiveData(WalletModel())
+    val selectedWalletTo: LiveData<WalletModel?> = _selectedWalletTo
+
+    init {
+        getCourse(selectedWalletFrom.value!!.currency.toString(),selectedWalletTo.value!!.currency.toString() )
+    }
+
+    fun getCourse(from: String, to: String) {
         _loading.postValue(true)
         viewModelScope.launch {
             val result = courseRepository.getCourse(from, to).value
@@ -62,6 +73,14 @@ open class ConvertViewModel @Inject constructor(
             disable(errorMessage.value)
             _loading.postValue(false)
         }
+    }
+
+    fun selectFromWallet(fromWallet: WalletModel){
+        _selectedWalletFrom.value = fromWallet
+    }
+
+    fun selectToWallet(toWallet: WalletModel){
+        _selectedWalletTo.value = toWallet
     }
 
     fun setCourseSymbol(course: String): String {
