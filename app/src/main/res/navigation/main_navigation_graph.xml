@@ -23,7 +23,9 @@
             android:name="wallet_type"
             app:argType="string" />
         <argument
-            android:name="list"
+            android:name="fromList"
+            app:argType="com.example.backend.data.model.WalletModel[]" />
+        <argument android:name="toList"
             app:argType="com.example.backend.data.model.WalletModel[]" />
     </fragment>
 </navigation>

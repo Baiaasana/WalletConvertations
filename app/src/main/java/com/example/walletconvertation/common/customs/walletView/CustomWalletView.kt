@@ -4,19 +4,22 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.doOnAttach
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.*
+import androidx.navigation.findNavController
 import com.example.backend.data.model.WalletModel
 import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
 import com.example.walletconvertation.databinding.CustomWalletViewBinding
-import com.example.walletconvertation.presentation.fragments.convert.ConvertFragment
+import com.example.walletconvertation.presentation.fragments.convert.ConvertFragmentDirections
 
 class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs),
-    Utility {
+    Utility, WalletCallback {
 
     private val walletImage: AppCompatImageView
     private val walletTitle: AppCompatTextView
@@ -24,22 +27,33 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
     private val amount: AppCompatTextView
     private val currency: AppCompatTextView
     private val endIcon: AppCompatImageView
+    private val walletView: LinearLayoutCompat
 
     private val binding: CustomWalletViewBinding =
         CustomWalletViewBinding.inflate(LayoutInflater.from(context), this, true)
 
+    //        private val viewModel =
+//        ViewModelProvider(findViewTreeViewModelStoreOwner()!!).get<WalletViewModel>()
+
+//    private val viewModel by lazy(LazyThreadSafetyMode.NONE) {
+//        ViewModelProvider(findViewTreeViewModelStoreOwner()!!)[WalletViewModel::class.java]
+//    }
+
     private val viewModel by lazy {
-        ViewModelProvider(findViewTreeViewModelStoreOwner()!!).get<WalletViewModel>()
+        val viewModelStoreOwner = checkNotNull(findViewTreeViewModelStoreOwner())
+        ViewModelProvider(viewModelStoreOwner).get<WalletViewModel>()
     }
+
 
     init {
         val view = inflate(context, R.layout.custom_wallet_view, this)
-        walletImage = view.findViewById(R.id.ivWallet)
-        walletTitle = view.findViewById(R.id.tvTitle)
-        accountNumber = view.findViewById(R.id.tvAccountNumber)
+        walletImage = binding.ivWallet
+        walletTitle = binding.tvTitle
+        accountNumber = binding.tvAccountNumber
         amount = binding.tvAmountWallet
         currency = binding.tvCurrencyWallet
-        endIcon = view.findViewById(R.id.ivEndIcon)
+        endIcon = binding.ivEndIcon
+        walletView = binding.walletLayout
 
         getLifeCycleOwner(this)?.let {
             binding.lifecycleOwner = it
@@ -50,38 +64,73 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
             binding.viewModel = viewModel
         }
 
+        walletView.setOnClickListener {
+            val currency = getCurrency().text.toString()
+            if (currency == setSymbol(viewModel.selectedWalletFrom.value!!.currency.toString())) {
+                onWalletClick("from")
+            }
+            if (currency == setSymbol(viewModel.selectedWalletTo.value!!.currency.toString())) {
+                onWalletClick("to")
+            }
+        }
     }
 
     private var callback: WalletCallback? = null
-    fun setCallBack(callback: WalletCallback){
+    fun setCallBack(callback: WalletCallback) {
         this.callback = callback
     }
 
-    fun setEventListener(callback: WalletCallback?) {
-        this.callback = callback
+    private fun onWalletClick(walletType: String) {
+        if (walletType == "from") {
+            findNavController().navigate(
+                ConvertFragmentDirections.actionConvertFragmentToWalletsFragment(
+                    walletType = walletType,
+                    fromList = viewModel.walletsFrom.value!!.toTypedArray(),
+                    toList = viewModel.walletsTo.value!!.toTypedArray()
+                )
+            )
+        }
+        if (walletType == "to") {
+            findNavController().navigate(
+                ConvertFragmentDirections.actionConvertFragmentToWalletsFragment(
+                    walletType = walletType,
+                    fromList = viewModel.walletsFrom.value!!.toTypedArray(),
+                    toList = viewModel.walletsTo.value!!.toTypedArray()
+                )
+            )
+        }
+    }
+
+    fun setData(walletType: String) {
+        if (walletType == "from") {
+            binding.wallet = viewModel.selectedWalletFrom.value
+        }
+        if (walletType == "to") {
+            binding.wallet = viewModel.selectedWalletTo.value
+        }
+    }
+
+    fun selectFromWallet(walletType: String, callback: WalletCallback, wallet: WalletModel) {
+        if (walletType == "from") {
+            callback.onSelectedWalletFromChanged(wallet)
+        }
+        if (walletType == "to") {
+            callback.onSelectedWalletToChanged(wallet)
+            viewModel.selectWalletTo(wallet)
+        }
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        viewModel.selectedWalletFrom.observe(findViewTreeLifecycleOwner()!!) { wallet ->
-            binding.wallet = wallet
-        }
 
     }
 
-    fun getWalletVIewModel(): WalletViewModel{
+//    fun getWalletViewModel(): WalletViewModel {
+//        this.viewModel.let { return viewModel }
+//    }
 
-        this.viewModel.let { return viewModel }
-    }
-
-    fun selectFromWallet(selectedWalletFrom: WalletModel) {
-        if (callback != null) {
-            viewModel.selectedWalletFrom.observe(findViewTreeLifecycleOwner()!!) { wallet ->
-                binding.wallet = wallet
-            }
-            callback!!.onSelectedWalletFromChanged(selectedWalletFrom)
-            viewModel.selectWalletFrom(selectedWalletFrom)
-        }
+    override fun onSelectedWalletFromChanged(wallet: WalletModel) {
+        viewModel.selectWalletFrom(wallet)
     }
 
     fun selectToWallet(selectedWalletTo: WalletModel) {

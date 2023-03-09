@@ -62,12 +62,12 @@ class WalletViewModel @Inject constructor(
                         secondWallet?.let { it.enable = false }
 
                         _selectedWalletFrom.value = firstWallet
-                        onSelectedWalletFromChanged(firstWallet)
+                        onSelectedWalletFromChanged(firstWallet!!)
                         _selectedWalletTo.value = secondWallet
-                        onSelectedWalletToChanged(secondWallet)
+                        onSelectedWalletToChanged(secondWallet!!)
 
-                        dataFrom.find { it.id == firstWallet!!.id }!!.is_selected_from = true
-                        dataTo.find { it.id == secondWallet!!.id }!!.is_selected_to = true
+                        dataFrom.find { it.id == firstWallet.id }!!.is_selected_from = true
+                        dataTo.find { it.id == secondWallet.id }!!.is_selected_to = true
 
                         _walletsFrom.value = dataFrom
                         onWalletsFromChanged(dataFrom)
@@ -88,30 +88,37 @@ class WalletViewModel @Inject constructor(
         }
     }
 
-    fun setCourseSymbol(course: String): String {
-
-        return when (course) {
-            CourseSymbols.RUB.name -> CourseSymbols.RUB.symbol
-            CourseSymbols.USD.name -> CourseSymbols.USD.symbol
-            CourseSymbols.EUR.name -> CourseSymbols.EUR.symbol
-            else -> CourseSymbols.GEL.symbol
-        }
-    }
-
-    fun updateFromData(updatedData: List<WalletModel>) {
-        _walletsFrom.value = updatedData
-    }
-
-
-
-    fun updateToData(updatedData: List<WalletModel>) {
-        _walletsTo.value = updatedData
-    }
+    fun setCourseSymbol(course: String) = setSymbol(course)
 
     fun reverseWallets() {
         val from = _selectedWalletFrom.value
         val to = _selectedWalletTo.value
         _selectedWalletFrom.value = to
         _selectedWalletTo.value = from
+    }
+
+    override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {
+        super.onSelectedWalletFromChanged(selectedWalletFrom)
+        _selectedWalletFrom.value = selectedWalletFrom
+    }
+
+    override fun onSelectedWalletToChanged(selectedWalletTo: WalletModel) {
+        super.onSelectedWalletToChanged(selectedWalletTo)
+        _selectedWalletTo.value = selectedWalletTo
+    }
+
+    override fun onWalletsFromChanged(walletsFromList: List<WalletModel>) {
+        super.onWalletsFromChanged(walletsFromList)
+        _walletsFrom.value = walletsFromList
+    }
+
+    override fun onWalletsToChanged(walletsToList: List<WalletModel>) {
+        super.onWalletsToChanged(walletsToList)
+        _walletsTo.value = walletsToList
+    }
+
+    override fun onLoadingStateChanged(loading: Boolean) {
+        super.onLoadingStateChanged(loading)
+        _loading.value = loading
     }
 }

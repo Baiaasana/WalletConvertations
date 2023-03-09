@@ -1,6 +1,7 @@
 package com.example.walletconvertation.presentation.fragments.wallet
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,6 +47,8 @@ class WalletsFragment : Fragment(), WalletCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+//        binding.walletFrom.setCallBack(this)
+//        binding.walletTo.setCallBack(this)
         listeners()
         init()
     }
@@ -59,12 +62,15 @@ class WalletsFragment : Fragment(), WalletCallback {
         var data : List<WalletModel> = emptyList()
         when (args.walletType) {
             "from" -> {
-                data = args.list.toList()
-                data.find { it.id == args.list.toList().find { !it.enable }?.id.toString().toInt()}?.enable = false
+                data = args.fromList.toList()
+                Log.d("log", "args list from - ".plus(data))
+                data.find { it.id == args.toList.toList().find { wallet -> !wallet.enable }?.id.toString().toInt()}?.enable = false
             }
             "to" -> {
-                data = args.list.toList()
+                data = args.toList.toList()
+                Log.d("log", "args list to - ".plus(data))
                 data = data.filterNot { it.id == selectedFrom.id }
+                Log.d("log", "args filter to - ".plus(data))
             }
         }
         walletAdapter.submitList(data)
@@ -82,9 +88,8 @@ class WalletsFragment : Fragment(), WalletCallback {
 
         when (args.walletType) {
             "from" -> walletAdapter.onWalletClickListener = {
-
                 it.is_selected_from = true
-                val data = args.list.toList()
+                val data = args.fromList.toList()
                 data.filterNot { item -> item.id == it.id }
                     .forEach { el -> el.is_selected_from = false }
                 onWalletsFromChanged(data)
@@ -100,13 +105,13 @@ class WalletsFragment : Fragment(), WalletCallback {
             "to" -> walletAdapter.onWalletClickListener = {
                 it.is_selected_to = true
                 it.enable = false
-                val data = args.list.toList()
+                val data = args.toList.toList()
                 data.filterNot { item -> item.id == it.id }
                     .forEach { item ->
                         item.is_selected_to = false
                         item.enable = true
                     }
-                args.list.toList().forEach { item -> item.enable = true }
+                args.fromList.toList().forEach { item -> item.enable = true }
                 onWalletsToChanged(data)
                 onSelectedWalletToChanged(it).also {
                     convertViewModel.getCourse(

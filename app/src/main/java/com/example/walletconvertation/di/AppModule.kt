@@ -1,9 +1,9 @@
 package com.example.walletconvertation.di
 
-import com.example.backend.data.network.ApiService
 import com.example.backend.common.Constants
 import com.example.backend.common.ResponseHandler
 import com.example.backend.data.model.WalletModel
+import com.example.backend.data.network.ApiService
 import com.example.walletconvertation.common.customs.walletView.WalletCallback
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -66,12 +66,12 @@ object AppModule {
     @Singleton
     fun provideWalletCallback(): WalletCallback{
         return object : WalletCallback {
-            override fun onWalletsFromChanged(walletsFromList: List<WalletModel>?) {}
-            override fun onWalletsToChanged(walletsToList: List<WalletModel>?) {}
-            override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel?) {}
-            override fun onSelectedWalletToChanged(selectedWalletTo: WalletModel?) {}
+            override fun onWalletsFromChanged(walletsFromList: List<WalletModel>) {}
+            override fun onWalletsToChanged(walletsToList: List<WalletModel>) {}
+            override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {}
+            override fun onSelectedWalletToChanged(selectedWalletTo: WalletModel) {}
             override fun onLoadingStateChanged(loading: Boolean) {}
-            override fun onError(errorMessage: String?) {}
+            override fun onError(errorMessage: String) {}
         }
     }
 }

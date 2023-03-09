@@ -8,6 +8,7 @@ import android.text.method.DigitsKeyListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnAttach
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
@@ -37,7 +38,6 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
     ): View {
         _binding = FragmentConvertBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,81 +50,15 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
         binding.walletTo.setCallBack(this)
         handleKeyboardEvent()
         listeners()
+        init()
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    private fun init(){
+        binding.walletFrom.doOnAttach { binding.walletFrom.setData("from") }
+        binding.walletTo.doOnAttach { binding.walletTo.setData("to") }
+    }
+
     private fun listeners() {
-
-        //listeners dawere tvitom customshi
-        binding.walletFrom.setOnClickListener {
-
-//            binding.walletFrom.setEventListener(object : WalletCallback {
-//                override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel?) {
-//                    super.onSelectedWalletFromChanged(selectedWalletFrom)
-//                    viewModel.selectFromWallet(selectedWalletFrom!!)
-//                }
-//            })
-            viewModel.clearFields()
-            findNavController().navigate(
-                ConvertFragmentDirections.actionConvertFragmentToWalletsFragment(
-                    "from", binding.walletFrom.getWalletVIewModel().walletsFrom.value!!.toTypedArray()
-                )
-            )
-        }
-
-        binding.walletTo.setOnClickListener {
-            binding.walletTo.setEventListener(object : WalletCallback {
-                override fun onSelectedWalletToChanged(selectedWalletTo: WalletModel?) {
-                    super.onSelectedWalletToChanged(selectedWalletTo)
-                    viewModel.selectToWallet(selectedWalletTo!!)
-                }
-            })
-            viewModel.clearFields()
-            findNavController().navigate(
-                ConvertFragmentDirections.actionConvertFragmentToWalletsFragment(
-                    "to", binding.walletFrom.getWalletVIewModel().walletsTo.value!!.toTypedArray()
-                )
-            )
-        }
-
-        val amountFromWatcher = object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {}
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                p0?.let {
-                    viewModel.amountFrom.value = p0.toString().replace(",", ".")
-
-                    if (viewModel.amountFrom.value!!.contains(".")) {
-                        binding.etAmountFrom.getAmount().keyListener =
-                            DigitsKeyListener.getInstance("0123456789")
-                    } else {
-                        binding.etAmountFrom.getAmount().keyListener =
-                            DigitsKeyListener.getInstance("0123456789.,")
-                    }
-                    viewModel.convertFROMTO()
-//                    binding.btnContinue.isEnabled = viewModel.checkAmount(viewModel.amountFrom.value.toString(),walletsViewModel.selectedWalletFrom.value?.balance.toString())
-                }
-            }
-        }
-
-        val amountToWatcher = object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {}
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                p0?.let {
-                    viewModel.amountTo.value = p0.toString().replace(",", ".")
-                    if (viewModel.amountTo.value!!.contains(".")) {
-                        binding.etAmountTo.getAmount().keyListener =
-                            DigitsKeyListener.getInstance("0123456789")
-                    } else {
-                        binding.etAmountTo.getAmount().keyListener =
-                            DigitsKeyListener.getInstance("0123456789.,")
-                    }
-                    viewModel.convertTOFROM()
-//                    binding.btnContinue.isEnabled = viewModel.checkAmount(viewModel.amountTo.value.toString(),walletsViewModel.selectedWalletTo.value?.balance.toString())
-                }
-            }
-        }
 
         binding.etAmountFrom.getAmount().setOnFocusChangeListener { view, hasFocused ->
             if (hasFocused) {
@@ -151,9 +85,47 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
 //            )
 //        }
 
-
         binding.root.setOnClickListener {
             it?.let { activity?.hideKeyboard(it) }
+        }
+    }
+
+    private val amountFromWatcher = object : TextWatcher {
+        override fun afterTextChanged(p0: Editable?) {}
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            p0?.let {
+                viewModel.amountFrom.value = p0.toString().replace(",", ".")
+
+                if (viewModel.amountFrom.value!!.contains(".")) {
+                    binding.etAmountFrom.getAmount().keyListener =
+                        DigitsKeyListener.getInstance("0123456789")
+                } else {
+                    binding.etAmountFrom.getAmount().keyListener =
+                        DigitsKeyListener.getInstance("0123456789.,")
+                }
+                viewModel.convertFROMTO()
+//                    binding.btnContinue.isEnabled = viewModel.checkAmount(viewModel.amountFrom.value.toString(),walletsViewModel.selectedWalletFrom.value?.balance.toString())
+            }
+        }
+    }
+
+    private val amountToWatcher = object : TextWatcher {
+        override fun afterTextChanged(p0: Editable?) {}
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            p0?.let {
+                viewModel.amountTo.value = p0.toString().replace(",", ".")
+                if (viewModel.amountTo.value!!.contains(".")) {
+                    binding.etAmountTo.getAmount().keyListener =
+                        DigitsKeyListener.getInstance("0123456789")
+                } else {
+                    binding.etAmountTo.getAmount().keyListener =
+                        DigitsKeyListener.getInstance("0123456789.,")
+                }
+                viewModel.convertTOFROM()
+//                    binding.btnContinue.isEnabled = viewModel.checkAmount(viewModel.amountTo.value.toString(),walletsViewModel.selectedWalletTo.value?.balance.toString())
+            }
         }
     }
 
