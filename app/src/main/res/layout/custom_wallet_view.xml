@@ -2,17 +2,17 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
+        <data>
 
-        <variable
-            name="viewModel"
-            type="com.example.walletconvertation.common.customs.walletView.WalletViewModel" />
+            <variable
+                name="viewModel"
+                type="com.example.walletconvertation.common.customs.walletView.WalletViewModel" />
 
-        <variable
-            name="wallet"
-            type="com.example.backend.data.model.WalletModel" />
+            <variable
+                name="wallet"
+                type="com.example.backend.data.model.WalletModel" />
 
-    </data>
+        </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/walletLayout"
@@ -24,7 +24,7 @@
         android:padding="10dp"
         android:weightSum="1">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <ImageView
             android:id="@+id/ivWallet"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -80,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.1"
-            android:text="@{viewModel.setCourseSymbol(wallet.currency)}"
+            android:text="₾"
             android:fontFamily="@font/fira_go_book"
             android:gravity="start|center_vertical"
             android:paddingStart="5dp"
@@ -88,7 +88,7 @@
             android:textSize="14sp"
             tools:ignore="RtlSymmetry" />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <ImageView
             android:id="@+id/ivEndIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

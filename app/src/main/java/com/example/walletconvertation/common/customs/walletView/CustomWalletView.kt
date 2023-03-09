@@ -3,9 +3,9 @@ package com.example.walletconvertation.common.customs.walletView
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.Toast
-import androidx.appcompat.widget.AppCompatImageView
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.doOnAttach
@@ -21,50 +21,44 @@ import com.example.walletconvertation.presentation.fragments.convert.ConvertFrag
 class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs),
     Utility, WalletCallback {
 
-    private val walletImage: AppCompatImageView
-    private val walletTitle: AppCompatTextView
-    private val accountNumber: AppCompatTextView
-    private val amount: AppCompatTextView
-    private val currency: AppCompatTextView
-    private val endIcon: AppCompatImageView
-    private val walletView: LinearLayoutCompat
-
     private val binding: CustomWalletViewBinding =
         CustomWalletViewBinding.inflate(LayoutInflater.from(context), this, true)
 
-    //        private val viewModel =
-//        ViewModelProvider(findViewTreeViewModelStoreOwner()!!).get<WalletViewModel>()
+    private val viewModel by lazy {
+        ViewModelProvider(findViewTreeViewModelStoreOwner()!!).get<WalletViewModel>()
+    }
+
 
 //    private val viewModel by lazy(LazyThreadSafetyMode.NONE) {
 //        ViewModelProvider(findViewTreeViewModelStoreOwner()!!)[WalletViewModel::class.java]
 //    }
 
-    private val viewModel by lazy {
-        val viewModelStoreOwner = checkNotNull(findViewTreeViewModelStoreOwner())
-        ViewModelProvider(viewModelStoreOwner).get<WalletViewModel>()
-    }
-
+//    private val viewModel by lazy {
+//        val viewModelStoreOwner = checkNotNull(findViewTreeViewModelStoreOwner())
+//        ViewModelProvider(viewModelStoreOwner).get<WalletViewModel>()
+//    }
 
     init {
         val view = inflate(context, R.layout.custom_wallet_view, this)
-        walletImage = binding.ivWallet
-        walletTitle = binding.tvTitle
-        accountNumber = binding.tvAccountNumber
-        amount = binding.tvAmountWallet
-        currency = binding.tvCurrencyWallet
-        endIcon = binding.ivEndIcon
-        walletView = binding.walletLayout
 
         getLifeCycleOwner(this)?.let {
             binding.lifecycleOwner = it
         }
 
+//        binding.lifecycleOwner = findViewTreeLifecycleOwner()
+
         doOnAttach {
             setViewModel(viewModel)
             binding.viewModel = viewModel
+            binding.wallet = viewModel.selectedWalletFrom.value
+
+//            viewModel.selectedWalletFrom.observe(viewLifecycleOwner, Observer { newScore ->
+//            })
+
+
         }
 
-        walletView.setOnClickListener {
+        getWalletView().setOnClickListener {
             val currency = getCurrency().text.toString()
             if (currency == setSymbol(viewModel.selectedWalletFrom.value!!.currency.toString())) {
                 onWalletClick("from")
@@ -103,10 +97,14 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
 
     fun setData(walletType: String) {
         if (walletType == "from") {
-            binding.wallet = viewModel.selectedWalletFrom.value
+            viewModel.selectedWalletFrom.observe(findViewTreeLifecycleOwner()!!) { wallet ->
+                binding.wallet = wallet
+            }
         }
         if (walletType == "to") {
-            binding.wallet = viewModel.selectedWalletTo.value
+            viewModel.selectedWalletTo.observe(findViewTreeLifecycleOwner()!!) { wallet ->
+                binding.wallet = wallet
+            }
         }
     }
 
@@ -122,6 +120,9 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+//        viewModel.selectedWalletFrom.observe(findViewTreeLifecycleOwner()!!) { wallet ->
+//            binding.wallet = wallet
+//        }
 
     }
 
@@ -149,54 +150,58 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         binding.viewModel = convertViewModel
     }
 
-    fun getAmount(): AppCompatTextView {
-        return amount
+    private fun getWalletView(): LinearLayoutCompat {
+        return binding.walletLayout
     }
 
-    fun getTitle(): AppCompatTextView {
-        return walletTitle
+//    fun getAmount(): TextView {
+//        return binding.tvAmountWallet
+//    }
+
+    fun getTitle(): TextView {
+        return binding.tvTitle
     }
 
-    fun getAccount(): AppCompatTextView {
-        return accountNumber
+    fun getAccount(): TextView {
+        return binding.tvAccountNumber
     }
 
-    fun getCurrency(): AppCompatTextView {
-        return currency
+    private fun getCurrency(): AppCompatTextView {
+        return binding.tvCurrencyWallet
     }
 
-    fun getEndIcon() : AppCompatImageView{
-        return endIcon
+    fun getEndIcon(): ImageView {
+        return binding.ivEndIcon
     }
 }
 
-@BindingAdapter("walletCurrency")
-fun setCurrency(wallet: CustomWalletView, currency: String?) {
-    currency.let {
-        wallet.getCurrency().text = currency
-    }
-}
-
-@BindingAdapter("walletAmount")
-fun setAmount(wallet: CustomWalletView, amount: String?) {
-    amount.let {
-        wallet.getAmount().text = amount
-    }
-}
-
-@BindingAdapter("walletTitle")
-fun setTitle(view: CustomWalletView, title: String?) {
-    title.let {
-        view.getTitle().text = title
-    }
-}
-
-@BindingAdapter("accountNumber")
-fun setAccountNumber(view: CustomWalletView, accountNumber: String?) {
-    accountNumber.let {
-        view.getAccount().text = accountNumber
-    }
-}
+//@BindingAdapter("walletCurrency")
+//fun setCurrency(wallet: CustomWalletView, currency: String?) {
+//    currency.let {
+//        wallet.getCurrency().text = currency
+//    }
+//}
+//
+//@BindingAdapter("walletAmount")
+//fun setAmount(wallet: CustomWalletView, amount: String?) {
+//    amount.let {
+//        wallet.getAmount().text = amount
+//    }
+//}
+//
+//@BindingAdapter("walletTitle")
+//fun setTitle(view: CustomWalletView, title: String?) {
+//    title.let {
+//        view.getTitle().text = title
+//    }
+//}
+//
+//@BindingAdapter("accountNumber")
+//fun setAccountNumber(view: CustomWalletView, accountNumber: String?) {
+//    accountNumber.let {
+//        view.getAccount().text = accountNumber
+//    }
+//}
 
 @BindingAdapter("wallet_enabled")
 fun setDisable(view: CustomWalletView, boolean: Boolean) {

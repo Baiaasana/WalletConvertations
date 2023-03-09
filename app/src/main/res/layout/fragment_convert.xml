@@ -216,7 +216,7 @@
                         android:layout_height="wrap_content" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tv_equals"
+                        android:id="@+id/tvEqualsFirst"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/fira_go_book"
@@ -267,7 +267,7 @@
                         android:layout_height="wrap_content" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tvEquals"
+                        android:id="@+id/tvEqualsSecond"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/fira_go_book"

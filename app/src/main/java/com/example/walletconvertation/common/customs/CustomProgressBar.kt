@@ -10,7 +10,6 @@ import com.example.walletconvertation.R
 class CustomProgressBar(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
 
     private val progressBar: ProgressBar
-
     init {
         val view = inflate(context, R.layout.custom_progress_bar, this)
         progressBar = view.findViewById(R.id.customProgressBar)

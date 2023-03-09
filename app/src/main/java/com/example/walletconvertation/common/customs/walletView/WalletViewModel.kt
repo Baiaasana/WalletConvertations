@@ -16,10 +16,10 @@ class WalletViewModel @Inject constructor(
     private val walletsRepository: WalletsRepository) : Utility, ViewModel(), WalletCallback {
 
     private val _loading = MutableLiveData<Boolean>()
-    val loading1: LiveData<Boolean> = _loading
+    val loading: LiveData<Boolean> = _loading
 
     private val _errorMessage = MutableLiveData("")
-    val errorMessage1: LiveData<String?> = _errorMessage
+    val errorMessage: LiveData<String?> = _errorMessage
 
     private val _walletsFrom = MutableLiveData<List<WalletModel>?>()
     val walletsFrom: LiveData<List<WalletModel>?> = _walletsFrom
@@ -35,14 +35,6 @@ class WalletViewModel @Inject constructor(
 
     init {
         getWallets()
-    }
-
-    fun selectWalletFrom(walletModel: WalletModel) {
-        _selectedWalletFrom.value = walletModel
-    }
-
-    fun selectWalletTo(walletModel: WalletModel) {
-        _selectedWalletTo.value = walletModel
     }
 
     private fun getWallets() {
@@ -95,6 +87,13 @@ class WalletViewModel @Inject constructor(
         val to = _selectedWalletTo.value
         _selectedWalletFrom.value = to
         _selectedWalletTo.value = from
+    }
+
+    fun selectWalletFrom(walletModel: WalletModel) {
+        _selectedWalletFrom.value = walletModel
+    }
+    fun selectWalletTo(walletModel: WalletModel) {
+        _selectedWalletTo.value = walletModel
     }
 
     override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {
