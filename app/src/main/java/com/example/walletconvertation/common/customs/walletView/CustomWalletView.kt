@@ -3,9 +3,7 @@ package com.example.walletconvertation.common.customs.walletView
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.doOnAttach
@@ -13,48 +11,20 @@ import androidx.databinding.BindingAdapter
 import androidx.lifecycle.*
 import androidx.navigation.findNavController
 import com.example.backend.data.model.WalletModel
-import com.example.walletconvertation.R
-import com.example.walletconvertation.common.Utility
+import com.example.walletconvertation.common.CourseSymbols
 import com.example.walletconvertation.databinding.CustomWalletViewBinding
 import com.example.walletconvertation.presentation.fragments.convert.ConvertFragmentDirections
 
-class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs),
-    Utility, WalletCallback {
+class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
 
-    private val binding: CustomWalletViewBinding =
-        CustomWalletViewBinding.inflate(LayoutInflater.from(context), this, true)
-
+    private val binding = CustomWalletViewBinding.inflate(LayoutInflater.from(context), this, true)
     private val viewModel by lazy {
         ViewModelProvider(findViewTreeViewModelStoreOwner()!!).get<WalletViewModel>()
     }
-
-
-//    private val viewModel by lazy(LazyThreadSafetyMode.NONE) {
-//        ViewModelProvider(findViewTreeViewModelStoreOwner()!!)[WalletViewModel::class.java]
-//    }
-
-//    private val viewModel by lazy {
-//        val viewModelStoreOwner = checkNotNull(findViewTreeViewModelStoreOwner())
-//        ViewModelProvider(viewModelStoreOwner).get<WalletViewModel>()
-//    }
-
     init {
-        val view = inflate(context, R.layout.custom_wallet_view, this)
 
-        getLifeCycleOwner(this)?.let {
-            binding.lifecycleOwner = it
-        }
-
-//        binding.lifecycleOwner = findViewTreeLifecycleOwner()
-
+        binding.lifecycleOwner = findViewTreeLifecycleOwner()
         doOnAttach {
-            setViewModel(viewModel)
-            binding.viewModel = viewModel
-            binding.wallet = viewModel.selectedWalletFrom.value
-
-//            viewModel.selectedWalletFrom.observe(viewLifecycleOwner, Observer { newScore ->
-//            })
-
 
         }
 
@@ -66,6 +36,26 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
             if (currency == setSymbol(viewModel.selectedWalletTo.value!!.currency.toString())) {
                 onWalletClick("to")
             }
+        }
+    }
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+
+        findViewTreeLifecycleOwner()?.lifecycle?.addObserver(object : DefaultLifecycleObserver {
+            override fun onCreate(owner: LifecycleOwner) {
+                super.onCreate(owner)
+                binding.viewModel = viewModel
+            }
+        })
+    }
+
+    private fun setSymbol(course: String): String {
+
+        return when (course) {
+            CourseSymbols.RUB.name -> CourseSymbols.RUB.symbol
+            CourseSymbols.USD.name -> CourseSymbols.USD.symbol
+            CourseSymbols.EUR.name -> CourseSymbols.EUR.symbol
+            else -> CourseSymbols.GEL.symbol
         }
     }
 
@@ -96,112 +86,38 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
     }
 
     fun setData(walletType: String) {
-        if (walletType == "from") {
-            viewModel.selectedWalletFrom.observe(findViewTreeLifecycleOwner()!!) { wallet ->
-                binding.wallet = wallet
+        when (walletType) {
+            "from" -> {
+                viewModel.selectedWalletFrom.observe(findViewTreeLifecycleOwner()!!) { wallet ->
+                    binding.wallet = wallet
+                }
             }
-        }
-        if (walletType == "to") {
-            viewModel.selectedWalletTo.observe(findViewTreeLifecycleOwner()!!) { wallet ->
-                binding.wallet = wallet
+            "to" -> {
+                viewModel.selectedWalletTo.observe(findViewTreeLifecycleOwner()!!) { wallet ->
+                    binding.wallet = wallet
+                }
             }
         }
     }
 
-    fun selectFromWallet(walletType: String, callback: WalletCallback, wallet: WalletModel) {
-        if (walletType == "from") {
-            callback.onSelectedWalletFromChanged(wallet)
-        }
-        if (walletType == "to") {
-            callback.onSelectedWalletToChanged(wallet)
-            viewModel.selectWalletTo(wallet)
-        }
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-//        viewModel.selectedWalletFrom.observe(findViewTreeLifecycleOwner()!!) { wallet ->
-//            binding.wallet = wallet
+//    fun selectFromWallet(walletType: String, callback: WalletCallback, wallet: WalletModel) {
+//        if (walletType == "from") {
+//            callback.onSelectedWalletFromChanged(wallet)
 //        }
-
-    }
-
-//    fun getWalletViewModel(): WalletViewModel {
-//        this.viewModel.let { return viewModel }
+//        if (walletType == "to") {
+//            callback.onSelectedWalletToChanged(wallet)
+//            viewModel.selectWalletTo(wallet)
+//        }
 //    }
-
-    override fun onSelectedWalletFromChanged(wallet: WalletModel) {
-        viewModel.selectWalletFrom(wallet)
-    }
-
-    fun selectToWallet(selectedWalletTo: WalletModel) {
-
-        if (callback != null) {
-            viewModel.selectedWalletTo.observe(findViewTreeLifecycleOwner()!!) { wallet ->
-                binding.wallet = wallet
-            }
-            callback!!.onSelectedWalletToChanged(selectedWalletTo)
-            viewModel.selectWalletTo(selectedWalletTo)
-            binding.wallet = selectedWalletTo
-        }
-    }
-
-    private fun setViewModel(convertViewModel: WalletViewModel) {
-        binding.viewModel = convertViewModel
-    }
 
     private fun getWalletView(): LinearLayoutCompat {
         return binding.walletLayout
     }
 
-//    fun getAmount(): TextView {
-//        return binding.tvAmountWallet
-//    }
-
-    fun getTitle(): TextView {
-        return binding.tvTitle
-    }
-
-    fun getAccount(): TextView {
-        return binding.tvAccountNumber
-    }
-
     private fun getCurrency(): AppCompatTextView {
         return binding.tvCurrencyWallet
     }
-
-    fun getEndIcon(): ImageView {
-        return binding.ivEndIcon
-    }
 }
-
-//@BindingAdapter("walletCurrency")
-//fun setCurrency(wallet: CustomWalletView, currency: String?) {
-//    currency.let {
-//        wallet.getCurrency().text = currency
-//    }
-//}
-//
-//@BindingAdapter("walletAmount")
-//fun setAmount(wallet: CustomWalletView, amount: String?) {
-//    amount.let {
-//        wallet.getAmount().text = amount
-//    }
-//}
-//
-//@BindingAdapter("walletTitle")
-//fun setTitle(view: CustomWalletView, title: String?) {
-//    title.let {
-//        view.getTitle().text = title
-//    }
-//}
-//
-//@BindingAdapter("accountNumber")
-//fun setAccountNumber(view: CustomWalletView, accountNumber: String?) {
-//    accountNumber.let {
-//        view.getAccount().text = accountNumber
-//    }
-//}
 
 @BindingAdapter("wallet_enabled")
 fun setDisable(view: CustomWalletView, boolean: Boolean) {

@@ -1,6 +1,5 @@
 package com.example.walletconvertation.presentation.fragments.convert
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,11 +7,11 @@ import android.text.method.DigitsKeyListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.doOnAttach
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
-import androidx.navigation.fragment.findNavController
-import com.example.backend.data.model.WalletModel
 import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
 import com.example.walletconvertation.common.customs.walletView.WalletCallback
@@ -28,7 +27,6 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
     private var _binding: FragmentConvertBinding? = null
     val binding get() = _binding!!
 
-//    private val walletsViewModel : WalletViewModel by activityViewModels()
     private val viewModel: ConvertViewModel by hiltNavGraphViewModels(R.id.main_navigation_graph)
 
     override fun onCreateView(
@@ -36,7 +34,9 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentConvertBinding.inflate(inflater, container, false)
+        _binding =
+            DataBindingUtil.inflate(layoutInflater, R.layout.fragment_convert, container, false)
+//        _binding = FragmentConvertBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -53,9 +53,23 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
         init()
     }
 
-    private fun init(){
-        binding.walletFrom.doOnAttach { binding.walletFrom.setData("from") }
-        binding.walletTo.doOnAttach { binding.walletTo.setData("to") }
+    private fun init() {
+        binding.walletFrom.let { wallet ->
+            wallet.doOnAttach {
+//                viewModel.selectFromWallet(wallet.getWalletViewModel().selectedWalletFrom.value!!)
+                wallet.setData("from")
+            }
+        }
+        binding.walletTo.let { wallet ->
+            wallet.doOnAttach {
+                wallet.setData("to")
+//                viewModel.selectFromWallet(wallet.getWalletViewModel().selectedWalletTo.value!!)
+            }
+        }
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
     }
 
     private fun listeners() {
@@ -73,7 +87,7 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
                 binding.etAmountFrom.getAmount().removeTextChangedListener(amountFromWatcher)
             }
         }
-//
+
 //        binding.btnReverse.setOnClickListener {
 //            walletsViewModel.reverseWallets()
 //            viewModel.clearFields()
@@ -105,7 +119,13 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
                         DigitsKeyListener.getInstance("0123456789.,")
                 }
                 viewModel.convertFROMTO()
-//                    binding.btnContinue.isEnabled = viewModel.checkAmount(viewModel.amountFrom.value.toString(),walletsViewModel.selectedWalletFrom.value?.balance.toString())
+                binding.btnContinue.isEnabled = (viewModel.checkAmount(
+                    viewModel.amountTo.value.toString(),
+                    viewModel.selectedWalletTo.value?.balance.toString()
+                ) || (viewModel.checkAmount(
+                    viewModel.amountFrom.value.toString(),
+                    viewModel.selectedWalletFrom.value?.balance.toString()
+                )))
             }
         }
     }
@@ -124,7 +144,13 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
                         DigitsKeyListener.getInstance("0123456789.,")
                 }
                 viewModel.convertTOFROM()
-//                    binding.btnContinue.isEnabled = viewModel.checkAmount(viewModel.amountTo.value.toString(),walletsViewModel.selectedWalletTo.value?.balance.toString())
+                binding.btnContinue.isEnabled = (viewModel.checkAmount(
+                    viewModel.amountTo.value.toString(),
+                    viewModel.selectedWalletTo.value?.balance.toString()
+                ) || (viewModel.checkAmount(
+                    viewModel.amountFrom.value.toString(),
+                    viewModel.selectedWalletFrom.value?.balance.toString()
+                )))
             }
         }
     }

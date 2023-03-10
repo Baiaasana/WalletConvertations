@@ -11,26 +11,27 @@ import com.example.backend.data.model.WalletModel
 import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
 import com.example.walletconvertation.databinding.CustomWalletViewBinding
+import com.example.walletconvertation.databinding.SingleWalletBinding
 
 class WalletAdapter :
     ListAdapter<WalletModel, WalletAdapter.WalletViewHolder>(ItemCallback), Utility {
 
     var onWalletClickListener: ((WalletModel) -> Unit)? = null
-    inner class WalletViewHolder(private val binding: CustomWalletViewBinding) :
+    inner class WalletViewHolder(private val binding: SingleWalletBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind() {
             val item = getItem(adapterPosition)
             binding.apply {
-                tvTitle.text = item.title.toString()
-                tvAccountNumber.text = item.account_number.toString().plus("(${item.currency})")
-                tvAmountWallet.text = item.balance.toString()
-                tvCurrencyWallet.text = setSymbol(item.currency.toString())
-                ivEndIcon.setImageResource(R.drawable.ic_check)
+                tvTitleSingle.text = item.title.toString()
+                tvAccountNumberSingle.text = item.account_number.toString().plus("(${item.currency})")
+                tvAmountSingle.text = item.balance.toString()
+                tvCurrencySingle.text = setSymbol(item.currency.toString())
+                ivEndIconSingle.setImageResource(R.drawable.ic_check)
                 if (item.is_selected_from || item.is_selected_to) {
-                    ivEndIcon.visibility = View.VISIBLE
+                    ivEndIconSingle.visibility = View.VISIBLE
                 } else {
-                    ivEndIcon.visibility = View.GONE
+                    ivEndIconSingle.visibility = View.GONE
                 }
                 if(!item.enable){
                     itemView.isEnabled = false
@@ -43,7 +44,7 @@ class WalletAdapter :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WalletViewHolder =
-        WalletViewHolder(CustomWalletViewBinding.inflate(
+        WalletViewHolder(SingleWalletBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false))

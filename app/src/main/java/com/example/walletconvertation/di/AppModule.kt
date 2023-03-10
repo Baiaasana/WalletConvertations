@@ -62,16 +62,16 @@ object AppModule {
         return ResponseHandler()
     }
 
-    @Provides
-    @Singleton
-    fun provideWalletCallback(): WalletCallback{
-        return object : WalletCallback {
-            override fun onWalletsFromChanged(walletsFromList: List<WalletModel>) {}
-            override fun onWalletsToChanged(walletsToList: List<WalletModel>) {}
-            override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {}
-            override fun onSelectedWalletToChanged(selectedWalletTo: WalletModel) {}
-            override fun onLoadingStateChanged(loading: Boolean) {}
-            override fun onError(errorMessage: String) {}
-        }
-    }
+//    @Provides
+//    @Singleton
+//    fun provideWalletCallback(): WalletCallback{
+//        return object : WalletCallback {
+//            override fun onWalletsFromChanged(walletsFromList: List<WalletModel>) {}
+//            override fun onWalletsToChanged(walletsToList: List<WalletModel>) {}
+//            override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {}
+//            override fun onSelectedWalletToChanged(selectedWalletTo: WalletModel) {}
+//            override fun onLoadingStateChanged(loading: Boolean) {}
+//            override fun onError(errorMessage: String) {}
+//        }
+//    }
 }

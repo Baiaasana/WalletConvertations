@@ -51,7 +51,6 @@ open class ConvertViewModel @Inject constructor(
     init {
         getCourse(selectedWalletFrom.value!!.currency.toString(),selectedWalletTo.value!!.currency.toString() )
     }
-
     fun getCourse(from: String, to: String) {
         _loading.postValue(true)
         viewModelScope.launch {

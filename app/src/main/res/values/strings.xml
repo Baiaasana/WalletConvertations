@@ -16,4 +16,6 @@
     <string name="your_course">შენი კურსი:</string>
     <string name="continue_eng">გაგრძელება</string>
     <string name="wallets_accounts">საფულეების ანგარიში</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

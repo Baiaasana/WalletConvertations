@@ -3,9 +3,7 @@ package com.example.walletconvertation.common.customs.walletView
 import androidx.lifecycle.*
 import com.example.backend.common.Resource
 import com.example.backend.data.model.WalletModel
-import com.example.backend.repository.course.CourseRepository
 import com.example.backend.repository.wallets.WalletsRepository
-import com.example.walletconvertation.common.CourseSymbols
 import com.example.walletconvertation.common.Utility
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -95,27 +93,22 @@ class WalletViewModel @Inject constructor(
     fun selectWalletTo(walletModel: WalletModel) {
         _selectedWalletTo.value = walletModel
     }
-
     override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {
         super.onSelectedWalletFromChanged(selectedWalletFrom)
         _selectedWalletFrom.value = selectedWalletFrom
     }
-
     override fun onSelectedWalletToChanged(selectedWalletTo: WalletModel) {
         super.onSelectedWalletToChanged(selectedWalletTo)
         _selectedWalletTo.value = selectedWalletTo
     }
-
     override fun onWalletsFromChanged(walletsFromList: List<WalletModel>) {
         super.onWalletsFromChanged(walletsFromList)
         _walletsFrom.value = walletsFromList
     }
-
     override fun onWalletsToChanged(walletsToList: List<WalletModel>) {
         super.onWalletsToChanged(walletsToList)
         _walletsTo.value = walletsToList
     }
-
     override fun onLoadingStateChanged(loading: Boolean) {
         super.onLoadingStateChanged(loading)
         _loading.value = loading
