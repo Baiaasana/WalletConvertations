@@ -1,6 +1,6 @@
 package com.example.walletconvertation.presentation.adapters
 
-import android.content.res.Resources
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,13 +10,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.backend.data.model.WalletModel
 import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
-import com.example.walletconvertation.databinding.CustomWalletViewBinding
+import com.example.walletconvertation.common.customs.walletView.WalletCallback
 import com.example.walletconvertation.databinding.SingleWalletBinding
 
 class WalletAdapter :
-    ListAdapter<WalletModel, WalletAdapter.WalletViewHolder>(ItemCallback), Utility {
+    ListAdapter<WalletModel, WalletAdapter.WalletViewHolder>(ItemCallback), Utility, WalletCallback {
 
     var onWalletClickListener: ((WalletModel) -> Unit)? = null
+
+    var onWalletChange: ((WalletCallback) -> Unit)? = null
     inner class WalletViewHolder(private val binding: SingleWalletBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -38,6 +40,12 @@ class WalletAdapter :
                 }
                 itemView.setOnClickListener {
                     onWalletClickListener?.invoke(item)
+                    onWalletChange?.invoke(object : WalletCallback{
+                        override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {
+                            super.onSelectedWalletFromChanged(selectedWalletFrom)
+                            Log.d("log", "adapter callback ")
+                        }
+                    })
                 }
             }
         }

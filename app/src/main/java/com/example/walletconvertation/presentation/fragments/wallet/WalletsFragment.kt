@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResult
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.backend.data.model.WalletModel
 import com.example.walletconvertation.R
 import com.example.walletconvertation.common.customs.walletView.WalletCallback
-import com.example.walletconvertation.common.customs.walletView.WalletViewModel
 import com.example.walletconvertation.databinding.FragmentWalletsBinding
 import com.example.walletconvertation.presentation.adapters.WalletAdapter
 import com.example.walletconvertation.presentation.fragments.convert.ConvertViewModel
@@ -55,7 +54,7 @@ class WalletsFragment : Fragment(), WalletCallback {
         when (args.walletType) {
             "from" -> {
                 data = args.fromList.toList()
-                data.find { it.id == args.toList.toList().find { wallet -> !wallet.enable }?.id.toString().toInt()}?.enable = false
+                data.find { it.id == args.toList.toList().find { wallet -> wallet.is_selected_to }?.id.toString().toInt()}?.enable = false
             }
             "to" -> {
                 data = args.toList.toList()
@@ -81,20 +80,25 @@ class WalletsFragment : Fragment(), WalletCallback {
                 val data = args.fromList.toList()
                 data.filterNot { item -> item.id == selectedFrom.id }
                     .forEach { el -> el.is_selected_from = false }
-                onWalletsFromChanged(data)
-                onSaveInstanceState(bundleOf("from" to selectedFrom))
-                onSelectedWalletFromChanged(selectedFrom).also{convertViewModel.selectFromWallet(selectedFrom)}.also {
+                setFragmentResult("requestKeyFrom", bundleOf("walletFrom" to selectedFrom))
+                setFragmentResult("requestKeyFromList", bundleOf("walletsFrom" to data))
+                convertViewModel.selectFromWallet(selectedFrom).also {
                     convertViewModel.getCourse(
                         convertViewModel.selectedWalletFrom.value!!.currency.toString(),
                         convertViewModel.selectedWalletTo.value!!.currency.toString()
                     )
                 }
 
+                walletAdapter.onWalletChange = {
+                    it.onSelectedWalletFromChanged(selectedFrom)
+                    Log.d("log", "wallet f callback")
+                }
+
                 findNavController().navigateUp()
             }
             "to" -> walletAdapter.onWalletClickListener = { selectedTo ->
                 selectedTo.is_selected_to = true
-                selectedTo.enable = false
+//                selectedTo.enable = false
                 val data = args.toList.toList()
                 data.filterNot { item -> item.id == selectedTo.id }
                     .forEach { item ->
@@ -103,8 +107,10 @@ class WalletsFragment : Fragment(), WalletCallback {
                     }
                 args.fromList.toList().forEach { item -> item.enable = true }
                 onWalletsToChanged(data)
-                onSaveInstanceState(bundleOf("to" to selectedTo))
-                onSelectedWalletToChanged(selectedTo).also{convertViewModel.selectToWallet(selectedTo)}.also {
+                setFragmentResult("requestKeyTo", bundleOf("walletTo" to selectedTo))
+                setFragmentResult("requestKeyToList", bundleOf("walletsTo" to data))
+
+                convertViewModel.selectToWallet(selectedTo).also {
                     convertViewModel.getCourse(
                         convertViewModel.selectedWalletFrom.value!!.currency.toString(),
                         convertViewModel.selectedWalletTo.value!!.currency.toString()

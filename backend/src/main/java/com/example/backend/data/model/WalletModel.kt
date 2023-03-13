@@ -14,4 +14,4 @@ data class WalletModel(
     var is_selected_from: Boolean = false,
     var is_selected_to: Boolean = false,
     var enable: Boolean = true
-): Parcelable
+) : Parcelable

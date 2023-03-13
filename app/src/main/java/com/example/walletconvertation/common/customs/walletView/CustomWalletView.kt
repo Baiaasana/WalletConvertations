@@ -21,12 +21,9 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
     private val viewModel by lazy {
         ViewModelProvider(findViewTreeViewModelStoreOwner()!!).get<WalletViewModel>()
     }
+
     init {
-
         binding.lifecycleOwner = findViewTreeLifecycleOwner()
-        doOnAttach {
-
-        }
 
         getWalletView().setOnClickListener {
             val currency = getCurrency().text.toString()
@@ -38,6 +35,15 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
             }
         }
     }
+    private var callback: WalletCallback? = null
+    fun setCallBack(listener: WalletCallback) {
+        callback = listener
+    }
+
+    fun initCourse(listener: WalletCallback){
+        callback = listener
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
@@ -59,9 +65,9 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         }
     }
 
-    private var callback: WalletCallback? = null
-    fun setCallBack(callback: WalletCallback) {
-        this.callback = callback
+
+    fun getWalletViewModel() : WalletViewModel {
+        return viewModel
     }
 
     private fun onWalletClick(walletType: String) {
@@ -100,15 +106,21 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         }
     }
 
-//    fun selectFromWallet(walletType: String, callback: WalletCallback, wallet: WalletModel) {
-//        if (walletType == "from") {
-//            callback.onSelectedWalletFromChanged(wallet)
-//        }
-//        if (walletType == "to") {
-//            callback.onSelectedWalletToChanged(wallet)
-//            viewModel.selectWalletTo(wallet)
-//        }
-//    }
+    fun updateWalletFrom(wallet: WalletModel){
+        viewModel.onSelectedWalletFromChanged(wallet)
+    }
+
+    fun updateWalletsFrom(walletList: List<WalletModel>){
+        viewModel.onWalletsFromChanged(walletList)
+    }
+
+    fun updateWalletsTo(walletList: List<WalletModel>){
+        viewModel.onWalletsToChanged(walletList)
+    }
+
+    fun updateWalletTo(wallet: WalletModel){
+        viewModel.onSelectedWalletToChanged(wallet)
+    }
 
     private fun getWalletView(): LinearLayoutCompat {
         return binding.walletLayout
@@ -123,6 +135,7 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
 fun setDisable(view: CustomWalletView, boolean: Boolean) {
     view.isEnabled = boolean
 }
+
 
 
 

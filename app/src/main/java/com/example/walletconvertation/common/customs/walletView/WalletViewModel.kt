@@ -1,6 +1,9 @@
 package com.example.walletconvertation.common.customs.walletView
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.backend.common.Resource
 import com.example.backend.data.model.WalletModel
 import com.example.backend.repository.wallets.WalletsRepository
@@ -49,15 +52,13 @@ class WalletViewModel @Inject constructor(
 
                         val firstWallet = dataFrom.findLast { it.is_default == true }
                         val secondWallet = dataTo.findLast { it.id == (firstWallet!!.id!!.plus(1)) }
-                        secondWallet?.let { it.enable = false }
+//                        secondWallet?.let { it.enable = false }
 
                         _selectedWalletFrom.value = firstWallet
-                        onSelectedWalletFromChanged(firstWallet!!)
                         _selectedWalletTo.value = secondWallet
-                        onSelectedWalletToChanged(secondWallet!!)
 
-                        dataFrom.find { it.id == firstWallet.id }!!.is_selected_from = true
-                        dataTo.find { it.id == secondWallet.id }!!.is_selected_to = true
+                        dataFrom.find { it.id == firstWallet!!.id }!!.is_selected_from = true
+                        dataTo.find { it.id == secondWallet!!.id }!!.is_selected_to = true
 
                         _walletsFrom.value = dataFrom
                         onWalletsFromChanged(dataFrom)
@@ -72,7 +73,6 @@ class WalletViewModel @Inject constructor(
                     _errorMessage.value = result.message.toString()
                 }
             }
-//            disable(errorMessage.value)
             _loading.postValue(false)
             onLoadingStateChanged(false)
         }
@@ -87,28 +87,26 @@ class WalletViewModel @Inject constructor(
         _selectedWalletTo.value = from
     }
 
-    fun selectWalletFrom(walletModel: WalletModel) {
-        _selectedWalletFrom.value = walletModel
-    }
-    fun selectWalletTo(walletModel: WalletModel) {
-        _selectedWalletTo.value = walletModel
-    }
     override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {
         super.onSelectedWalletFromChanged(selectedWalletFrom)
         _selectedWalletFrom.value = selectedWalletFrom
     }
+
     override fun onSelectedWalletToChanged(selectedWalletTo: WalletModel) {
         super.onSelectedWalletToChanged(selectedWalletTo)
         _selectedWalletTo.value = selectedWalletTo
     }
+
     override fun onWalletsFromChanged(walletsFromList: List<WalletModel>) {
         super.onWalletsFromChanged(walletsFromList)
         _walletsFrom.value = walletsFromList
     }
+
     override fun onWalletsToChanged(walletsToList: List<WalletModel>) {
         super.onWalletsToChanged(walletsToList)
         _walletsTo.value = walletsToList
     }
+
     override fun onLoadingStateChanged(loading: Boolean) {
         super.onLoadingStateChanged(loading)
         _loading.value = loading

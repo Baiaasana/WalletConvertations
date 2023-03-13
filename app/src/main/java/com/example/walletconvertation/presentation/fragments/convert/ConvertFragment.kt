@@ -7,11 +7,12 @@ import android.text.method.DigitsKeyListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.doOnAttach
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
+import com.example.backend.data.model.WalletModel
 import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
 import com.example.walletconvertation.common.customs.walletView.WalletCallback
@@ -36,7 +37,6 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
     ): View {
         _binding =
             DataBindingUtil.inflate(layoutInflater, R.layout.fragment_convert, container, false)
-//        _binding = FragmentConvertBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -49,30 +49,71 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
         binding.walletFrom.setCallBack(this)
         binding.walletTo.setCallBack(this)
         handleKeyboardEvent()
-        listeners()
         init()
+        listeners()
     }
 
     private fun init() {
+
+//        binding.walletFrom.setCallBack(object : WalletCallback {
+//            override fun onWalletsFromChanged(walletsFromList: List<WalletModel>) {
+//                super.onWalletsFromChanged(walletsFromList)
+//
+//            }
+//        })
+
         binding.walletFrom.let { wallet ->
+            setFragmentResultListener("requestKeyFrom") { _, bundle ->
+                val walletFrom = bundle.getParcelable<WalletModel>("walletFrom")
+                walletFrom.let {
+                    wallet.updateWalletFrom(it!!)
+                }
+            }
+            setFragmentResultListener("requestKeyFromList") { _, bundle ->
+                val newList = bundle.getParcelableArrayList<WalletModel>("walletsFrom")
+                newList?.let { wallet.updateWalletsFrom(it) }
+            }
             wallet.doOnAttach {
-//                viewModel.selectFromWallet(wallet.getWalletViewModel().selectedWalletFrom.value!!)
                 wallet.setData("from")
+                getCourses()
             }
         }
         binding.walletTo.let { wallet ->
+            setFragmentResultListener("requestKeyTo") { _, bundle ->
+                val walletTo = bundle.getParcelable<WalletModel>("walletTo")
+                walletTo.let {
+                    wallet.updateWalletTo(it!!)
+                }
+            }
+
+            setFragmentResultListener("requestKeyToList") { _, bundle ->
+                val newList = bundle.getParcelableArrayList<WalletModel>("walletsTo")
+                newList?.let { wallet.updateWalletsTo(it) }
+            }
+
             wallet.doOnAttach {
                 wallet.setData("to")
-//                viewModel.selectFromWallet(wallet.getWalletViewModel().selectedWalletTo.value!!)
+                getCourses()
             }
         }
     }
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
+    private fun getCourses() {
+        val fromWallet = binding.walletFrom.getWalletViewModel().selectedWalletFrom.value!!
+        val toWallet = binding.walletFrom.getWalletViewModel().selectedWalletTo.value!!
+        viewModel.selectFromWallet(fromWallet)
+        viewModel.selectToWallet(toWallet)
+        viewModel.getCourse(
+            fromWallet.currency.toString(),
+            toWallet.currency.toString()
+        )
     }
 
     private fun listeners() {
+
+        binding.walletFrom.doOnAttach {
+            getCourses()
+        }
 
         binding.etAmountFrom.getAmount().setOnFocusChangeListener { view, hasFocused ->
             if (hasFocused) {
@@ -88,16 +129,13 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
             }
         }
 
-//        binding.btnReverse.setOnClickListener {
-//            walletsViewModel.reverseWallets()
-//            viewModel.clearFields()
-//            binding.etAmountTo.getAmount().isClickable = false
-//            binding.etAmountFrom.getAmount().isClickable = false
-//            viewModel.getCourse(
-//                walletsViewModel.selectedWalletFrom.value!!.currency.toString(),
-//                walletsViewModel.selectedWalletTo.value!!.currency.toString()
-//            )
-//        }
+        binding.btnReverse.setOnClickListener {
+            binding.walletFrom.getWalletViewModel().reverseWallets()
+            viewModel.clearFields()
+            binding.etAmountTo.getAmount().isClickable = false
+            binding.etAmountFrom.getAmount().isClickable = false
+            getCourses()
+        }
 
         binding.root.setOnClickListener {
             it?.let { activity?.hideKeyboard(it) }
@@ -188,5 +226,10 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
                 }
             }
         })
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.clearFields()
     }
 }
