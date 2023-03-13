@@ -38,6 +38,10 @@ class WalletViewModel @Inject constructor(
         getWallets()
     }
 
+    private var callback: WalletCallback? = null
+    fun setCallBack(listener: WalletCallback) {
+        callback = listener
+    }
     private fun getWallets() {
         _loading.postValue(true)
         onLoadingStateChanged(true)
@@ -49,22 +53,16 @@ class WalletViewModel @Inject constructor(
 
                         val dataFrom = ArrayList(walletList.map { it.copy() })
                         val dataTo = ArrayList(walletList.map { it.copy() })
-
                         val firstWallet = dataFrom.findLast { it.is_default == true }
                         val secondWallet = dataTo.findLast { it.id == (firstWallet!!.id!!.plus(1)) }
-//                        secondWallet?.let { it.enable = false }
 
-                        _selectedWalletFrom.value = firstWallet
                         onSelectedWalletFromChanged(firstWallet!!)
-                        _selectedWalletTo.value = secondWallet
                         onSelectedWalletToChanged(secondWallet!!)
 
                         dataFrom.find { it.id == firstWallet!!.id }!!.is_selected_from = true
                         dataTo.find { it.id == secondWallet!!.id }!!.is_selected_to = true
 
-                        _walletsFrom.value = dataFrom
                         onWalletsFromChanged(dataFrom)
-                        _walletsTo.value = dataTo
                         onWalletsToChanged(dataTo)
 
                     } ?: kotlin.run {
@@ -87,19 +85,18 @@ class WalletViewModel @Inject constructor(
         val to = _selectedWalletTo.value
         onSelectedWalletFromChanged(to!!)
         onSelectedWalletToChanged(from!!)
-//        _selectedWalletTo.value = from
-//        _selectedWalletFrom.value = to
-
     }
 
     override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {
         super.onSelectedWalletFromChanged(selectedWalletFrom)
         _selectedWalletFrom.value = selectedWalletFrom
+        callback!!.onSelectedWalletFromChanged(selectedWalletFrom)
     }
 
     override fun onSelectedWalletToChanged(selectedWalletTo: WalletModel) {
         super.onSelectedWalletToChanged(selectedWalletTo)
         _selectedWalletTo.value = selectedWalletTo
+        callback!!.onSelectedWalletToChanged(selectedWalletTo)
     }
 
     override fun onWalletsFromChanged(walletsFromList: List<WalletModel>) {

@@ -46,13 +46,11 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
             lifecycleOwner = viewLifecycleOwner
             convertViewModel = viewModel
         }
-        binding.walletFrom.setCallBack(this)
-        binding.walletTo.setCallBack(this)
+
         handleKeyboardEvent()
         init()
         listeners()
     }
-
     private fun init() {
 
         binding.walletFrom.let { wallet ->
@@ -67,16 +65,9 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
                 newList?.let { wallet.updateWalletsFrom(it) }
             }
             wallet.doOnAttach {
-                wallet.setData("from")
+                binding.walletFrom.getWalletViewModel().setCallBack(this)
             }
 
-//            wallet.setCallBack(object : WalletCallback{
-//                override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {
-//                    super.onSelectedWalletFromChanged(selectedWalletFrom)
-//                    viewModel.selectFromWallet(selectedWalletFrom)
-//                    viewModel.getCourse(viewModel.selectedWalletFrom.value!!.currency.toString(),viewModel.selectedWalletTo.value!!.currency.toString() )
-//                }
-//            })
         }
         binding.walletTo.let { wallet ->
             setFragmentResultListener("requestKeyTo") { _, bundle ->
@@ -90,12 +81,8 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
                 val newList = bundle.getParcelableArrayList<WalletModel>("walletsTo")
                 newList?.let { wallet.updateWalletsTo(it) }
             }
-
             wallet.doOnAttach {
-                wallet.setData("to")
-//                onSelectedWalletToChanged(binding.walletTo.getWalletViewModel().selectedWalletTo.value!!)
-//                onSelectedWalletFromChanged(binding.walletFrom.getWalletViewModel().selectedWalletFrom.value!!)
-
+                binding.walletTo.getWalletViewModel().setCallBack(this)
             }
         }
     }
@@ -108,7 +95,7 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
     override fun onSelectedWalletToChanged(selectedWalletTo: WalletModel) {
         super.onSelectedWalletToChanged(selectedWalletTo)
         viewModel.selectToWallet(selectedWalletTo)
-       getCourses()
+        getCourses()
     }
 
     private fun getCourses() {

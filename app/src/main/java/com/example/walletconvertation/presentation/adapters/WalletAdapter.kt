@@ -17,8 +17,6 @@ class WalletAdapter :
     ListAdapter<WalletModel, WalletAdapter.WalletViewHolder>(ItemCallback), Utility, WalletCallback {
 
     var onWalletClickListener: ((WalletModel) -> Unit)? = null
-
-    var onWalletChange: (WalletCallback)? = null
     inner class WalletViewHolder(private val binding: SingleWalletBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -40,7 +38,6 @@ class WalletAdapter :
                 }
                 itemView.setOnClickListener {
                     onWalletClickListener?.invoke(item)
-                    onWalletChange
                     onSelectedWalletFromChanged(item)
                     onSelectedWalletToChanged(item)
                 }

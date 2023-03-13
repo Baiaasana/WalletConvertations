@@ -33,11 +33,11 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
                 onWalletClick("to")
             }
         }
+
     }
-    private var callback: WalletCallback? = null
-    fun setCallBack(listener: WalletCallback) {
-        callback = listener
-    }
+
+
+
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -105,16 +105,24 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         viewModel.onSelectedWalletFromChanged(wallet)
     }
 
+    fun firstUpdate(){
+        viewModel.onSelectedWalletFromChanged(viewModel.selectedWalletFrom.value!!)
+        viewModel.onSelectedWalletToChanged(viewModel.selectedWalletTo.value!!)
+    }
+
     fun updateWalletsFrom(walletList: List<WalletModel>){
         viewModel.onWalletsFromChanged(walletList)
+
     }
 
     fun updateWalletsTo(walletList: List<WalletModel>){
         viewModel.onWalletsToChanged(walletList)
+
     }
 
     fun updateWalletTo(wallet: WalletModel){
         viewModel.onSelectedWalletToChanged(wallet)
+
     }
 
     private fun getWalletView(): LinearLayoutCompat {
@@ -129,6 +137,16 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
 @BindingAdapter("wallet_enabled")
 fun setDisable(view: CustomWalletView, boolean: Boolean) {
     view.isEnabled = boolean
+}
+
+@BindingAdapter("wallet_data")
+fun setData(view: CustomWalletView, boolean: Boolean){
+    if(boolean){
+        view.setData("from")
+    }else{
+        view.setData("to")
+    }
+
 }
 
 
