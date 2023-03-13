@@ -18,7 +18,7 @@ class WalletAdapter :
 
     var onWalletClickListener: ((WalletModel) -> Unit)? = null
 
-    var onWalletChange: ((WalletCallback) -> Unit)? = null
+    var onWalletChange: (WalletCallback)? = null
     inner class WalletViewHolder(private val binding: SingleWalletBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -40,12 +40,9 @@ class WalletAdapter :
                 }
                 itemView.setOnClickListener {
                     onWalletClickListener?.invoke(item)
-                    onWalletChange?.invoke(object : WalletCallback{
-                        override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {
-                            super.onSelectedWalletFromChanged(selectedWalletFrom)
-                            Log.d("log", "adapter callback ")
-                        }
-                    })
+                    onWalletChange
+                    onSelectedWalletFromChanged(item)
+                    onSelectedWalletToChanged(item)
                 }
             }
         }

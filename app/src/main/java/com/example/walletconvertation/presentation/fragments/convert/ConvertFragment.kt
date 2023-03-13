@@ -12,7 +12,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
-import androidx.lifecycle.observe
 import com.example.backend.data.model.WalletModel
 import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
@@ -56,13 +55,6 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
 
     private fun init() {
 
-//        binding.walletFrom.setCallBack(object : WalletCallback {
-//            override fun onWalletsFromChanged(walletsFromList: List<WalletModel>) {
-//                super.onWalletsFromChanged(walletsFromList)
-//
-//            }
-//        })
-
         binding.walletFrom.let { wallet ->
             setFragmentResultListener("requestKeyFrom") { _, bundle ->
                 val walletFrom = bundle.getParcelable<WalletModel>("walletFrom")
@@ -77,6 +69,14 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
             wallet.doOnAttach {
                 wallet.setData("from")
             }
+
+//            wallet.setCallBack(object : WalletCallback{
+//                override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {
+//                    super.onSelectedWalletFromChanged(selectedWalletFrom)
+//                    viewModel.selectFromWallet(selectedWalletFrom)
+//                    viewModel.getCourse(viewModel.selectedWalletFrom.value!!.currency.toString(),viewModel.selectedWalletTo.value!!.currency.toString() )
+//                }
+//            })
         }
         binding.walletTo.let { wallet ->
             setFragmentResultListener("requestKeyTo") { _, bundle ->
@@ -93,45 +93,41 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
 
             wallet.doOnAttach {
                 wallet.setData("to")
-                getCourses()
+//                onSelectedWalletToChanged(binding.walletTo.getWalletViewModel().selectedWalletTo.value!!)
+//                onSelectedWalletFromChanged(binding.walletFrom.getWalletViewModel().selectedWalletFrom.value!!)
+
             }
         }
     }
 
+    override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {
+        super.onSelectedWalletFromChanged(selectedWalletFrom)
+        viewModel.selectFromWallet(selectedWalletFrom)
+    }
+
+    override fun onSelectedWalletToChanged(selectedWalletTo: WalletModel) {
+        super.onSelectedWalletToChanged(selectedWalletTo)
+        viewModel.selectToWallet(selectedWalletTo)
+       getCourses()
+    }
+
     private fun getCourses() {
-//        var fromWallet: WalletModel = WalletModel()
-//        binding.walletFrom.getWalletViewModel().selectedWalletFrom.observe(getLifeCycleOwner(binding.walletFrom)!!) {
-//            fromWallet = it!!
-//        }
-//
-//        var toWallet: WalletModel = WalletModel()
-//        binding.walletTo.getWalletViewModel().selectedWalletTo.observe(getLifeCycleOwner(binding.walletTo)!!) {
-//            toWallet = it!!
-//        }
-        val  fromWallet = binding.walletFrom.getWalletViewModel().selectedWalletFrom.value!!
-        val toWallet = binding.walletTo.getWalletViewModel().selectedWalletTo.value!!
-        viewModel.selectFromWallet(fromWallet)
-        viewModel.selectToWallet(toWallet)
         viewModel.getCourse(
-            fromWallet.currency.toString(),
-            toWallet.currency.toString()
+            viewModel.selectedWalletFrom.value!!.currency.toString(),
+            viewModel.selectedWalletTo.value!!.currency.toString()
         )
     }
 
     private fun listeners() {
 
-//        binding.walletTo.doOnAttach {
-//            getCourses()
-//        }
-
-        binding.etAmountFrom.getAmount().setOnFocusChangeListener { view, hasFocused ->
+        binding.etAmountFrom.getAmount().setOnFocusChangeListener { _, hasFocused ->
             if (hasFocused) {
                 binding.etAmountFrom.getAmount().addTextChangedListener(amountFromWatcher)
                 binding.etAmountTo.getAmount().removeTextChangedListener(amountToWatcher)
             }
         }
 
-        binding.etAmountTo.getAmount().setOnFocusChangeListener { view, hasFocused ->
+        binding.etAmountTo.getAmount().setOnFocusChangeListener { _, hasFocused ->
             if (hasFocused) {
                 binding.etAmountTo.getAmount().addTextChangedListener(amountToWatcher)
                 binding.etAmountFrom.getAmount().removeTextChangedListener(amountFromWatcher)
@@ -140,10 +136,10 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
 
         binding.btnReverse.setOnClickListener {
             binding.walletFrom.getWalletViewModel().reverseWallets()
+            viewModel.reverseCourses()
             viewModel.clearFields()
             binding.etAmountTo.getAmount().isClickable = false
             binding.etAmountFrom.getAmount().isClickable = false
-            getCourses()
         }
 
         binding.root.setOnClickListener {

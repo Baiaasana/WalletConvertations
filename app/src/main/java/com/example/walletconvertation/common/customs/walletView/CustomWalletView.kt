@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.view.doOnAttach
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.*
 import androidx.navigation.findNavController
@@ -37,10 +36,6 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
     }
     private var callback: WalletCallback? = null
     fun setCallBack(listener: WalletCallback) {
-        callback = listener
-    }
-
-    fun initCourse(listener: WalletCallback){
         callback = listener
     }
 

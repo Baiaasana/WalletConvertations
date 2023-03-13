@@ -11,6 +11,7 @@ import com.example.backend.repository.wallets.WalletsRepository
 import com.example.walletconvertation.common.CourseSymbols
 import com.example.walletconvertation.common.ErrorEnum
 import com.example.walletconvertation.common.Utility
+import com.example.walletconvertation.common.customs.walletView.WalletCallback
 import com.example.walletconvertation.common.customs.walletView.WalletViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -19,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 open class ConvertViewModel @Inject constructor(
     private val courseRepository: CourseRepository,
-    ) : ViewModel(), Utility {
+    ) : ViewModel(), Utility, WalletCallback {
 
     private val _rate = MutableLiveData<Float>(1F)
     val rate: LiveData<Float?> = _rate
@@ -72,6 +73,25 @@ open class ConvertViewModel @Inject constructor(
             disable(errorMessage.value)
             _loading.postValue(false)
         }
+    }
+
+    fun reverseCourses() {
+        val from = _selectedWalletFrom.value
+        val to = _selectedWalletTo.value
+        onSelectedWalletFromChanged(to!!)
+        onSelectedWalletToChanged(from!!)
+        getCourse(selectedWalletFrom.value!!.currency.toString(), selectedWalletTo.value!!.currency.toString()
+        )
+    }
+
+    override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {
+        super.onSelectedWalletFromChanged(selectedWalletFrom)
+        _selectedWalletFrom.value = selectedWalletFrom
+    }
+
+    override fun onSelectedWalletToChanged(selectedWalletTo: WalletModel) {
+        super.onSelectedWalletToChanged(selectedWalletTo)
+        _selectedWalletTo.value = selectedWalletTo
     }
 
     fun selectFromWallet(fromWallet: WalletModel){
