@@ -1,5 +1,6 @@
 package com.example.walletconvertation.common.customs.walletView
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -38,6 +39,8 @@ class WalletViewModel @Inject constructor(
         getWallets()
     }
 
+    var onWalletSelect: ((WalletCallback) -> Unit)? = null
+
     private fun getWallets() {
         _loading.postValue(true)
         onLoadingStateChanged(true)
@@ -55,6 +58,13 @@ class WalletViewModel @Inject constructor(
 //                        secondWallet?.let { it.enable = false }
 
                         _selectedWalletFrom.value = firstWallet
+
+                        onWalletSelect?.invoke(object : WalletCallback{
+                            override fun onSelectedWalletToChanged(selectedWalletTo: WalletModel) {
+                                super.onSelectedWalletToChanged(selectedWalletTo)
+                                Log.d("log", "walletViewModel callback")
+                            }
+                        })
                         _selectedWalletTo.value = secondWallet
 
                         dataFrom.find { it.id == firstWallet!!.id }!!.is_selected_from = true

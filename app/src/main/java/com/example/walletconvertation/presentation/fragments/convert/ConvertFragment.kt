@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
+import androidx.lifecycle.observe
 import com.example.backend.data.model.WalletModel
 import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
@@ -75,7 +76,6 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
             }
             wallet.doOnAttach {
                 wallet.setData("from")
-                getCourses()
             }
         }
         binding.walletTo.let { wallet ->
@@ -99,8 +99,17 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
     }
 
     private fun getCourses() {
-        val fromWallet = binding.walletFrom.getWalletViewModel().selectedWalletFrom.value!!
-        val toWallet = binding.walletFrom.getWalletViewModel().selectedWalletTo.value!!
+//        var fromWallet: WalletModel = WalletModel()
+//        binding.walletFrom.getWalletViewModel().selectedWalletFrom.observe(getLifeCycleOwner(binding.walletFrom)!!) {
+//            fromWallet = it!!
+//        }
+//
+//        var toWallet: WalletModel = WalletModel()
+//        binding.walletTo.getWalletViewModel().selectedWalletTo.observe(getLifeCycleOwner(binding.walletTo)!!) {
+//            toWallet = it!!
+//        }
+        val  fromWallet = binding.walletFrom.getWalletViewModel().selectedWalletFrom.value!!
+        val toWallet = binding.walletTo.getWalletViewModel().selectedWalletTo.value!!
         viewModel.selectFromWallet(fromWallet)
         viewModel.selectToWallet(toWallet)
         viewModel.getCourse(
@@ -111,9 +120,9 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
 
     private fun listeners() {
 
-        binding.walletFrom.doOnAttach {
-            getCourses()
-        }
+//        binding.walletTo.doOnAttach {
+//            getCourses()
+//        }
 
         binding.etAmountFrom.getAmount().setOnFocusChangeListener { view, hasFocused ->
             if (hasFocused) {

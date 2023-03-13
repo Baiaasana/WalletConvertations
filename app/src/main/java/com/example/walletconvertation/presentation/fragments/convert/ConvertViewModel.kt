@@ -48,9 +48,9 @@ open class ConvertViewModel @Inject constructor(
     private val _selectedWalletTo = MutableLiveData(WalletModel())
     val selectedWalletTo: LiveData<WalletModel?> = _selectedWalletTo
 
-    init {
-        getCourse(selectedWalletFrom.value!!.currency.toString(),selectedWalletTo.value!!.currency.toString() )
-    }
+//    init {
+//        getCourse(selectedWalletFrom.value!!.currency.toString(),selectedWalletTo.value!!.currency.toString() )
+//    }
     fun getCourse(from: String, to: String) {
         _loading.postValue(true)
         viewModelScope.launch {
@@ -130,7 +130,7 @@ open class ConvertViewModel @Inject constructor(
         amountTo.value = ""
     }
 
-     fun disable(error: String?) {
+     private fun disable(error: String?) {
         when (error.toString()) {
             ErrorEnum.ERROR.error.toString() -> {
                 _etEnable.value = ErrorEnum.ERROR.boolean
