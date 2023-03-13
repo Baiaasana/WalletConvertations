@@ -38,10 +38,6 @@ class WalletViewModel @Inject constructor(
         getWallets()
     }
 
-    private var callback: WalletCallback? = null
-    fun setCallBack(listener: WalletCallback) {
-        callback = listener
-    }
     private fun getWallets() {
         _loading.postValue(true)
         onLoadingStateChanged(true)
@@ -90,13 +86,11 @@ class WalletViewModel @Inject constructor(
     override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {
         super.onSelectedWalletFromChanged(selectedWalletFrom)
         _selectedWalletFrom.value = selectedWalletFrom
-        callback!!.onSelectedWalletFromChanged(selectedWalletFrom)
     }
 
     override fun onSelectedWalletToChanged(selectedWalletTo: WalletModel) {
         super.onSelectedWalletToChanged(selectedWalletTo)
         _selectedWalletTo.value = selectedWalletTo
-        callback!!.onSelectedWalletToChanged(selectedWalletTo)
     }
 
     override fun onWalletsFromChanged(walletsFromList: List<WalletModel>) {

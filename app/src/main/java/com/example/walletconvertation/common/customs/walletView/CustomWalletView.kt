@@ -21,6 +21,10 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         ViewModelProvider(findViewTreeViewModelStoreOwner()!!).get<WalletViewModel>()
     }
 
+    private var callback: WalletCallback? = null
+    fun setCallBack(listener: WalletCallback) {
+        callback = listener
+    }
     init {
         binding.lifecycleOwner = findViewTreeLifecycleOwner()
 
@@ -34,9 +38,10 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
             }
         }
 
+
+
+
     }
-
-
 
 
     override fun onAttachedToWindow() {
@@ -91,11 +96,13 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
             "from" -> {
                 viewModel.selectedWalletFrom.observe(findViewTreeLifecycleOwner()!!) { wallet ->
                     binding.wallet = wallet
+                    wallet?.let { callback!!.onSelectedWalletFromChanged(it) }
                 }
             }
             "to" -> {
                 viewModel.selectedWalletTo.observe(findViewTreeLifecycleOwner()!!) { wallet ->
                     binding.wallet = wallet
+                    wallet?.let { callback!!.onSelectedWalletToChanged(it) }
                 }
             }
         }

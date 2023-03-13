@@ -7,7 +7,6 @@ import android.text.method.DigitsKeyListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.doOnAttach
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -46,7 +45,8 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
             lifecycleOwner = viewLifecycleOwner
             convertViewModel = viewModel
         }
-
+        binding.walletFrom.setCallBack(this)
+        binding.walletTo.setCallBack(this)
         handleKeyboardEvent()
         init()
         listeners()
@@ -64,9 +64,6 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
                 val newList = bundle.getParcelableArrayList<WalletModel>("walletsFrom")
                 newList?.let { wallet.updateWalletsFrom(it) }
             }
-            wallet.doOnAttach {
-                binding.walletFrom.getWalletViewModel().setCallBack(this)
-            }
 
         }
         binding.walletTo.let { wallet ->
@@ -81,10 +78,8 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
                 val newList = bundle.getParcelableArrayList<WalletModel>("walletsTo")
                 newList?.let { wallet.updateWalletsTo(it) }
             }
-            wallet.doOnAttach {
-                binding.walletTo.getWalletViewModel().setCallBack(this)
-            }
         }
+
     }
 
     override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {
