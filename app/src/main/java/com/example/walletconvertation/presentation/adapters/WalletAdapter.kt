@@ -34,7 +34,7 @@ class WalletAdapter :
                     ivEndIconSingle.visibility = View.GONE
                 }
                 if(!item.enable){
-                    itemView.isEnabled = false
+//                    itemView.isEnabled = false
                 }
                 itemView.setOnClickListener {
                     onWalletClickListener?.invoke(item)

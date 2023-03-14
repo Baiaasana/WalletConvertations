@@ -77,16 +77,31 @@ class WalletsFragment : Fragment(), WalletCallback {
             "from" ->{
                 walletAdapter.onWalletClickListener = { selectedFrom ->
 
+                    val dataFrom = args.fromList.toList()
+                    val dataTo = args.toList.toList()
+                    val oldSelectedFrom = dataFrom.findLast { item -> item.is_selected_from }
+                    val oldSelectedTo = dataTo.findLast { item -> item.is_selected_to }
                     selectedFrom.is_selected_from = true
-                    val data = args.fromList.toList()
-                    data.filterNot { item -> item.id == selectedFrom.id }
+
+                    dataFrom.filterNot { item -> item.id == selectedFrom.id }
                         .forEach { el -> el.is_selected_from = false }
-                    onWalletsFromChanged(data)
+
+                    if(selectedFrom.id == oldSelectedTo?.id){
+                        dataTo.find { item -> item.is_selected_to }!!.is_selected_to = false
+                        dataTo.findLast { item -> item.id == oldSelectedFrom!!.id }!!.is_selected_to = true
+//                        onWalletsFromChanged(dataFrom)
+                        onWalletsToChanged(dataTo)
+                    }
+                    val selectedTo = dataTo.findLast { item -> item.is_selected_to }
+                    onWalletsFromChanged(dataFrom)
 //
                     setFragmentResult("requestKeyFrom", bundleOf("walletFrom" to selectedFrom))
-                    setFragmentResult("requestKeyFromList", bundleOf("walletsFrom" to data))
+                    setFragmentResult("requestKeyTo", bundleOf("walletTo" to selectedTo))
+                    setFragmentResult("requestKeyFromList", bundleOf("walletsFrom" to dataFrom))
+                    setFragmentResult("requestKeyToList", bundleOf("walletsTo" to dataTo))
+
                     convertViewModel.onSelectedWalletFromChanged(selectedFrom)
-                    args.toList.find { it.is_selected_to }
+                    dataTo.findLast { it.is_selected_to }
                         ?.let { convertViewModel.onSelectedWalletToChanged(it) }
                         .also {
                         convertViewModel.getCourse(

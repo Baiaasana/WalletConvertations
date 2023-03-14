@@ -32,8 +32,7 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
             val currency = getCurrency().text.toString()
             if (currency == setSymbol(viewModel.selectedWalletFrom.value!!.currency.toString())) {
                 onWalletClick("from")
-            }
-            if (currency == setSymbol(viewModel.selectedWalletTo.value!!.currency.toString())) {
+            }else if (currency == setSymbol(viewModel.selectedWalletTo.value!!.currency.toString())) {
                 onWalletClick("to")
             }
         }
@@ -104,23 +103,22 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
 
     fun updateWalletFrom(wallet: WalletModel){
         viewModel.onSelectedWalletFromChanged(wallet)
-    }
-
-    fun firstUpdate(){
-        viewModel.onSelectedWalletFromChanged(viewModel.selectedWalletFrom.value!!)
-        viewModel.onSelectedWalletToChanged(viewModel.selectedWalletTo.value!!)
+        callback!!.onSelectedWalletFromChanged(wallet)
     }
 
     fun updateWalletsFrom(walletList: List<WalletModel>){
         viewModel.onWalletsFromChanged(walletList)
+        callback!!.onWalletsFromChanged(walletList)
     }
 
     fun updateWalletsTo(walletList: List<WalletModel>){
         viewModel.onWalletsToChanged(walletList)
+        callback!!.onWalletsToChanged(walletList)
     }
 
     fun updateWalletTo(wallet: WalletModel){
         viewModel.onSelectedWalletToChanged(wallet)
+        callback!!.onSelectedWalletToChanged(wallet)
     }
 
     private fun getWalletView(): LinearLayoutCompat {

@@ -67,8 +67,11 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
                 newList?.let { wallet.updateWalletsFrom(it) }
             }
 
-        }
-        binding.walletTo.let { wallet ->
+            setFragmentResultListener("requestKeyToList") { _, bundle ->
+                val newList = bundle.getParcelableArrayList<WalletModel>("walletsTo")
+                newList?.let { wallet.updateWalletsTo(it) }
+            }
+
             setFragmentResultListener("requestKeyTo") { _, bundle ->
                 val walletTo = bundle.getParcelable<WalletModel>("walletTo")
                 walletTo.let {
@@ -76,9 +79,29 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
                 }
             }
 
+        }
+        binding.walletTo.let { wallet ->
+            setFragmentResultListener("requestKeyFrom") { _, bundle ->
+                val walletFrom = bundle.getParcelable<WalletModel>("walletFrom")
+                walletFrom.let {
+                    wallet.updateWalletFrom(it!!)
+                }
+            }
+            setFragmentResultListener("requestKeyFromList") { _, bundle ->
+                val newList = bundle.getParcelableArrayList<WalletModel>("walletsFrom")
+                newList?.let { wallet.updateWalletsFrom(it) }
+            }
+
             setFragmentResultListener("requestKeyToList") { _, bundle ->
                 val newList = bundle.getParcelableArrayList<WalletModel>("walletsTo")
                 newList?.let { wallet.updateWalletsTo(it) }
+            }
+
+            setFragmentResultListener("requestKeyTo") { _, bundle ->
+                val walletTo = bundle.getParcelable<WalletModel>("walletTo")
+                walletTo.let {
+                    wallet.updateWalletTo(it!!)
+                }
             }
         }
     }
