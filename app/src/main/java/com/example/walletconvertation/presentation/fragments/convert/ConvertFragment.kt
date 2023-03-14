@@ -166,7 +166,16 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
     }
 
     private val amountFromWatcher = object : TextWatcher {
-        override fun afterTextChanged(p0: Editable?) {}
+        override fun afterTextChanged(p0: Editable?) {
+            viewModel.amountTo.value.let {
+                if (it!!.isNotEmpty()) {
+                    val amount =
+                        viewModel.amountTo.value.toString().toDouble()
+                    val formattedAmount = kotlinStringFormat(amount, 2)
+                    viewModel.amountTo.value = formattedAmount
+                }
+            }
+        }
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             p0?.let {
@@ -177,8 +186,19 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
                         DigitsKeyListener.getInstance("0123456789")
                 } else {
                     binding.etAmountFrom.getAmount().keyListener =
-                        DigitsKeyListener.getInstance("0123456789.,")
+                        DigitsKeyListener.getInstance("0123456789.")
                 }
+                //
+//                viewModel.amountTo.value.let {
+//                    if (it!!.isNotEmpty()) {
+//                        val amount =
+//                            viewModel.amountTo.value.toString().replace(",", ".")
+//                                .toDouble()
+//                        val formattedAmount = kotlinStringFormat(amount, 2)
+//                        viewModel.amountTo.value = formattedAmount
+//                    }
+//                }
+                //
                 viewModel.convertFROMTO()
                 binding.btnContinue.isEnabled = (viewModel.checkAmount(
                     viewModel.amountTo.value.toString(),
@@ -192,7 +212,18 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
     }
 
     private val amountToWatcher = object : TextWatcher {
-        override fun afterTextChanged(p0: Editable?) {}
+        override fun afterTextChanged(p0: Editable?) {
+            viewModel.amountFrom.value.let {
+                if (it!!.isNotEmpty()) {
+                    val amount =
+                        viewModel.amountFrom.value.toString()
+                            .toDouble()
+                    val formattedAmount = kotlinStringFormat(amount, 2)
+                    viewModel.amountFrom.value = formattedAmount
+                }
+            }
+        }
+
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             p0?.let {
@@ -202,8 +233,19 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
                         DigitsKeyListener.getInstance("0123456789")
                 } else {
                     binding.etAmountTo.getAmount().keyListener =
-                        DigitsKeyListener.getInstance("0123456789.,")
+                        DigitsKeyListener.getInstance("0123456789.")
                 }
+                //
+//                viewModel.amountFrom.value.let {
+//                    if (it!!.isNotEmpty()) {
+//                        val amount =
+//                            viewModel.amountFrom.value.toString().replace(",", ".")
+//                                .toDouble()
+//                        val formattedAmount = kotlinStringFormat(amount, 2)
+//                        viewModel.amountFrom.value = formattedAmount
+//                    }
+//                }
+                //
                 viewModel.convertTOFROM()
                 binding.btnContinue.isEnabled = (viewModel.checkAmount(
                     viewModel.amountTo.value.toString(),
