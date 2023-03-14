@@ -79,12 +79,22 @@ class WalletViewModel @Inject constructor(
     fun reverseWallets() {
         val from = _selectedWalletFrom.value!!
         val to = _selectedWalletTo.value!!
-//        onSelectedWalletFromChanged(to!!)
-//        onSelectedWalletToChanged(from!!)
-        onReverse(from, to)
+        val fromList = _walletsFrom.value!!
+        val toList = _walletsTo.value!!
+
+        fromList.forEach {
+            it.is_selected_from = false
+            it.is_selected_to = false
+        }
+        toList.forEach {
+            it.is_selected_from = false
+            it.is_selected_to = false
+        }
+        fromList.find { item -> item.id == from.id }!!.is_selected_to = true
+        toList.find { item -> item.id == to.id }!!.is_selected_from = true
+
+        onReverse(from, to, fromList, toList)
     }
-
-
 
     override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {
         super.onSelectedWalletFromChanged(selectedWalletFrom)
@@ -111,9 +121,16 @@ class WalletViewModel @Inject constructor(
         _loading.value = loading
     }
 
-    override fun onReverse(selectedWalletFrom: WalletModel, selectedWalletTo: WalletModel) {
-        super.onReverse(selectedWalletFrom, selectedWalletTo)
+    override fun onReverse(
+        selectedWalletFrom: WalletModel,
+        selectedWalletTo: WalletModel,
+        walletsFromList: List<WalletModel>,
+        walletsToList: List<WalletModel>
+    ) {
+        super.onReverse(selectedWalletFrom, selectedWalletTo, walletsFromList, walletsToList)
         _selectedWalletFrom.value = selectedWalletTo
         _selectedWalletTo.value = selectedWalletFrom
+        _walletsFrom.value = walletsToList
+        _walletsTo.value = walletsFromList
     }
 }

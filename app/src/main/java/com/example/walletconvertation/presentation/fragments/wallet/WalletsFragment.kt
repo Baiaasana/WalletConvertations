@@ -57,7 +57,7 @@ class WalletsFragment : Fragment(), WalletCallback {
             }
             "to" -> {
                 data = args.toList.toList()
-                data = data.filterNot { it.id == args.fromList.find { item -> item.is_selected_from }!!.id }
+                data = data.filterNot { it.id == args.fromList.find { item -> item.is_selected_from }?.id }
             }
         }
         walletAdapter.submitList(data)

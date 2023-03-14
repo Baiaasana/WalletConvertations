@@ -11,14 +11,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
-import androidx.lifecycle.*
 import com.example.backend.data.model.WalletModel
 import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
 import com.example.walletconvertation.common.customs.walletView.WalletCallback
 import com.example.walletconvertation.databinding.FragmentConvertBinding
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.ViewModelLifecycle
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent.setEventListener
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 
@@ -142,7 +140,10 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
 
         binding.btnReverse.setOnClickListener {
             binding.walletFrom.getWalletViewModel().reverseWallets()
-            viewModel.reverseCourses()
+            viewModel.getCourse(
+                viewModel.selectedWalletFrom.value!!.currency.toString(),
+                viewModel.selectedWalletTo.value!!.currency.toString()
+            )
             viewModel.clearFields()
             binding.etAmountTo.getAmount().isClickable = false
             binding.etAmountFrom.getAmount().isClickable = false
@@ -150,6 +151,17 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
 
         binding.root.setOnClickListener {
             it?.let { activity?.hideKeyboard(it) }
+        }
+    }
+
+    private fun reverseLists() {
+        binding.walletFrom.let { wallet ->
+
+            val fromList = wallet.getWalletViewModel().walletsFrom.value
+            fromList?.let { wallet.updateWalletsTo(it) }
+
+            val toList = wallet.getWalletViewModel().walletsTo.value
+            toList?.let { wallet.updateWalletsFrom(it) }
         }
     }
 

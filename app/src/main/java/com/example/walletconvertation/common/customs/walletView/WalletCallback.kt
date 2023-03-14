@@ -9,6 +9,6 @@ interface WalletCallback {
     fun onSelectedWalletToChanged(selectedWalletTo: WalletModel){}
     fun onLoadingStateChanged(loading: Boolean){}
     fun onError(errorMessage: String){}
-    fun onReverse(selectedWalletFrom: WalletModel, selectedWalletTo: WalletModel){}
+    fun onReverse(selectedWalletFrom: WalletModel, selectedWalletTo: WalletModel, walletsFromList: List<WalletModel>, walletsToList: List<WalletModel>){}
 
 }

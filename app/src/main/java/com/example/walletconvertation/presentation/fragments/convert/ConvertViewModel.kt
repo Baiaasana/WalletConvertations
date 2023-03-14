@@ -80,15 +80,6 @@ open class ConvertViewModel @Inject constructor(
         }
     }
 
-    fun reverseCourses() {
-        val from = _selectedWalletFrom.value
-        val to = _selectedWalletTo.value
-//        onSelectedWalletFromChanged(to!!)
-//        onSelectedWalletToChanged(from!!)
-        getCourse(selectedWalletFrom.value!!.currency.toString(), selectedWalletTo.value!!.currency.toString()
-        )
-    }
-
     override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {
         super.onSelectedWalletFromChanged(selectedWalletFrom)
         _selectedWalletFrom.value = selectedWalletFrom
