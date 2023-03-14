@@ -37,12 +37,7 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
                 onWalletClick("to")
             }
         }
-
-
-
-
     }
-
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -64,7 +59,6 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
             else -> CourseSymbols.GEL.symbol
         }
     }
-
 
     fun getWalletViewModel() : WalletViewModel {
         return viewModel
@@ -119,17 +113,14 @@ class CustomWalletView(context: Context, attrs: AttributeSet?) : LinearLayout(co
 
     fun updateWalletsFrom(walletList: List<WalletModel>){
         viewModel.onWalletsFromChanged(walletList)
-
     }
 
     fun updateWalletsTo(walletList: List<WalletModel>){
         viewModel.onWalletsToChanged(walletList)
-
     }
 
     fun updateWalletTo(wallet: WalletModel){
         viewModel.onSelectedWalletToChanged(wallet)
-
     }
 
     private fun getWalletView(): LinearLayoutCompat {
@@ -153,7 +144,6 @@ fun setData(view: CustomWalletView, boolean: Boolean){
     }else{
         view.setData("to")
     }
-
 }
 
 

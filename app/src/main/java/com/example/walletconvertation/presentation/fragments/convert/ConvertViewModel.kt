@@ -52,7 +52,6 @@ open class ConvertViewModel @Inject constructor(
 //    init {
 //        getCourse(selectedWalletFrom.value!!.currency.toString(),selectedWalletTo.value!!.currency.toString() )
 //    }
-
     fun getCourse(from: String, to: String) {
         _loading.postValue(true)
         viewModelScope.launch {
@@ -79,8 +78,8 @@ open class ConvertViewModel @Inject constructor(
     fun reverseCourses() {
         val from = _selectedWalletFrom.value
         val to = _selectedWalletTo.value
-        onSelectedWalletFromChanged(to!!)
-        onSelectedWalletToChanged(from!!)
+//        onSelectedWalletFromChanged(to!!)
+//        onSelectedWalletToChanged(from!!)
         getCourse(selectedWalletFrom.value!!.currency.toString(), selectedWalletTo.value!!.currency.toString()
         )
     }

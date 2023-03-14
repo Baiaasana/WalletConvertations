@@ -11,12 +11,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
+import androidx.lifecycle.*
 import com.example.backend.data.model.WalletModel
 import com.example.walletconvertation.R
 import com.example.walletconvertation.common.Utility
 import com.example.walletconvertation.common.customs.walletView.WalletCallback
 import com.example.walletconvertation.databinding.FragmentConvertBinding
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.ViewModelLifecycle
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent.setEventListener
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 
@@ -79,7 +81,6 @@ class ConvertFragment : Fragment(), Utility, WalletCallback {
                 newList?.let { wallet.updateWalletsTo(it) }
             }
         }
-
     }
 
     override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {

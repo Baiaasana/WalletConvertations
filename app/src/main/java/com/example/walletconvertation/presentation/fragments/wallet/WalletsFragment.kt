@@ -82,6 +82,7 @@ class WalletsFragment : Fragment(), WalletCallback {
                     data.filterNot { item -> item.id == selectedFrom.id }
                         .forEach { el -> el.is_selected_from = false }
                     onWalletsFromChanged(data)
+//
                     setFragmentResult("requestKeyFrom", bundleOf("walletFrom" to selectedFrom))
                     setFragmentResult("requestKeyFromList", bundleOf("walletsFrom" to data))
                     convertViewModel.onSelectedWalletFromChanged(selectedFrom)
