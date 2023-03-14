@@ -22,6 +22,11 @@ open class ConvertViewModel @Inject constructor(
     private val courseRepository: CourseRepository,
     ) : ViewModel(), Utility, WalletCallback {
 
+    companion object{
+        const val FROM = "from"
+        const val TO = "to"
+    }
+
     private val _rate = MutableLiveData<Float>(1F)
     val rate: LiveData<Float?> = _rate
 

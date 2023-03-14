@@ -138,8 +138,8 @@ fun setDisable(view: CustomWalletView, boolean: Boolean) {
 }
 
 @BindingAdapter("wallet_data")
-fun setData(view: CustomWalletView, boolean: Boolean){
-    if(boolean){
+fun setData(view: CustomWalletView, walletType: String){
+    if(walletType == "from"){
         view.setData("from")
     }else{
         view.setData("to")

@@ -77,11 +77,14 @@ class WalletViewModel @Inject constructor(
     fun setCourseSymbol(course: String) = setSymbol(course)
 
     fun reverseWallets() {
-        val from = _selectedWalletFrom.value
-        val to = _selectedWalletTo.value
-        onSelectedWalletFromChanged(to!!)
-        onSelectedWalletToChanged(from!!)
+        val from = _selectedWalletFrom.value!!
+        val to = _selectedWalletTo.value!!
+//        onSelectedWalletFromChanged(to!!)
+//        onSelectedWalletToChanged(from!!)
+        onReverse(from, to)
     }
+
+
 
     override fun onSelectedWalletFromChanged(selectedWalletFrom: WalletModel) {
         super.onSelectedWalletFromChanged(selectedWalletFrom)
@@ -106,5 +109,11 @@ class WalletViewModel @Inject constructor(
     override fun onLoadingStateChanged(loading: Boolean) {
         super.onLoadingStateChanged(loading)
         _loading.value = loading
+    }
+
+    override fun onReverse(selectedWalletFrom: WalletModel, selectedWalletTo: WalletModel) {
+        super.onReverse(selectedWalletFrom, selectedWalletTo)
+        _selectedWalletFrom.value = selectedWalletTo
+        _selectedWalletTo.value = selectedWalletFrom
     }
 }
